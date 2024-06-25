@@ -1,0 +1,9 @@
+rootProject.name = 'meme'
+//include 'Search'
+//include 'Auth'
+//include 'Notification'
+//include 'Portfolio'
+//include 'Reservation'
+include 'Domain'
+include 'Member'
+
