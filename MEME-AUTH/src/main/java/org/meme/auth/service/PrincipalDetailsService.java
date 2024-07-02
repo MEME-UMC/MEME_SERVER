@@ -1,8 +1,8 @@
 package org.meme.auth.service;
 
 import lombok.RequiredArgsConstructor;
-import org.meme.domain.Entity.User;
-import org.meme.domain.Repository.UserRepository;
+import org.meme.domain.entity.User;
+import org.meme.domain.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
