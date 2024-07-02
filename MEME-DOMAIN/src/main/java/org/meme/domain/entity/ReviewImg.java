@@ -1,4 +1,4 @@
-package org.meme.domain.Entity;
+package org.meme.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,25 +9,23 @@ import org.meme.domain.common.BaseEntity;
 @Entity
 @Builder
 @Getter @Setter
-public class PortfolioImg extends BaseEntity {
+public class ReviewImg extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long portfolioImgId;
+    private Long reviewImgId;
 
     @ManyToOne
-    @JoinColumn(name="portfolio_id", nullable = false)
-    private Portfolio portfolio;
+    @JoinColumn(name="review_id", nullable = false)
+    private Review review;
 
     @Column(nullable = false)
     private String src;
 
-    public static PortfolioImg from(String src){
-        return PortfolioImg.builder()
+    public static ReviewImg from(String src){
+        return ReviewImg.builder()
                 .src(src)
                 .build();
     }
 
-    public void updateSrc(String src) {
-        this.src = src;
-    }
+    public void updateSrc(String src){this.src = src;}
 }
