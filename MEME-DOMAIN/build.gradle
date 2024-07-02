@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.meme'
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+tasks.register("prepareKotlinBuildScriptModel") {
+
+}
