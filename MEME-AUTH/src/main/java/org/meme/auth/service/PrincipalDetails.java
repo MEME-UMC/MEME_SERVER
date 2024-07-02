@@ -1,6 +1,6 @@
 package org.meme.auth.service;
 
-import org.meme.domain.user.User;
+import org.meme.domain.Entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

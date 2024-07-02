@@ -1,7 +1,7 @@
 package org.meme.auth.converter;
 
-import org.meme.domain.dto.AuthResponse;
-import org.meme.domain.user.User;
+import org.meme.auth.dto.AuthResponse;
+import org.meme.domain.Entity.User;
 
 public class TokenConverter {
 
