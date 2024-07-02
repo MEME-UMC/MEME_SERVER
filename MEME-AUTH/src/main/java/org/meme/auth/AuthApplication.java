@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
 @EnableJpaAuditing
-public class MemberApplication {
+public class AuthApplication {
     public static void main(String[] args) {
-        SpringApplication.run(MemberApplication.class,args);
+        SpringApplication.run(AuthApplication.class,args);
     }
 }

@@ -1,4 +1,4 @@
-package org.meme.domain.Entity;
+package org.meme.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,30 +7,27 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.meme.domain.common.BaseEntity;
 
-
 @Builder
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class FavoritePortfolio extends BaseEntity {
+public class FavoriteArtist extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long favoritePortfolioId;
+    private Long favoriteArtistId;
 
     @ManyToOne
     @JoinColumn(name="user_id", nullable = false)
-    private User model;
+    private Model model;
 
-    @ManyToOne
-    @JoinColumn(name="portfolio_id", nullable = false)
-    private Portfolio portfolio;
+    private Long artistId;
 
-    public static FavoritePortfolio from(Model model, Portfolio portfolio){
-        return FavoritePortfolio.builder()
+    public static FavoriteArtist from(Artist artist, Model model){
+        return FavoriteArtist.builder()
                 .model(model)
-                .portfolio(portfolio)
+                .artistId(artist.getUserId())
                 .build();
     }
 }

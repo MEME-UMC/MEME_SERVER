@@ -1,11 +1,11 @@
 package org.meme.auth.converter;
 
 import org.meme.auth.config.SecurityConfig;
-import org.meme.domain.Entity.Artist;
+import org.meme.domain.entity.Artist;
 import org.meme.auth.dto.AuthRequest;
 import org.meme.auth.dto.AuthResponse;
-import org.meme.domain.Entity.Model;
-import org.meme.domain.Entity.User;
+import org.meme.domain.entity.Model;
+import org.meme.domain.entity.User;
 
 public class UserConverter {
 

@@ -1,4 +1,4 @@
-package org.meme.domain.Entity;
+package org.meme.domain.entity;
 
 import lombok.Builder;
 

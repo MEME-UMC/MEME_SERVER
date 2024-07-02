@@ -1,7 +1,7 @@
-package org.meme.domain.Repository;
+package org.meme.domain.repository;
 
-import org.meme.domain.Entity.Model;
-import org.meme.domain.Entity.Review;
+import org.meme.domain.entity.Model;
+import org.meme.domain.entity.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

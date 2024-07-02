@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/auth_test?useSSL=false&useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
-    username: root
-    password: 1234
+    url: jdbc:mysql://localhost:3306/${DB_SCHEMA}?useSSL=false&useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 
   jpa:
     hibernate:
@@ -23,14 +23,14 @@ spring:
     oauth2:
       kakao:
         issuer: "https://kauth.kakao.com"
-        rest-api-key: 3d9ba27e79e64cf857e8e91bbfc88346
+        rest-api-key: ${KAKAO_REST_API_KEY}
       apple:
         issuer: "https://appleid.apple.com"
-        client-id: umc.MEME
+        client-id: ${APPLE_CLIENT_ID}
 
 jwt:
   issuer: meme_umc
-  secret-key: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
+  secret-key: ${JWT_SECRET_KEY}
   access-token-validity-in-seconds: 1800  # 30 minutes
   refresh-token-validity-in-seconds: 86400  # 24 hours
 

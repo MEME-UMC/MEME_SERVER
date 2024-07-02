@@ -1,7 +1,7 @@
-package org.meme.domain.Repository;
+package org.meme.domain.repository;
 
-import org.meme.domain.Entity.Portfolio;
-import org.meme.domain.Entity.PortfolioImg;
+import org.meme.domain.entity.Portfolio;
+import org.meme.domain.entity.PortfolioImg;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 

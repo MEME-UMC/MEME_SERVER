@@ -1,6 +1,6 @@
-package org.meme.domain.Repository;
+package org.meme.domain.repository;
 
-import org.meme.domain.Entity.Token;
+import org.meme.domain.entity.Token;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Repository;

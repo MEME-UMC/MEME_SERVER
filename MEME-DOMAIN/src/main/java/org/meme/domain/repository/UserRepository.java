@@ -1,6 +1,6 @@
-package org.meme.domain.Repository;
+package org.meme.domain.repository;
 
-import org.meme.domain.Entity.User;
+import org.meme.domain.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

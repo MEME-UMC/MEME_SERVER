@@ -1,9 +1,9 @@
-package org.meme.domain.Repository;
+package org.meme.domain.repository;
 
-import org.meme.domain.Entity.Artist;
-import org.meme.domain.Entity.Model;
-import org.meme.domain.Entity.Portfolio;
-import org.meme.domain.Entity.Reservation;
+import org.meme.domain.entity.Artist;
+import org.meme.domain.entity.Model;
+import org.meme.domain.entity.Portfolio;
+import org.meme.domain.entity.Reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
