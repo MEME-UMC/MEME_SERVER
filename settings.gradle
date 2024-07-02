@@ -1,0 +1,6 @@
+rootProject.name = 'meme'
+include 'MEME-AUTH'
+include 'MEME-DOMAIN'
+include 'MEME-RESERVATION'
+include 'MEME-SERVICE'
+include 'MEME-NOTIFICATION'
