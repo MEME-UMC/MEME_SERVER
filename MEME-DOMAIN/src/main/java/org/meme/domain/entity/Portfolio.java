@@ -96,19 +96,6 @@ public class Portfolio extends BaseEntity {
 
     public void updatePortfolioImgList(List<PortfolioImg> portfolioImgList){this.portfolioImgList = portfolioImgList;}
 
-//    public static Portfolio from(Artist artist, CreatePortfolioDto dto){
-//        return Portfolio.builder()
-//                .artist(artist)
-//                .category(dto.getCategory())
-//                .makeupName(dto.getMakeupName())
-//                .info(dto.getInfo())
-//                .price(dto.getPrice())
-//                .portfolioImgList(new ArrayList<PortfolioImg>())
-//                .averageStars("0.00")
-//                .isBlock(false)
-//                .build();
-//    }
-
     public void addPortfolioImg(PortfolioImg portfolioImg) {
         this.portfolioImgList.add(portfolioImg);
         portfolioImg.setPortfolio(this);

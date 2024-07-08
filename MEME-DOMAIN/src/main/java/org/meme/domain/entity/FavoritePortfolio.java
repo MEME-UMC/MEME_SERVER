@@ -27,10 +27,10 @@ public class FavoritePortfolio extends BaseEntity {
     @JoinColumn(name="portfolio_id", nullable = false)
     private Portfolio portfolio;
 
-    public static FavoritePortfolio from(Model model, Portfolio portfolio){
-        return FavoritePortfolio.builder()
-                .model(model)
-                .portfolio(portfolio)
-                .build();
-    }
+//    public static FavoritePortfolio from(Model model, Portfolio portfolio){
+//        return FavoritePortfolio.builder()
+//                .model(model)
+//                .portfolio(portfolio)
+//                .build();
+//    }
 }
