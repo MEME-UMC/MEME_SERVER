@@ -116,7 +116,8 @@ public class PortfolioService {
             updatePortfolioImgList(portfolio, updatePortfolioDto.getPortfolioImgSrcList());
 
         // 포트폴리오 수정
-        portfolio.updatePortfolio(updatePortfolioDto);
+        // TODO:
+//        portfolio.updatePortfolio(updatePortfolioDto);
     }
 
     @Transactional
