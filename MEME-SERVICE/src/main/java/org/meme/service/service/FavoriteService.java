@@ -6,7 +6,9 @@ import org.meme.domain.common.exception.GeneralException;
 import org.meme.domain.common.status.ErrorStatus;
 import org.meme.domain.entity.*;
 import org.meme.domain.repository.*;
+import org.meme.service.converter.ArtistConverter;
 import org.meme.service.converter.FavoriteConverter;
+import org.meme.service.dto.ArtistResponse;
 import org.meme.service.dto.FavoriteRequest;
 import org.meme.service.dto.FavoriteResponse;
 import org.springframework.data.domain.Page;
@@ -39,17 +41,17 @@ public class FavoriteService {
         Page<FavoriteArtist> favoriteArtistPage = getPage(page, favoriteArtistList);
 
         //관심 아티스트 리스트
-        List<ArtistSimpleDto> content = favoriteArtistPage.getContent().stream()
+        List<ArtistResponse.ArtistSimpleDto> content = favoriteArtistPage.getContent().stream()
                 .map(favoriteArtist -> {
                     Artist artist = artistRepository.findById(favoriteArtist.getArtistId())
                             .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_ARTIST));
                     //해당 아티스트를 관심 아티스트로 설정한 모델 수 카운트
                     Long modelCount = favoriteArtistRepository.countByArtistId(artist.getUserId());
-                    return ArtistSimpleDto.from(artist, modelCount);
+                    return ArtistConverter.toArtistSimpleDto(artist, modelCount);
                 })
                 .collect(Collectors.toList());
 
-        return FavoriteArtistPageDto.from(favoriteArtistPage, content);
+        return FavoriteConverter.toFavoriteArtistPageDto(favoriteArtistPage, content);
     }
 
     //관심 메이크업 조회

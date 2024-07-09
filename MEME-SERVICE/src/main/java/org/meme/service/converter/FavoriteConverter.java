@@ -1,6 +1,7 @@
 package org.meme.service.converter;
 
 import org.meme.domain.entity.*;
+import org.meme.service.dto.ArtistResponse;
 import org.meme.service.dto.FavoriteResponse;
 import org.meme.service.dto.PortfolioResponse;
 import org.springframework.data.domain.Page;
@@ -16,7 +17,8 @@ public class FavoriteConverter {
                 .build();
     }
 
-    public static FavoriteResponse.FavoriteArtistPageDto toFavoriteArtistPageDto(Page<FavoriteArtist> page, List<SimpleArtistDto> content){
+    public static FavoriteResponse.FavoriteArtistPageDto toFavoriteArtistPageDto
+            (Page<FavoriteArtist> page, List<ArtistResponse.ArtistSimpleDto> content){
         return FavoriteResponse.FavoriteArtistPageDto.builder()
                 .content(content)
                 .pageSize(page.getSize())

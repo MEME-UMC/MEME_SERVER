@@ -15,7 +15,7 @@ public class FavoriteResponse {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class FavoriteArtistPageDto {
-        private List<SimpleArtistDto> content;
+        private List<ArtistResponse.ArtistSimpleDto> content;
         private int currentPage; //현재 페이지 번호
         private int pageSize; //페이지 크기
         private int totalNumber; //전체 메이크업 개수
