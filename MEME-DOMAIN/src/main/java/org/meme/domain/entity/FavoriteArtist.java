@@ -24,10 +24,4 @@ public class FavoriteArtist extends BaseEntity {
 
     private Long artistId;
 
-//    public static FavoriteArtist from(Artist artist, Model model){
-//        return FavoriteArtist.builder()
-//                .model(model)
-//                .artistId(artist.getUserId())
-//                .build();
-//    }
 }
