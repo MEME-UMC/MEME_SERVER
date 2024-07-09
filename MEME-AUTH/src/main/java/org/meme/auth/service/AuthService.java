@@ -21,6 +21,8 @@ import org.meme.domain.entity.Token;
 import org.meme.domain.repository.TokenRepository;
 import org.meme.domain.entity.User;
 import org.meme.domain.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -43,6 +45,7 @@ public class AuthService {
     private final TokenRepository tokenRepository;  // 필수 - 토큰 저장 및 삭제
     private final UserRepository userRepository;  // 필수 - 사용자 정보 조회
     private final RedisRepository redisRepository;  // 필수 - 자식 클래스 의존성 주입 시 필요
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     private final static String TOKEN_PREFIX = "Bearer ";
     private static final String USERNAME = "username";
@@ -50,12 +53,14 @@ public class AuthService {
     private final static String ROLE_ARTIST = "ARTIST";
     private final static int MAX_LENGTH_NICKNAME = 15;
 
+
     @Transactional
     public AuthResponse.JoinDto signupModel(AuthRequest.ModelJoinDto modelJoinDto) throws AuthException {
         checkNicknameLessThanMaxLength(modelJoinDto.getNickname());
         String userEmail = getUserEmail(modelJoinDto.getId_token(), modelJoinDto.getProvider());
         User user = saveUser(modelJoinDto, userEmail);
         String[] tokenPair = login(user);
+        kafkaTemplate.send("model_signup", userEmail);
         return TokenConverter.toJoinDto(user, tokenPair, ROLE_MODEL);
     }
 

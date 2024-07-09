@@ -8,6 +8,10 @@ dependencies {
     // Mockito
     testImplementation 'org.mockito:mockito-core:5.8.0'
 
+    // Kafka
+    implementation 'org.springframework.kafka:spring-kafka'
+
+
 }
 
 test {

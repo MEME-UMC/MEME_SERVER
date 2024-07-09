@@ -28,6 +28,9 @@ dependencies {
     // Embedded Redis
     implementation 'it.ozimov:embedded-redis:0.7.2'
 
+    //Kafka
+    implementation 'org.springframework.kafka:spring-kafka'
+
 }
 
 test {
