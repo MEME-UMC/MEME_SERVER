@@ -39,14 +39,14 @@ public class AvailableTime {
     @JoinColumn(name = "user_id", nullable = false)
     private Artist artist;
 
-    @OneToOne(mappedBy = "availableTime", fetch = FetchType.LAZY)
-    private Reservation reservation;
+//    @OneToOne(mappedBy = "availableTime", fetch = FetchType.LAZY)
+//    private Reservation reservation;
 
     public void updateIsReservated(boolean isReservated){
         this.isReservated = isReservated;
     }
 
-    public void updateReservation(Reservation reservation){this.reservation = reservation;}
+//    public void updateReservation(Reservation reservation){this.reservation = reservation;}
 
     public void updateArtist(Artist artist){this.artist = artist;}
 
