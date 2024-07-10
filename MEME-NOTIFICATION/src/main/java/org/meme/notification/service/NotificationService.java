@@ -7,6 +7,7 @@ import com.google.auth.oauth2.GoogleCredentials;
 import org.meme.notification.config.FcmKeyProperties;
 import org.meme.notification.dto.FcmMessageDto;
 import org.meme.notification.dto.FcmSendDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.*;
@@ -20,15 +21,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Service
-@EnableConfigurationProperties(FcmKeyProperties.class)
 public class NotificationService {
 
-    @Value("${fcm.key.url}")
-    private String API_URL;
-    @Value("${fcm.key.scope}")
-    private String scope;
-    @Value("${fcm.key.path}")
-    private String jsonPath;
+    private final FcmKeyProperties fcmKeyProperties;
+
+    @Autowired
+    public NotificationService(FcmKeyProperties fcmKeyProperties) {
+        this.fcmKeyProperties = fcmKeyProperties;
+    }
 
     @KafkaListener(topics = "model_signup", groupId = "notification_service")
     public void consumeMessage(String message) {
@@ -52,7 +52,7 @@ public class NotificationService {
 
         HttpEntity<String> entity = new HttpEntity<>(message, headers);
 
-        ResponseEntity<String> response = restTemplate.exchange(API_URL, HttpMethod.POST, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(fcmKeyProperties.getUrl(), HttpMethod.POST, entity, String.class);
 
         System.out.println(response.getStatusCode());
 
@@ -65,11 +65,11 @@ public class NotificationService {
      * @return Bearer token
      */
     private String getAccessToken() throws IOException {
-        String firebaseConfigPath = jsonPath;
+        String firebaseConfigPath = fcmKeyProperties.getPath();
 
         GoogleCredentials googleCredentials = GoogleCredentials
                 .fromStream(new ClassPathResource(firebaseConfigPath).getInputStream())
-                .createScoped(List.of(scope));
+                .createScoped(List.of(fcmKeyProperties.getScope()));
 
         googleCredentials.refreshIfExpired();
         String token = googleCredentials.getAccessToken().getTokenValue();

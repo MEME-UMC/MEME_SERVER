@@ -46,3 +46,10 @@ springdoc:
 
 server:
   port: 8082
+
+fcm:
+  key:
+    url: ${FCM_URL}
+    scope: ${FCM_SCOPE}
+    path: ${FCM_PATH}
+
