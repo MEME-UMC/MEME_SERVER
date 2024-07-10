@@ -1,22 +1,21 @@
 package org.meme.auth.infra;
 
+import lombok.RequiredArgsConstructor;
 import org.meme.auth.oauth.jsonwebkey.PublicKeyDto;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+@RequiredArgsConstructor
 @Repository
 public class RedisRepository {
 
-    private RedisTemplate redisTemplate;
+    private final StringRedisTemplate redisTemplate;
     private static final long CACHING_EXPIRES = 60 * 60 * 24;  // 1일
-
-    public RedisRepository(RedisTemplate redisTemplate) {
-        this.redisTemplate = redisTemplate;
-    }
 
     public void save(PublicKeyDto publicKeyDto) {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
