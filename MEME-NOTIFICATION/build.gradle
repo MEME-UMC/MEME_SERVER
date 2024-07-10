@@ -11,6 +11,8 @@ dependencies {
     // Kafka
     implementation 'org.springframework.kafka:spring-kafka'
 
+    implementation 'com.google.firebase:firebase-admin:9.2.0'           // Google Firebase Admin
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.16.1'     // Jackson Data Bind
 
 }
 

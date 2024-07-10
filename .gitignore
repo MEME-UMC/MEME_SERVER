@@ -36,4 +36,4 @@ out/
 ### VS Code ###
 .vscode/
 */application.yml
-*/meme-950b0-firebase-adminsdk-xx32v-df8611b12b.json
+*.json
