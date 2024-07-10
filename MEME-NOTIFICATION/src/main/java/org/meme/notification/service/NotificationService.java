@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.client.util.Value;
 import com.google.auth.oauth2.GoogleCredentials;
+import jakarta.transaction.Transactional;
 import org.meme.notification.config.FcmKeyProperties;
 import org.meme.notification.dto.FcmMessageDto;
 import org.meme.notification.dto.FcmSendDto;
@@ -35,6 +36,7 @@ public class NotificationService {
         System.out.println("Consumed message: " + message);
     }
 
+    @Transactional
     public int sendMessageTo(FcmSendDto fcmSendDto) throws IOException {
 
         String message = makeMessage(fcmSendDto);

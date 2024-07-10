@@ -16,7 +16,6 @@ import java.io.IOException;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/fcm")
 public class NotificationController {
 
     private final NotificationService fcmService;
@@ -25,8 +24,8 @@ public class NotificationController {
         this.fcmService = fcmService;
     }
 
-    @PostMapping("/send")
-    public ResponseEntity<ApiResponseWrapper<Object>> pushMessage(@RequestBody @Validated FcmSendDto fcmSendDto) throws IOException {
+    @PostMapping("/api/fcm/v1/send")
+    public ResponseEntity<ApiResponseWrapper<Object>> pushMessageTest(@RequestBody @Validated FcmSendDto fcmSendDto) throws IOException {
         log.debug("[+] 푸시 메시지를 전송합니다. ");
         int result = fcmService.sendMessageTo(fcmSendDto);
 

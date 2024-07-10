@@ -14,5 +14,4 @@ public class FcmKeyProperties {
     private String url;
     private String scope;
     private String path;
-
 }
