@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.meme.domain.entity.Artist;
 import org.meme.domain.common.exception.GeneralException;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,21 +24,6 @@ public class ArtistService {
     private final ModelRepository modelRepository;
     private final FavoriteArtistRepository favoriteArtistRepository;
 
-
-    //아티스트 프로필 관리/수정
-    @Transactional
-    public void updateArtistProfile(ArtistRequest.ArtistProfileDto profileDto){
-        Artist artist = artistRepository.findById(profileDto.getUserId())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_ARTIST));
-        artist.updateArtist(profileDto);
-    }
-
-    //아티스트 프로필 조회 (관리 조회 용)
-    public ArtistResponse.ArtistProfileDto getProfile(Long userId){
-        Artist artist = artistRepository.findById(userId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_ARTIST));
-        return ArtistConverter.toArtistProfileDto(artist);
-    }
 
     //아티스트 프로필 조회 (Model Ver.)
     public ArtistResponse.ArtistDto getArtistProfile(Long userId, Long artistId){

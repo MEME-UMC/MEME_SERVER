@@ -53,21 +53,4 @@ public class ArtistResponse {
         private String region;
         private Long modelCount; //해당 아티스트를 관심 아티스트로 설정한 모델 수
     }
-
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class ArtistProfileDto {
-        private Long userId;
-        private String profileImg;
-        private String nickname;
-        private Gender gender;
-        private String introduction;
-        private WorkExperience workExperience;
-        private List<Region> region;
-        private List<Category> specialization;
-        private MakeupLocation makeupLocation;
-        private String shopLocation;
-    }
 }

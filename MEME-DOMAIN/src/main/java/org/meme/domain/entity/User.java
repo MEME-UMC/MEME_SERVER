@@ -13,6 +13,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @SuperBuilder @Getter
 @NoArgsConstructor
@@ -62,6 +63,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     @NotNull
     private Provider provider;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    protected List<Inquiry> inquiryList;
 
     public boolean getDetails() {
         return details;

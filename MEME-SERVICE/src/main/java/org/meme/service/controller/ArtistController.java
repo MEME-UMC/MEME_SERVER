@@ -15,22 +15,9 @@ public class ArtistController {
 
     private final ArtistService artistService;
 
-    @Operation(summary = "아티스트 프로필 관리")
-    @PatchMapping("/mypage/profile/artist")
-    public BaseResponseDto updateProfile(@RequestBody ArtistRequest.ArtistProfileDto profileDto){
-        artistService.updateArtistProfile(profileDto);
-        return BaseResponseDto.SuccessResponse(SuccessStatus.ARTIST_PROFILE_UPDATE);
-    }
-
-    @Operation(summary = "아티스트 프로필 관리 조회(수정 전 정보 불러오기 용)")
-    @GetMapping("/mypage/profile/artist/{userId}")
-    public BaseResponseDto getProfile (@PathVariable(name = "userId") Long userId){
-        return BaseResponseDto.SuccessResponse(SuccessStatus.ARTIST_PROFILE_GET, artistService.getProfile(userId));
-    }
-
     @Operation(summary = "아티스트 프로필 조회(Model Ver.")
     @GetMapping("/profile/{userId}/{artistId}")
-    public BaseResponseDto getArtistProfile(@PathVariable(name = "userId") Long userId, @PathVariable(name = "artistId") Long artistId){
+    public BaseResponseDto getArtistProfile(@PathVariable(name = "userId") Long userId, @PathVariable(name = "artistId") Long artistId) {
         return BaseResponseDto.SuccessResponse(SuccessStatus.ARTIST_PROFILE_GET, artistService.getArtistProfile(userId, artistId));
     }
 
@@ -44,7 +31,7 @@ public class ArtistController {
 
     @Operation(summary = "아티스트 프로필 조회 (Artist Ver.)")
     @GetMapping("/profile/{artistId}")
-    public BaseResponseDto getArtistProfile(@PathVariable(name = "artistId") Long artistId){
+    public BaseResponseDto getArtistProfile(@PathVariable(name = "artistId") Long artistId) {
         return BaseResponseDto.SuccessResponse(SuccessStatus.ARTIST_PROFILE_GET, artistService.getArtistProfileFromArtist(artistId));
     }
 }

@@ -8,7 +8,20 @@ import org.meme.domain.enums.*;
 
 import java.util.List;
 
-public class ArtistRequest {
+public class MypageRequest {
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ModelProfileDto {
+        private Long userId;
+        private String profileImg;
+        private String nickname;
+        private Gender gender;
+        private SkinType skinType;
+        private PersonalColor personalColor;
+    }
 
     @Data
     @Builder
@@ -26,4 +39,14 @@ public class ArtistRequest {
         private MakeupLocation makeupLocation;
         private String shopLocation;
     }
+
+    @Builder @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class InquiryDto {
+        private Long userId;
+        private String inquiryTitle;
+        private String inquiryText;
+    }
+
 }

@@ -16,16 +16,13 @@ public class FavoriteController {
 
     @Operation(summary = "관심 아티스트 조회", description = "관심 아티스트를 조회하는 API입니다.")
     @GetMapping("/artist/{modelId}")
-    public BaseResponseDto getFavoriteArtist(@PathVariable(name = "modelId") Long modelId,
-                                             @RequestParam(value = "page", defaultValue = "0", required = false)int page){
+    public BaseResponseDto getFavoriteArtist(@PathVariable(name = "modelId") Long modelId, @RequestParam(value = "page", defaultValue = "0", required = false) int page) {
         return BaseResponseDto.SuccessResponse(SuccessStatus.FAVORITE_ARTIST_GET, favoriteService.getFavoriteArtist(modelId, page));
     }
 
     @Operation(summary = "관심 메이크업 조회", description = "관심 메이크업을 조회하는 API입니다.")
     @GetMapping("/portfolio/{modelId}")
-    public BaseResponseDto getFavoritePortfolio(@PathVariable(name = "modelId") Long modelId,
-                                            @RequestParam(value = "page", defaultValue = "0", required = false) int page
-    ){
+    public BaseResponseDto getFavoritePortfolio(@PathVariable(name = "modelId") Long modelId, @RequestParam(value = "page", defaultValue = "0", required = false) int page) {
         return BaseResponseDto.SuccessResponse(SuccessStatus.FAVORITE_PORTFOLIO_GET, favoriteService.getFavoritePortfolio(modelId, page));
     }
 

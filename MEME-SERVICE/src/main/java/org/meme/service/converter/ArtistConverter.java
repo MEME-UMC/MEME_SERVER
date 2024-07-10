@@ -46,19 +46,4 @@ public class ArtistConverter {
                 .build();
     }
 
-    public static ArtistResponse.ArtistProfileDto toArtistProfileDto(Artist artist){
-        return ArtistResponse.ArtistProfileDto.builder()
-                .userId(artist.getUserId())
-                .profileImg(artist.getProfileImg())
-                .nickname(artist.getNickname())
-                .gender(artist.getGender())
-                .introduction(artist.getIntroduction())
-                .workExperience(artist.getWorkExperience())
-                .region(artist.getRegion())
-                .specialization(artist.getSpecialization())
-                .makeupLocation(artist.getMakeupLocation())
-                .shopLocation(artist.getShopLocation())
-                .build();
-    }
-
 }
