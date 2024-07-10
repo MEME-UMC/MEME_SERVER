@@ -45,16 +45,6 @@ public class Review extends BaseEntity {
 
     public void updateReviewImgList(List<ReviewImg> reviewImgList){this.reviewImgList = reviewImgList;}
 
-//    public static Review from(Model model, Portfolio portfolio, ReviewDto dto){
-//        return Review.builder()
-//                .model(model)
-//                .portfolio(portfolio)
-//                .star(dto.getStar())
-//                .comment(dto.getComment())
-//                .reviewImgList(new ArrayList<ReviewImg>())
-//                .build();
-//    }
-
     public void addReviewImg(ReviewImg reviewImg) {
         this.reviewImgList.add(reviewImg);
         reviewImg.setReview(this);

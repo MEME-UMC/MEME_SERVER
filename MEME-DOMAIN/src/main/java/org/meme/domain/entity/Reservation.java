@@ -54,13 +54,4 @@ public class Reservation extends BaseEntity {
         return !status.equals(Status.COMPLETE);
     }
 
-    public static Reservation from(Model model, Portfolio portfolio, AvailableTime availableTime, String location){
-        return Reservation.builder()
-                .model(model)
-                .portfolio(portfolio)
-                .availableTime(availableTime)
-                .status(Status.EXPECTED)
-                .location(location)
-                .build();
-    }
 }
