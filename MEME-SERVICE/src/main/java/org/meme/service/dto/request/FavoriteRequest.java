@@ -1,4 +1,4 @@
-package org.meme.service.dto;
+package org.meme.service.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

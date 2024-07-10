@@ -4,8 +4,8 @@ import org.meme.domain.entity.Artist;
 import org.meme.domain.entity.Inquiry;
 import org.meme.domain.entity.Model;
 import org.meme.domain.entity.User;
-import org.meme.service.dto.MypageRequest;
-import org.meme.service.dto.MypageResponse;
+import org.meme.service.dto.request.MypageRequest;
+import org.meme.service.dto.response.MypageResponse;
 
 public class MypageConverter {
     public static MypageResponse.ModelProfileDto toModelProfileDto(Model model){

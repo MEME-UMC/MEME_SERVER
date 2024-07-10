@@ -1,4 +1,4 @@
-package org.meme.service.dto;
+package org.meme.service.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

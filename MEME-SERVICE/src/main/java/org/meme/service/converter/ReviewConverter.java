@@ -1,8 +1,8 @@
 package org.meme.service.converter;
 
 import org.meme.domain.entity.*;
-import org.meme.service.dto.ReviewRequest;
-import org.meme.service.dto.ReviewResponse;
+import org.meme.service.dto.request.ReviewRequest;
+import org.meme.service.dto.response.ReviewResponse;
 import org.springframework.data.domain.Page;
 
 import java.util.ArrayList;

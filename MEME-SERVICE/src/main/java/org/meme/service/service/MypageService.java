@@ -13,8 +13,8 @@ import org.meme.domain.repository.InquiryRepository;
 import org.meme.domain.repository.ModelRepository;
 import org.meme.domain.repository.UserRepository;
 import org.meme.service.converter.MypageConverter;
-import org.meme.service.dto.MypageRequest;
-import org.meme.service.dto.MypageResponse;
+import org.meme.service.dto.request.MypageRequest;
+import org.meme.service.dto.response.MypageResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

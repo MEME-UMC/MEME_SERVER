@@ -1,8 +1,8 @@
 package org.meme.service.converter;
 
 import org.meme.domain.entity.Artist;
-import org.meme.service.dto.ArtistResponse;
-import org.meme.service.dto.PortfolioResponse;
+import org.meme.service.dto.response.ArtistResponse;
+import org.meme.service.dto.response.PortfolioResponse;
 
 import java.util.List;
 
