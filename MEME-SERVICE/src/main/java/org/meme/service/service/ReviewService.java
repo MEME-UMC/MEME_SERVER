@@ -131,8 +131,7 @@ public class ReviewService {
             updateReviewImgList(review, updateReviewDto.getReviewImgSrcList());
 
         // 리뷰 수정
-        // TODO:
-//        review.updateReview(updateReviewDto);
+        updateReviewEntity(review, updateReviewDto);
         return ReviewConverter.toReviewDetailDto(review);
     }
 
@@ -192,5 +191,12 @@ public class ReviewService {
         //list를 page로 변환
         return new PageImpl<>(list.subList(start, end),
                 pageable, list.size());
+    }
+
+    private void updateReviewEntity(Review review, ReviewRequest.UpdateReviewDto updateReviewDto){
+        if(updateReviewDto.getStar() > 0)
+            review.setStar(updateReviewDto.getStar());
+        if(updateReviewDto.getComment() != null)
+            review.setComment(updateReviewDto.getComment());
     }
 }

@@ -1,10 +1,7 @@
 package org.meme.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.meme.domain.common.BaseEntity;
 import org.meme.domain.enums.Category;
 
@@ -13,7 +10,7 @@ import java.util.List;
 
 
 @Builder
-@Getter
+@Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -52,27 +49,9 @@ public class Portfolio extends BaseEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "portfolio")
     private List<Review> reviewList;
 
-// DTO가 Entity 부분에 존재하면 객체지향적이지 못하므로 다른 곳에서 작성하도록!
-//    public void updatePortfolio(UpdatePortfolioDto request) {
-//
-//        if(request.getCategory() != null){
-//            this.category = request.getCategory();
-//        }
-//
-//        if(request.getPrice() >= 0){
-//            this.price = request.getPrice();
-//        }
-//
-//        if(request.getInfo() != null){
-//            this.info = request.getInfo();
-//        }
-//
-//        if(request.getMakeupName() != null){
-//            this.makeupName = request.getMakeupName();
-//        }
-//
-//        this.isBlock = request.getIsBlock();
-//    }
+    public boolean isBlock(){
+        return this.isBlock;
+    }
 
     public void updateReviewList(Review review){
         this.reviewList.add(review);

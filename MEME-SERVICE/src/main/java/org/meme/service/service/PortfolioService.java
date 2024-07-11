@@ -116,8 +116,7 @@ public class PortfolioService {
             updatePortfolioImgList(portfolio, updatePortfolioDto.getPortfolioImgSrcList());
 
         // 포트폴리오 수정
-        // TODO:
-//        portfolio.updatePortfolio(updatePortfolioDto);
+        updatePortfolioEntity(portfolio, updatePortfolioDto);
     }
 
     @Transactional
@@ -203,5 +202,15 @@ public class PortfolioService {
                 pageable, list.size());
     }
 
-
+    private void updatePortfolioEntity(Portfolio portfolio, UpdatePortfolioDto request) {
+        if(request.getCategory() != null)
+            portfolio.setCategory(request.getCategory());
+        if(request.getPrice() >= 0)
+            portfolio.setPrice(request.getPrice());
+        if(request.getInfo() != null)
+            portfolio.setInfo(request.getInfo());
+        if(request.getMakeupName() != null)
+            portfolio.setMakeupName(request.getMakeupName());
+        portfolio.setBlock(request.getIsBlock());
+    }
 }

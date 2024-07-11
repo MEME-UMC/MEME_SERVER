@@ -4,14 +4,14 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.meme.domain.entity.User;
 import org.meme.domain.enums.*;
 
 import java.util.List;
 
 @SuperBuilder
-@Getter
+@Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -46,28 +46,6 @@ public class Artist extends User {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "artist")
     private List<Portfolio> portfolioList;
-
-
-//    public void updateArtist(ArtistProfileDto request) {
-//        if (request.getProfileImg() != null)
-//            this.profileImg = request.getProfileImg();
-//        if (request.getNickname() != null)
-//            this.nickname = request.getNickname();
-//        if (request.getGender() != null)
-//            this.gender = request.getGender();
-//        if (request.getIntroduction() != null)
-//            this.introduction = request.getIntroduction();
-//        if (request.getWorkExperience() != null)
-//            this.workExperience = request.getWorkExperience();
-//        if (request.getRegion() != null)
-//            this.region = request.getRegion();
-//        if (request.getSpecialization() != null)
-//            this.specialization = request.getSpecialization();
-//        if (request.getMakeupLocation() != null)
-//            this.makeupLocation = request.getMakeupLocation();
-//        if (request.getShopLocation() != null)
-//            this.shopLocation = request.getShopLocation();
-//    }
 
     public void updatePortfolioList(Portfolio portfolio){
         this.portfolioList.add(portfolio);
