@@ -2,14 +2,12 @@ package org.meme.notification.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.api.client.util.Value;
 import com.google.auth.oauth2.GoogleCredentials;
 import jakarta.transaction.Transactional;
+import org.meme.domain.dto.FcmSendDto;
 import org.meme.notification.config.FcmKeyProperties;
 import org.meme.notification.dto.FcmMessageDto;
-import org.meme.notification.dto.FcmSendDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.*;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -32,33 +30,43 @@ public class NotificationService {
     }
 
     @KafkaListener(topics = "model_signup", groupId = "notification_service")
-    public void consumeMessage(String message) {
-        System.out.println("Consumed message: " + message);
+    public void consumeModelMessage(FcmSendDto fcmSendDto) throws IOException {
+        System.out.println("Consumed message: " + fcmSendDto);
+        System.out.println(sendMessageTo(fcmSendDto));
+    }
+
+    @KafkaListener(topics = "artist_signup", groupId = "notification_service")
+    public void consumeArtistMessage(FcmSendDto fcmSendDto) {
+        System.out.println("Consumed message: " + fcmSendDto);
     }
 
     @Transactional
     public int sendMessageTo(FcmSendDto fcmSendDto) throws IOException {
+        int successCount = 0;
 
-        String message = makeMessage(fcmSendDto);
-        RestTemplate restTemplate = new RestTemplate();
-        /**
-         * 추가된 사항 : RestTemplate 이용중 클라이언트의 한글 깨짐 증상에 대한 수정
-         * @reference : https://stackoverflow.com/questions/29392422/how-can-i-tell-resttemplate-to-post-with-utf-8-encoding
-         */
-        restTemplate.getMessageConverters()
-                .add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
+        for (String token : fcmSendDto.getToken()) {
+            String message = makeMessage(fcmSendDto, token);
+            RestTemplate restTemplate = new RestTemplate();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Authorization", "Bearer " + getAccessToken());
+            restTemplate.getMessageConverters()
+                    .add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
 
-        HttpEntity<String> entity = new HttpEntity<>(message, headers);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.set("Authorization", "Bearer " + getAccessToken());
 
-        ResponseEntity<String> response = restTemplate.exchange(fcmKeyProperties.getUrl(), HttpMethod.POST, entity, String.class);
+            HttpEntity<String> entity = new HttpEntity<>(message, headers);
 
-        System.out.println(response.getStatusCode());
+            ResponseEntity<String> response = restTemplate.exchange(fcmKeyProperties.getUrl(), HttpMethod.POST, entity, String.class);
 
-        return response.getStatusCode() == HttpStatus.OK ? 1 : 0;
+            System.out.println(response.getStatusCode());
+
+            if (response.getStatusCode() == HttpStatus.OK) {
+                successCount++;
+            }
+        }
+
+        return successCount;
     }
 
     /**
@@ -86,14 +94,15 @@ public class NotificationService {
      * FCM 전송 정보를 기반으로 메시지를 구성합니다. (Object -> String)
      *
      * @param fcmSendDto FcmSendDto
+     * @param token      개별 FCM 토큰
      * @return String
      */
-    private String makeMessage(FcmSendDto fcmSendDto) throws JsonProcessingException {
+    private String makeMessage(FcmSendDto fcmSendDto, String token) throws JsonProcessingException {
 
         ObjectMapper om = new ObjectMapper();
         FcmMessageDto fcmMessageDto = FcmMessageDto.builder()
                 .message(FcmMessageDto.Message.builder()
-                        .token(fcmSendDto.getToken())
+                        .token(token)
                         .notification(FcmMessageDto.Notification.builder()
                                 .title(fcmSendDto.getTitle())
                                 .body(fcmSendDto.getBody())

@@ -10,6 +10,7 @@ import org.meme.auth.jwt.JwtTokenProvider;
 import org.meme.auth.oauth.provider.OAuthProvider;
 import org.meme.auth.oauth.provider.apple.AppleAuthProvider;
 import org.meme.auth.oauth.provider.kakao.KakaoAuthProvider;
+import org.meme.domain.dto.FcmSendDto;
 import org.meme.domain.entity.Artist;
 import org.meme.domain.repository.ArtistRepository;
 import org.meme.auth.dto.AuthRequest;
@@ -45,7 +46,7 @@ public class AuthService {
     private final TokenRepository tokenRepository;  // 필수 - 토큰 저장 및 삭제
     private final UserRepository userRepository;  // 필수 - 사용자 정보 조회
     private final RedisRepository redisRepository;  // 필수 - 자식 클래스 의존성 주입 시 필요
-    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final KafkaTemplate<String, FcmSendDto> kafkaTemplate;
 
     private final static String TOKEN_PREFIX = "Bearer ";
     private static final String USERNAME = "username";
@@ -58,9 +59,21 @@ public class AuthService {
     public AuthResponse.JoinDto signupModel(AuthRequest.ModelJoinDto modelJoinDto) throws AuthException {
         checkNicknameLessThanMaxLength(modelJoinDto.getNickname());
         String userEmail = getUserEmail(modelJoinDto.getId_token(), modelJoinDto.getProvider());
-        User user = saveUser(modelJoinDto, userEmail);
+
+        //TODO: 회원 중복 검사 로직
+        User user = checkUserDeviceToken(userEmail, modelJoinDto);
+
         String[] tokenPair = login(user);
-        kafkaTemplate.send("model_signup", userEmail);
+
+        FcmSendDto fcmSendDto = FcmSendDto.builder()
+                .userId(user.getUserId())
+                .username(user.getUsername())
+                .title("Congratulate your Signup")
+                .body("MODEL SIGNUP " + userEmail)
+                .token(user.getDeviceTokens().stream().toList())
+                .build();
+
+        kafkaTemplate.send("model_signup", fcmSendDto);
         return TokenConverter.toJoinDto(user, tokenPair, ROLE_MODEL);
     }
 
@@ -68,8 +81,20 @@ public class AuthService {
     public AuthResponse.JoinDto signupArtist(AuthRequest.ArtistJoinDto artistJoinDto) throws AuthException {
         checkNicknameLessThanMaxLength(artistJoinDto.getNickname());
         String userEmail = getUserEmail(artistJoinDto.getId_token(), artistJoinDto.getProvider());
-        User user = saveUser(artistJoinDto, userEmail);
+
+        //TODO: 회원 중복 검사 로직
+        User user = checkUserDeviceToken(userEmail, artistJoinDto);
+
         String[] tokenPair = login(user);
+        FcmSendDto fcmSendDto = FcmSendDto.builder()
+                .userId(user.getUserId())
+                .username(user.getUsername())
+                .title("Congratulate your Signup")
+                .body("Artist SIGNUP " + userEmail)
+                .token(user.getDeviceTokens().stream().toList())
+                .build();
+
+        kafkaTemplate.send("artist_signup", fcmSendDto);
         return TokenConverter.toJoinDto(user, tokenPair, ROLE_ARTIST);
     }
 
@@ -140,6 +165,28 @@ public class AuthService {
 
     protected Artist saveUser(AuthRequest.ArtistJoinDto artistJoinDto, String userEmail) {
         return artistRepository.save(UserConverter.toArtist(artistJoinDto, userEmail, ROLE_ARTIST));
+    }
+
+    private Model checkUserDeviceToken(String userEmail, AuthRequest.ModelJoinDto modelJoinDto) {
+        Model model = modelRepository.findByEmail(userEmail).orElseGet(() -> saveUser(modelJoinDto, userEmail));
+
+        if (!model.getDeviceTokens().contains(modelJoinDto.getDeviceToken())) {
+            model.getDeviceTokens().add(modelJoinDto.getDeviceToken());
+            model = modelRepository.save(model);
+        }
+
+        return model;
+    }
+
+    private User checkUserDeviceToken(String userEmail, AuthRequest.ArtistJoinDto artistJoinDto) {
+        Artist artist = artistRepository.findByEmail(userEmail).orElseGet(() -> saveUser(artistJoinDto, userEmail));
+
+        if (!artist.getDeviceTokens().contains(artistJoinDto.getDeviceToken())) {
+            artist.getDeviceTokens().add(artistJoinDto.getDeviceToken());
+            artist = artistRepository.save(artist);
+        }
+
+        return artist;
     }
 
     protected String[] login(User user) {

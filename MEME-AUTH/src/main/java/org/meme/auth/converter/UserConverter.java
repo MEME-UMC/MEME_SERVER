@@ -7,6 +7,9 @@ import org.meme.auth.dto.AuthResponse;
 import org.meme.domain.entity.Model;
 import org.meme.domain.entity.User;
 
+import java.util.Collections;
+import java.util.HashSet;
+
 public class UserConverter {
 
     public static Model toModel(AuthRequest.ModelJoinDto modelJoinDto, String userEmail, String role) {
@@ -15,6 +18,7 @@ public class UserConverter {
                 .email(userEmail)
                 .provider(modelJoinDto.getProvider())
                 .profileImg(modelJoinDto.getProfile_img())
+                .deviceTokens(new HashSet<>(Collections.singleton(modelJoinDto.getDeviceToken())))
                 .username(modelJoinDto.getUsername())
                 .nickname(modelJoinDto.getNickname())
                 .password(SecurityConfig.passwordEncoder().encode(userEmail))
@@ -31,6 +35,7 @@ public class UserConverter {
                 .email(userEmail)
                 .provider(artistJoinDto.getProvider())
                 .profileImg(artistJoinDto.getProfile_img())
+                .deviceTokens(new HashSet<>(Collections.singleton(artistJoinDto.getDeviceToken())))
                 .username(artistJoinDto.getUsername())
                 .nickname(artistJoinDto.getNickname())
                 .password(SecurityConfig.passwordEncoder().encode(userEmail))

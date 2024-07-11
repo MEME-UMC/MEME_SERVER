@@ -13,6 +13,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @SuperBuilder @Getter
 @NoArgsConstructor
@@ -62,6 +64,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     @NotNull
     private Provider provider;
+
+    @ElementCollection
+    private Set<String> deviceTokens = new HashSet<>();
 
     public boolean getDetails() {
         return details;
