@@ -1,9 +1,9 @@
 package org.meme.service.converter;
 
 import org.meme.domain.entity.*;
-import org.meme.service.dto.ArtistResponse;
-import org.meme.service.dto.FavoriteResponse;
-import org.meme.service.dto.PortfolioResponse;
+import org.meme.service.dto.response.ArtistResponse;
+import org.meme.service.dto.response.FavoriteResponse;
+import org.meme.service.dto.response.PortfolioResponse;
 import org.springframework.data.domain.Page;
 
 import java.util.List;

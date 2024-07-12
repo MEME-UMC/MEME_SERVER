@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.meme.domain.common.BaseResponseDto;
 import org.meme.domain.common.status.SuccessStatus;
-import org.meme.service.dto.ReviewRequest;
+import org.meme.service.dto.request.ReviewRequest;
 import org.springframework.web.bind.annotation.*;
 import org.meme.service.service.ReviewService;
 

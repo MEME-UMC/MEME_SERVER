@@ -1,4 +1,4 @@
-package org.meme.service.dto;
+package org.meme.service.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,8 +8,7 @@ import org.meme.domain.enums.*;
 
 import java.util.List;
 
-public class MypageRequest {
-
+public class MypageResponse {
     @Data
     @Builder
     @NoArgsConstructor
@@ -40,11 +39,24 @@ public class MypageRequest {
         private String shopLocation;
     }
 
-    @Builder @Data
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MypageDetailDto {
+        private String profileImg;
+        private String nickname;
+        private String name;
+        private Gender gender;
+        private String email;
+    }
+
+    @Data
+    @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     public static class InquiryDto {
-        private Long userId;
+        private String userEmail;
         private String inquiryTitle;
         private String inquiryText;
     }

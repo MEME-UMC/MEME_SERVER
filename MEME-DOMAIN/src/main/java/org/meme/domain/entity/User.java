@@ -70,4 +70,20 @@ public class User {
     public boolean getDetails() {
         return details;
     }
+
+    public void updateInquiryList(Inquiry inquiry){
+        this.inquiryList.add(inquiry);
+    }
+
+    public void updateProfileImg(String profileimg){
+        this.profileImg = profileimg;
+    }
+
+    public void updateNickname(String nickname){
+        this.nickname = nickname;
+    }
+
+    public void updateGender(Gender gender){
+        this.gender = gender;
+    }
 }

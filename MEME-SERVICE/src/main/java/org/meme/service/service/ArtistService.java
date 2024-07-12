@@ -9,8 +9,7 @@ import org.meme.domain.repository.ArtistRepository;
 import org.meme.domain.repository.FavoriteArtistRepository;
 import org.meme.domain.repository.ModelRepository;
 import org.meme.service.converter.ArtistConverter;
-import org.meme.service.dto.ArtistRequest;
-import org.meme.service.dto.ArtistResponse;
+import org.meme.service.dto.response.ArtistResponse;
 import org.springframework.stereotype.Service;
 import org.meme.domain.entity.Artist;
 import org.meme.domain.common.exception.GeneralException;
@@ -46,13 +45,7 @@ public class ArtistService {
     public void patchArtistAvailableTime() {
 //        Artist artist = artistRepository.findById(dto.getUserId())
 //                .orElseThrow(() -> new GlobalException(ErrorStatus.NOT_EXIST_ARTIST));
-//
-//        //새로운 예약 시간 설정
-//        List<AvailableTime> availableTimeList = dto.getAvailableTimeDtoList().stream()
-//                .map(AvailableTime::from)
-//                .peek(availableTime -> availableTime.updateArtist(artist))
-//                .toList();
-//        artist.updateAvailableTimeList(availableTimeList);
+
     }
 
     //아티스트 프로필 조회 (Artist Ver.)

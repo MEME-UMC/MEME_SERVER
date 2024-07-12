@@ -13,8 +13,8 @@ import org.meme.domain.repository.InquiryRepository;
 import org.meme.domain.repository.ModelRepository;
 import org.meme.domain.repository.UserRepository;
 import org.meme.service.converter.MypageConverter;
-import org.meme.service.dto.MypageRequest;
-import org.meme.service.dto.MypageResponse;
+import org.meme.service.dto.request.MypageRequest;
+import org.meme.service.dto.response.MypageResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,15 +29,14 @@ public class MypageService {
 
     //모델 프로필 관리
     @Transactional
-    public void updateModelProfile(MypageRequest.ModelProfileDto request){
+    public void updateModelProfile(MypageRequest.ModelProfileDto request) {
         Model model = modelRepository.findById(request.getUserId())
                 .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_MODEL));
-
-        model.updateModel(request);
+        updateModelEntity(model, request);
     }
 
     //모델 프로필 관리 조회
-    public MypageResponse.ModelProfileDto getModelProfile(Long userId){
+    public MypageResponse.ModelProfileDto getModelProfile(Long userId) {
         Model model = modelRepository.findById(userId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_MODEL));
         return MypageConverter.toModelProfileDto(model);
@@ -45,14 +44,14 @@ public class MypageService {
 
     //아티스트 프로필 관리/수정
     @Transactional
-    public void updateArtistProfile(MypageRequest.ArtistProfileDto profileDto){
+    public void updateArtistProfile(MypageRequest.ArtistProfileDto profileDto) {
         Artist artist = artistRepository.findById(profileDto.getUserId())
                 .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_ARTIST));
-        artist.updateArtist(profileDto);
+        updateArtistEntity(artist, profileDto);
     }
 
     //아티스트 프로필 조회 (관리 조회 용)
-    public MypageResponse.ArtistProfileDto getArtistProfile(Long userId){
+    public MypageResponse.ArtistProfileDto getArtistProfile(Long userId) {
         Artist artist = artistRepository.findById(userId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_ARTIST));
         return MypageConverter.toArtistProfileDto(artist);
@@ -87,5 +86,39 @@ public class MypageService {
         return inquiryList.stream()
                 .map(MypageConverter::toInquiryDto)
                 .toList();
+    }
+
+    private void updateModelEntity(Model model, MypageRequest.ModelProfileDto request) {
+        if (request.getProfileImg() != null)
+            model.updateProfileImg(request.getProfileImg());
+        if (request.getNickname() != null)
+            model.updateNickname(request.getNickname());
+        if (request.getGender() != null)
+            model.updateGender(request.getGender());
+        if (request.getSkinType() != null)
+            model.setSkinType(request.getSkinType());
+        if (request.getPersonalColor() != null)
+            model.setPersonalColor(request.getPersonalColor());
+    }
+
+    private void updateArtistEntity(Artist artist, MypageRequest.ArtistProfileDto request) {
+        if (request.getProfileImg() != null)
+            artist.updateProfileImg(request.getProfileImg());
+        if (request.getNickname() != null)
+            artist.updateNickname(request.getNickname());
+        if (request.getGender() != null)
+            artist.updateGender(request.getGender());
+        if (request.getIntroduction() != null)
+            artist.setIntroduction(request.getIntroduction());
+        if (request.getWorkExperience() != null)
+            artist.setWorkExperience(request.getWorkExperience());
+        if (request.getRegion() != null)
+            artist.setRegion(request.getRegion());
+        if (request.getSpecialization() != null)
+            artist.setSpecialization(request.getSpecialization());
+        if (request.getMakeupLocation() != null)
+            artist.setMakeupLocation(request.getMakeupLocation());
+        if (request.getShopLocation() != null)
+            artist.setShopLocation(request.getShopLocation());
     }
 }

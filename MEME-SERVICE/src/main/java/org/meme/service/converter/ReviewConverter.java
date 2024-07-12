@@ -1,8 +1,8 @@
 package org.meme.service.converter;
 
 import org.meme.domain.entity.*;
-import org.meme.service.dto.ReviewRequest;
-import org.meme.service.dto.ReviewResponse;
+import org.meme.service.dto.request.ReviewRequest;
+import org.meme.service.dto.response.ReviewResponse;
 import org.springframework.data.domain.Page;
 
 import java.util.ArrayList;
@@ -71,7 +71,7 @@ public class ReviewConverter {
                 .artistNickName(reservation.getPortfolio().getArtist().getNickname())
                 .makeupName(reservation.getPortfolio().getMakeupName())
                 .portfolioImg(reservation.getPortfolio().getPortfolioImgList().get(0).getSrc())
-                .reservationDate(reservation.getAvailableTime().getDate())
+                .reservationDate(reservation.getDate())
                 .shopLocation(reservation.getLocation())
                 .build();
     }

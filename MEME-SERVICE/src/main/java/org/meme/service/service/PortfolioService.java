@@ -11,8 +11,8 @@ import org.meme.domain.entity.FavoritePortfolio;
 import org.meme.domain.repository.FavoritePortfolioRepository;
 import org.meme.domain.entity.Model;
 import org.meme.domain.repository.ModelRepository;
-import org.meme.service.dto.PortfolioRequest.*;
-import org.meme.service.dto.PortfolioResponse.*;
+import org.meme.service.dto.request.PortfolioRequest.*;
+import org.meme.service.dto.response.PortfolioResponse.*;
 import org.meme.domain.entity.Portfolio;
 import org.meme.domain.entity.PortfolioImg;
 import org.meme.domain.repository.PortfolioImgRepository;
@@ -116,8 +116,7 @@ public class PortfolioService {
             updatePortfolioImgList(portfolio, updatePortfolioDto.getPortfolioImgSrcList());
 
         // 포트폴리오 수정
-        // TODO:
-//        portfolio.updatePortfolio(updatePortfolioDto);
+        updatePortfolioEntity(portfolio, updatePortfolioDto);
     }
 
     @Transactional
@@ -203,5 +202,15 @@ public class PortfolioService {
                 pageable, list.size());
     }
 
-
+    private void updatePortfolioEntity(Portfolio portfolio, UpdatePortfolioDto request) {
+        if(request.getCategory() != null)
+            portfolio.setCategory(request.getCategory());
+        if(request.getPrice() >= 0)
+            portfolio.setPrice(request.getPrice());
+        if(request.getInfo() != null)
+            portfolio.setInfo(request.getInfo());
+        if(request.getMakeupName() != null)
+            portfolio.setMakeupName(request.getMakeupName());
+        portfolio.setBlock(request.getIsBlock());
+    }
 }

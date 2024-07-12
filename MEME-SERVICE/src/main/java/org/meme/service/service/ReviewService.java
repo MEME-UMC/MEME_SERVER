@@ -7,8 +7,8 @@ import org.meme.domain.entity.*;
 import org.meme.domain.enums.Status;
 import org.meme.domain.repository.*;
 import org.meme.service.converter.ReviewConverter;
-import org.meme.service.dto.ReviewRequest;
-import org.meme.service.dto.ReviewResponse;
+import org.meme.service.dto.request.ReviewRequest;
+import org.meme.service.dto.response.ReviewResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -131,8 +131,7 @@ public class ReviewService {
             updateReviewImgList(review, updateReviewDto.getReviewImgSrcList());
 
         // 리뷰 수정
-        // TODO:
-//        review.updateReview(updateReviewDto);
+        updateReviewEntity(review, updateReviewDto);
         return ReviewConverter.toReviewDetailDto(review);
     }
 
@@ -192,5 +191,12 @@ public class ReviewService {
         //list를 page로 변환
         return new PageImpl<>(list.subList(start, end),
                 pageable, list.size());
+    }
+
+    private void updateReviewEntity(Review review, ReviewRequest.UpdateReviewDto updateReviewDto){
+        if(updateReviewDto.getStar() > 0)
+            review.setStar(updateReviewDto.getStar());
+        if(updateReviewDto.getComment() != null)
+            review.setComment(updateReviewDto.getComment());
     }
 }

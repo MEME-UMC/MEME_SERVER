@@ -6,8 +6,8 @@ import org.meme.domain.entity.Artist;
 import org.meme.domain.entity.FavoritePortfolio;
 import org.meme.domain.entity.Portfolio;
 import org.meme.domain.entity.PortfolioImg;
-import org.meme.service.dto.PortfolioRequest;
-import org.meme.service.dto.PortfolioResponse;
+import org.meme.service.dto.request.PortfolioRequest;
+import org.meme.service.dto.response.PortfolioResponse;
 import org.springframework.data.domain.Page;
 
 import java.util.ArrayList;

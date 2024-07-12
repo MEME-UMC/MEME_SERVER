@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.meme.domain.enums.PersonalColor;
 import org.meme.domain.enums.SkinType;
@@ -11,7 +12,7 @@ import org.meme.domain.enums.SkinType;
 import java.util.List;
 
 @SuperBuilder
-@Getter
+@Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -36,24 +37,6 @@ public class Model extends User {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "model")
     private List<Review> reviewList;
-
-//    public void updateModel(ModelProfileDto request) {
-//        if(request.getProfileImg() != null){
-//            this.profileImg = request.getProfileImg();
-//        }
-//        if(request.getNickname() != null){
-//            this.nickname = request.getNickname();
-//        }
-//        if(request.getGender() != null){
-//            this.gender = request.getGender();
-//        }
-//        if(request.getSkinType() != null){
-//            this.skinType = request.getSkinType();
-//        }
-//        if(request.getPersonalColor() != null){
-//            this.personalColor = request.getPersonalColor();
-//        }
-//    }
 
     public void updateFavoriteArtistList(FavoriteArtist artist){
         this.favoriteArtistList.add(artist);

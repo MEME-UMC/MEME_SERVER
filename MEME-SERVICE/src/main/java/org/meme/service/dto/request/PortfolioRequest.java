@@ -1,4 +1,4 @@
-package org.meme.service.dto;
+package org.meme.service.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -26,6 +26,8 @@ public class PortfolioRequest {
         private int price;
         @NotBlank(message = "메이크업 정보를 입력해주세요")
         private String info;
+        @NotBlank(message = "메이크업 소요시간을 입력해주세요")
+        private String durationTime;
         @NotBlank(message = "포트폴리오 이미지를 업로드해주세요")
         private List<String> portfolioImgSrc;
     }
