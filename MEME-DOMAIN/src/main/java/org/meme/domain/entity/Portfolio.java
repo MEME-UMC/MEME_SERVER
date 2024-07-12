@@ -37,6 +37,9 @@ public class Portfolio extends BaseEntity {
     @Column(nullable = false)
     private String info;
 
+    @Column(nullable = false)
+    private String durationTime; //소요시간
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "portfolio")
     private List<PortfolioImg> portfolioImgList;
 

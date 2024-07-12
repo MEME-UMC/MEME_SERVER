@@ -42,16 +42,12 @@ public class Artist extends User {
     private String shopLocation; //샵의 위치
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "artist")
-    private List<AvailableTime> availableTimeList;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "artist")
     private List<Portfolio> portfolioList;
 
     public void updatePortfolioList(Portfolio portfolio){
         this.portfolioList.add(portfolio);
     }
 
-    public void updateAvailableTimeList(List<AvailableTime> availableTimeList){this.availableTimeList = availableTimeList;}
 
 //    public void tempMethod(){
 //        this.username = "name";

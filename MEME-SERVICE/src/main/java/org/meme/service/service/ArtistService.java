@@ -45,13 +45,7 @@ public class ArtistService {
     public void patchArtistAvailableTime() {
 //        Artist artist = artistRepository.findById(dto.getUserId())
 //                .orElseThrow(() -> new GlobalException(ErrorStatus.NOT_EXIST_ARTIST));
-//
-//        //새로운 예약 시간 설정
-//        List<AvailableTime> availableTimeList = dto.getAvailableTimeDtoList().stream()
-//                .map(AvailableTime::from)
-//                .peek(availableTime -> availableTime.updateArtist(artist))
-//                .toList();
-//        artist.updateAvailableTimeList(availableTimeList);
+
     }
 
     //아티스트 프로필 조회 (Artist Ver.)
