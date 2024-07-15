@@ -66,8 +66,6 @@ public class AuthService {
         String[] tokenPair = login(user);
 
         FcmSendDto fcmSendDto = FcmSendDto.builder()
-                .userId(user.getUserId())
-                .username(user.getUsername())
                 .title("Congratulate your Signup")
                 .body("MODEL SIGNUP " + userEmail)
                 .token(user.getDeviceTokens().stream().toList())
@@ -87,8 +85,6 @@ public class AuthService {
 
         String[] tokenPair = login(user);
         FcmSendDto fcmSendDto = FcmSendDto.builder()
-                .userId(user.getUserId())
-                .username(user.getUsername())
                 .title("Congratulate your Signup")
                 .body("Artist SIGNUP " + userEmail)
                 .token(user.getDeviceTokens().stream().toList())
