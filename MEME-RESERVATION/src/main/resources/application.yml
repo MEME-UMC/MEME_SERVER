@@ -1,27 +1,53 @@
-server:
-  servlet:
-    encoding:
-      charset: utf-8
-      force: true
-  port: 8083
 spring:
   datasource:
-    url: jdbc:h2:mem:test;MODE=MySQL;NON_KEYWORDS=USER
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-  h2:
-    console:
-      enabled: true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/${DB_SCHEMA}?useSSL=false&useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  main:
+    allow-bean-definition-overriding: true
+
   jpa:
     hibernate:
       ddl-auto: create
-    show-sql: true
+    show_sql: true
     properties:
       hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
-      default_batch_fetch_size: 100
-    open-in-view: false
-  output:
-    ansi:
-      enabled: always
+
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+
+#  security:
+#    oauth2:
+#      kakao:
+#        issuer: "https://kauth.kakao.com"
+#        rest-api-key: ${KAKAO_REST_API_KEY}
+#      apple:
+#        issuer: "https://appleid.apple.com"
+#        client-id: ${APPLE_CLIENT_ID}
+#
+#jwt:
+#  issuer: meme_umc
+#  secret-key: ${JWT_SECRET_KEY}
+#  access-token-validity-in-seconds: 1800  # 30 minutes
+#  refresh-token-validity-in-seconds: 86400  # 24 hours
+#
+#springdoc:
+#  swagger-ui:
+#    path: /auth/swagger-ui
+#    display-request-duration: true
+#  api-docs:
+#    path: /auth/docs
+#
+server:
+#  servlet:
+#    encoding:
+#      charset: utf-8
+#      force: true
+  port: 8083
+
