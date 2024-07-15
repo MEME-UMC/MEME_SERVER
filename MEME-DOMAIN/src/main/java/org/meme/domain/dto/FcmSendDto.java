@@ -14,6 +14,8 @@ import java.util.List;
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FcmSendDto {
+    private Long userId;
+
     private List<String> token;
 
     private String title;
@@ -21,7 +23,8 @@ public class FcmSendDto {
     private String body;
 
     @Builder(toBuilder = true)
-    public FcmSendDto(List<String> token, String title, String body) {
+    public FcmSendDto(Long userId, List<String> token, String title, String body) {
+        this.userId = userId;
         this.token = token;
         this.title = title;
         this.body = body;

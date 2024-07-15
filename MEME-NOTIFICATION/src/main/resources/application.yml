@@ -17,6 +17,13 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
 
+  elasticsearch:
+    uris: ${ELASTIC_URIS}
+    username: ${ELASTIC_USERNAME}
+    password: ${ELASTIC_PASSWORD}
+    connection-timeout: 10s
+    socket-timeout: 10s
+
   data:
     redis:
       host: localhost
