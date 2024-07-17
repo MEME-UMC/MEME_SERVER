@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.meme.domain.common.BaseEntity;
 import org.meme.domain.enums.Status;
+import org.meme.domain.enums.Times;
+
+import java.time.LocalDate;
 
 import java.util.Set;
 
@@ -48,26 +51,4 @@ public class Reservation extends BaseEntity {
     @Column(nullable = false)
     private String location;
 
-//    public void updateReservation(Status status){
-//        if(status != null)
-//            this.status = status;
-//    }
-
-//    public void updateIsReview(boolean bool){
-//        this.isReview = bool;
-//    }
-
-//    public boolean isAvailableReview(){
-//        return !status.equals(Status.COMPLETE);
-//    }
-
-//    public static Reservation from(Model model, Portfolio portfolio, AvailableTime availableTime, String location){
-//        return Reservation.builder()
-//                .model(model)
-//                .portfolio(portfolio)
-//                .availableTime(availableTime)
-//                .status(Status.EXPECTED)
-//                .location(location)
-//                .build();
-//    }
 }
