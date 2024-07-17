@@ -17,7 +17,15 @@ public enum SuccessStatus {
     LOGIN_SUCCESS(HttpStatus.OK,200,"토큰 검증에 성공하였습니다."),
     REISSUE_SUCCESS(HttpStatus.OK, 200, "토큰 재발급이 완료되었습니다."),
     LOGOUT_SUCCESS(HttpStatus.OK, 200, "Logout Success"),
-    WITHDRAW_SUCCESS(HttpStatus.OK, 200, "Withdraw Success");
+    WITHDRAW_SUCCESS(HttpStatus.OK, 200, "Withdraw Success"),
+
+    // ReservationController
+    MAKE_RESERVATION_SUCCESS(HttpStatus.OK, 200, "예약을 완료하였습니다."),
+    GET_SCHEDULE_SUCCESS(HttpStatus.OK, 200, "일정 조회를 성공하였습니다."),
+    ADD_ENABLE_DATE_SUCCESS(HttpStatus.OK, 200, "영업 가능 날짜 등록에 성공하였습니다."),
+    ADD_ENABLE_TIME_SUCCESS(HttpStatus.OK, 200, "영업 가능 시간대 등록에 성공하였습니다."),
+    GET_ENABLE_DATE_SUCCESS(HttpStatus.OK, 200, "영업 가능 날짜 조회에 성공하였습니다."),
+    GET_ENABLE_TIME_SUCCESS(HttpStatus.OK, 200, "영업 가능 시간대 조회에 성공하였습니다.");
 
     private final HttpStatus httpStatus;
     private final int code;
