@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import org.meme.domain.common.BaseEntity;
 import org.meme.domain.enums.Status;
 
+import java.util.Set;
+
 @Builder
 @Getter
 @AllArgsConstructor
@@ -26,6 +28,9 @@ public class Reservation extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "portfolio_id", nullable = false)
     private Portfolio portfolio;
+
+    @Column(nullable = false)
+    private int year;
 
     @Column(nullable = false)
     private int month;
