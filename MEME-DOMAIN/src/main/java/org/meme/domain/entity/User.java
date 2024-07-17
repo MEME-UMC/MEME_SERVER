@@ -13,6 +13,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @SuperBuilder @Getter
 @NoArgsConstructor
@@ -63,7 +64,26 @@ public class User {
     @NotNull
     private Provider provider;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    protected List<Inquiry> inquiryList;
+
     public boolean getDetails() {
         return details;
+    }
+
+    public void updateInquiryList(Inquiry inquiry){
+        this.inquiryList.add(inquiry);
+    }
+
+    public void updateProfileImg(String profileimg){
+        this.profileImg = profileimg;
+    }
+
+    public void updateNickname(String nickname){
+        this.nickname = nickname;
+    }
+
+    public void updateGender(Gender gender){
+        this.gender = gender;
     }
 }
