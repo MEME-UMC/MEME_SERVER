@@ -7,9 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.meme.domain.common.BaseEntity;
 import org.meme.domain.enums.Status;
-import org.meme.domain.enums.Times;
 
-import java.time.LocalDate;
+import java.util.Set;
 
 @Builder
 @Getter
@@ -23,42 +22,52 @@ public class Reservation extends BaseEntity {
     private Long reservationId;
 
     @ManyToOne
-    @JoinColumn(name="user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User model;
 
     @ManyToOne
-    @JoinColumn(name="portfolio_id", nullable = false)
+    @JoinColumn(name = "portfolio_id", nullable = false)
     private Portfolio portfolio;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private LocalDate date; //예약 날짜
+    private int year;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Times time; //예약 시간
+    private int month;
+
+    @Column(nullable = false)
+    private int day;
+
+    @Column(nullable = false)
+    private String times;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status;
 
     @Column(nullable = false)
-    private boolean isReview = false;
+    private String location;
 
-    @Column(nullable = false)
-    private String location; //예약 장소
+//    public void updateReservation(Status status){
+//        if(status != null)
+//            this.status = status;
+//    }
 
-    public void updateReservation(Status status){
-        if(status != null)
-            this.status = status;
-    }
+//    public void updateIsReview(boolean bool){
+//        this.isReview = bool;
+//    }
 
-    public void updateIsReview(boolean bool){
-        this.isReview = bool;
-    }
+//    public boolean isAvailableReview(){
+//        return !status.equals(Status.COMPLETE);
+//    }
 
-    public boolean isAvailableReview(){
-        return !status.equals(Status.COMPLETE);
-    }
-
+//    public static Reservation from(Model model, Portfolio portfolio, AvailableTime availableTime, String location){
+//        return Reservation.builder()
+//                .model(model)
+//                .portfolio(portfolio)
+//                .availableTime(availableTime)
+//                .status(Status.EXPECTED)
+//                .location(location)
+//                .build();
+//    }
 }

@@ -1,23 +1,21 @@
 package org.meme.domain.repository;
 
+import lombok.RequiredArgsConstructor;
 import org.meme.domain.entity.Token;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+@RequiredArgsConstructor
 @Repository
 public class TokenRepository {
 
-    private RedisTemplate redisTemplate;
+    private final StringRedisTemplate redisTemplate;
     private static final long REFRESH_TOKEN_EXPIRES = 7 * 24 * 60 * 60;
-
-
-    public TokenRepository(RedisTemplate redisTemplate) {
-        this.redisTemplate = redisTemplate;
-    }
 
     public void save(Token token) {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
