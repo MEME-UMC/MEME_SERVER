@@ -16,6 +16,7 @@ public class AuthRequest {
     public static class ModelJoinDto {
         private String id_token;
         private Provider provider;
+        private String deviceToken;
 
         private String profile_img;
         private String username;
@@ -32,6 +33,7 @@ public class AuthRequest {
     public static class ArtistJoinDto {
         private String id_token;
         private Provider provider;
+        private String deviceToken;
 
         private String profile_img;
         private String username;

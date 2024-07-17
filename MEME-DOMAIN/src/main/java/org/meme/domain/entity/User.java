@@ -13,6 +13,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.List;
 
 @SuperBuilder @Getter
@@ -63,6 +65,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     @NotNull
     private Provider provider;
+
+    @ElementCollection
+    private Set<String> deviceTokens = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     protected List<Inquiry> inquiryList;

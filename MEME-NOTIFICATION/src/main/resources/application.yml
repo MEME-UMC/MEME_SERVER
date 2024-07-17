@@ -1,12 +1,12 @@
 spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer.group-id: notification_server
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${SPRING_DATASOURCE_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
-
-  main:
-    allow-bean-definition-overriding: true
 
   jpa:
     hibernate:
@@ -17,9 +17,16 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
 
+  elasticsearch:
+    uris: ${ELASTIC_URIS}
+    username: ${ELASTIC_USERNAME}
+    password: ${ELASTIC_PASSWORD}
+    connection-timeout: 10s
+    socket-timeout: 10s
+
   data:
     redis:
-      host: ${REDIS_URL}
+      host: localhost
       port: 6379
 
   security:
@@ -43,3 +50,13 @@ springdoc:
     display-request-duration: true
   api-docs:
     path: /auth/docs
+
+server:
+  port: 8082
+
+fcm:
+  key:
+    url: ${FCM_URL}
+    scope: ${FCM_SCOPE}
+    path: ${FCM_PATH}
+

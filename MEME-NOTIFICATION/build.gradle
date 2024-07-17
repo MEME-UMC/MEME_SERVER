@@ -8,6 +8,13 @@ dependencies {
     // Mockito
     testImplementation 'org.mockito:mockito-core:5.8.0'
 
+    // Kafka
+    implementation 'org.springframework.kafka:spring-kafka'
+
+    implementation 'com.google.firebase:firebase-admin:9.2.0'           // Google Firebase Admin
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.16.1'     // Jackson Data Bind
+    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+
 }
 
 test {
@@ -15,10 +22,6 @@ test {
 }
 
 jar {
-    enabled = true
-}
-
-bootJar {
     enabled = false
 }
 

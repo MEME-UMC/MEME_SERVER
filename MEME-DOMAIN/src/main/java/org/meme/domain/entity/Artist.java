@@ -10,6 +10,7 @@ import org.meme.domain.enums.*;
 
 import java.util.List;
 
+
 @SuperBuilder
 @Getter @Setter
 @AllArgsConstructor
@@ -19,7 +20,6 @@ public class Artist extends User {
 
     @Column(length = 500, nullable = true)
     private String introduction;
-
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = true)
@@ -61,3 +61,4 @@ public class Artist extends User {
 //        this.details = false;
 //    }
 }
+

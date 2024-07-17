@@ -19,7 +19,7 @@ spring:
 
   data:
     redis:
-      host: 127.0.0.1
+      host: www.dungdungcloud.shop
       port: 6379
 
 #  security:

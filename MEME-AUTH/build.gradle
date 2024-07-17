@@ -31,6 +31,9 @@ dependencies {
     runtimeOnly 'com.h2database:h2'  // h2 추가
 
 
+    //Kafka
+    implementation 'org.springframework.kafka:spring-kafka'
+
 }
 
 test {
@@ -38,10 +41,6 @@ test {
 }
 
 jar {
-    enabled = true
-}
-
-bootJar {
     enabled = false
 }
 
