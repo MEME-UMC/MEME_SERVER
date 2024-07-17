@@ -62,7 +62,7 @@ public class ReservationConverter {
         return joiner.toString();
     }
 
-    private static String intoDateString(List<LocalDate> dates) {
+    public static String intoDateString(List<LocalDate> dates) {
         StringJoiner joiner = new StringJoiner(",");
         for (LocalDate date : dates) {
             joiner.add(date.toString());
@@ -70,8 +70,7 @@ public class ReservationConverter {
         return joiner.toString();
     }
 
-    // MON_18:00,18:30,19:00;
-    private static String intoTimeString(Map<DayOfWeek, List<String>> enableTimes) {
+    public static String intoTimeString(Map<DayOfWeek, List<String>> enableTimes) {
         StringJoiner mainJoiner = new StringJoiner(";");
 
         for (Map.Entry<DayOfWeek, List<String>> entry : enableTimes.entrySet()) {

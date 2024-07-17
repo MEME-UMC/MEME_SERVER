@@ -1,7 +1,6 @@
 package org.meme.reservation.service;
 
 import lombok.RequiredArgsConstructor;
-import org.meme.domain.common.exception.ReservationException;
 import org.meme.domain.entity.*;
 import org.meme.domain.enums.DayOfWeek;
 import org.meme.domain.repository.*;
@@ -92,6 +91,24 @@ public class ReservationService {
         ArtistEnableTime artistEnableTime = enableTimeRepository.findByArtist_UserId(artistId)
                 .orElseThrow(() -> new IllegalArgumentException("Artist not found"));
         return ReservationConverter.toTimeDto(artistEnableTime);
+    }
+
+    @Transactional
+    public void updateEnableDate(ReservationRequest.EnableDateDto enableDateUpdateDto, Long artistId) {
+        String enableDates = ReservationConverter.intoDateString(enableDateUpdateDto.getEnable_date());
+
+        ArtistEnableDate enableDate = enableDateRepository.findByArtist_UserId(artistId)
+                .orElseThrow(() -> new IllegalArgumentException("Artist not found"));
+        enableDate.updateEnableDates(enableDates);
+    }
+
+    @Transactional
+    public void updateEnableTime(ReservationRequest.EnableTimeDto enableTimeUpdateDto, Long artistId) {
+        String enableTimes = ReservationConverter.intoTimeString(enableTimeUpdateDto.getEnable_time());
+
+        ArtistEnableTime enableTime = enableTimeRepository.findByArtist_UserId(artistId)
+                .orElseThrow(() -> new IllegalArgumentException("Artist not found"));
+        enableTime.updateEnableTimes(enableTimes);
     }
 
     private Artist getArtistById(Long artistId) {

@@ -50,17 +50,17 @@ public class ReservationController {
         return BaseResponseDto.SuccessResponse(SuccessStatus.GET_ENABLE_TIME_SUCCESS, reservationService.getEnableTime(artistId));
     }
 
-//    // 아티스트 가능 날짜 수정
-//    @PatchMapping("/api/v2/mypage/{artistId}/enable/date")
-//    public ResponseEntity<?> updateEnableDate(@PathVariable String artistId) {
-//
-//    }
+    @PatchMapping("/api/v2/mypage/{artistId}/enable/date")
+    public BaseResponseDto<?> updateEnableDate(@RequestBody ReservationRequest.EnableDateDto enableDateUpdateDto, @PathVariable("artistId") Long artistId) {
+        reservationService.updateEnableDate(enableDateUpdateDto, artistId);
+        return BaseResponseDto.SuccessResponse(SuccessStatus.UPDATE_ENABLE_DATE_SUCCESS);
+    }
 
-//    // 아티스트 가능 시간대 수정
-//    @PatchMapping("/api/v2/mypage/{artistId}/enable/time")
-//    public ResponseEntity<?> updateEnableTime(@PathVariable String artistId) {
-//
-//    }
+    @PatchMapping("/api/v2/mypage/{artistId}/enable/time")
+    public BaseResponseDto<?> updateEnableTime(@RequestBody ReservationRequest.EnableTimeDto enableTimeUpdateDto, @PathVariable("artistId") Long artistId) {
+        reservationService.updateEnableTime(enableTimeUpdateDto, artistId);
+        return BaseResponseDto.SuccessResponse(SuccessStatus.UPDATE_ENABLE_TIME_SUCCESS);
+    }
 
     // 아티스트 예약 상태 변경 (승낙, 거절 등)
 }

@@ -25,4 +25,8 @@ public class ArtistEnableTime {
         this.artist = artist;
         this.enableTimes = enableTimes;
     }
+
+    public void updateEnableTimes(String enableTimes) {
+        this.enableTimes = enableTimes;
+    }
 }

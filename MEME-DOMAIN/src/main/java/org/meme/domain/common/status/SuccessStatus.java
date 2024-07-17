@@ -74,7 +74,9 @@ public enum SuccessStatus {
     ADD_ENABLE_DATE_SUCCESS(HttpStatus.OK, 200, "영업 가능 날짜 등록에 성공하였습니다."),
     ADD_ENABLE_TIME_SUCCESS(HttpStatus.OK, 200, "영업 가능 시간대 등록에 성공하였습니다."),
     GET_ENABLE_DATE_SUCCESS(HttpStatus.OK, 200, "영업 가능 날짜 조회에 성공하였습니다."),
-    GET_ENABLE_TIME_SUCCESS(HttpStatus.OK, 200, "영업 가능 시간대 조회에 성공하였습니다.");
+    GET_ENABLE_TIME_SUCCESS(HttpStatus.OK, 200, "영업 가능 시간대 조회에 성공하였습니다."),
+    UPDATE_ENABLE_DATE_SUCCESS(HttpStatus.OK, 200, "영업 가능 날짜 수정에 성공하였습니다."),
+    UPDATE_ENABLE_TIME_SUCCESS(HttpStatus.OK, 200, "영업 가능 시간대 수정에 성공하였습니다.");
 
     private final HttpStatus httpStatus;
     private final int code;
