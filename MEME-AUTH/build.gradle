@@ -28,6 +28,9 @@ dependencies {
     // Embedded Redis
     implementation 'it.ozimov:embedded-redis:0.7.2'
 
+    runtimeOnly 'com.h2database:h2'  // h2 추가
+
+
 }
 
 test {

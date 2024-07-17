@@ -20,6 +20,7 @@ public class Artist extends User {
     @Column(length = 500, nullable = true)
     private String introduction;
 
+    
     @Enumerated(EnumType.STRING)
     @Column(nullable = true)
     private WorkExperience workExperience;
@@ -39,7 +40,7 @@ public class Artist extends User {
     private MakeupLocation makeupLocation;
 
     @Column(nullable = true)
-    private String shopLocation; //샵의 위치
+    private String shopLocation; // 샵의 위치
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "artist")
     private List<Portfolio> portfolioList;

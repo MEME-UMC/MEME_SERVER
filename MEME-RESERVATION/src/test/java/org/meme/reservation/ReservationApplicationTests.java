@@ -1,10 +1,10 @@
-package org.meme.memereservation;
+package org.meme.reservation;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MemeReservationApplicationTests {
+class ReservationApplicationTests {
 
     @Test
     void contextLoads() {
