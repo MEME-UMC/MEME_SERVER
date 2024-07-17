@@ -27,6 +27,7 @@ public class Portfolio extends BaseEntity {
     @JoinColumn(name="user_id", nullable = false)
     private Artist artist;
 
+    /* here
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Category category;
@@ -51,6 +52,7 @@ public class Portfolio extends BaseEntity {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "portfolio")
     private List<Review> reviewList;
+     */
 
 // DTO가 Entity 부분에 존재하면 객체지향적이지 못하므로 다른 곳에서 작성하도록!
 //    public void updatePortfolio(UpdatePortfolioDto request) {
@@ -74,6 +76,7 @@ public class Portfolio extends BaseEntity {
 //        this.isBlock = request.getIsBlock();
 //    }
 
+    /*
     public void updateReviewList(Review review){
         this.reviewList.add(review);
         //별점 업데이트
@@ -113,4 +116,5 @@ public class Portfolio extends BaseEntity {
         this.portfolioImgList.add(portfolioImg);
         portfolioImg.setPortfolio(this);
     }
+     */
 }

@@ -24,6 +24,7 @@ public class Artist extends User {
     @Column(nullable = true, length = 500)
     private String introduction;
 
+    /*
     @Enumerated(EnumType.STRING)
     @Column(nullable = true)
     private WorkExperience workExperience;
@@ -44,6 +45,7 @@ public class Artist extends User {
 
     @Column(nullable = true)
     private String shopLocation; // 샵의 위치
+     */
 
 //    @ElementCollection
 //    @CollectionTable(name = "available_time_mapping",
