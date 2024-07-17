@@ -24,7 +24,6 @@ public class Portfolio extends BaseEntity {
     @JoinColumn(name="user_id", nullable = false)
     private Artist artist;
 
-    /* here
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Category category;
@@ -52,13 +51,12 @@ public class Portfolio extends BaseEntity {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "portfolio")
     private List<Review> reviewList;
-     */
 
     public boolean isBlock(){
         return this.isBlock;
     }
 
-    /*
+
     public void updateReviewList(Review review){
         this.reviewList.add(review);
         //별점 업데이트
@@ -85,5 +83,4 @@ public class Portfolio extends BaseEntity {
         this.portfolioImgList.add(portfolioImg);
         portfolioImg.setPortfolio(this);
     }
-     */
 }
