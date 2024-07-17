@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.meme.domain.common.BaseEntity;
 import org.meme.domain.enums.Status;
+import org.meme.domain.enums.Times;
+
+import java.time.LocalDate;
 
 @Builder
 @Getter
@@ -27,9 +30,13 @@ public class Reservation extends BaseEntity {
     @JoinColumn(name="portfolio_id", nullable = false)
     private Portfolio portfolio;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "available_time_id")
-    private AvailableTime availableTime;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private LocalDate date; //예약 날짜
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Times time; //예약 시간
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -54,13 +61,4 @@ public class Reservation extends BaseEntity {
         return !status.equals(Status.COMPLETE);
     }
 
-    public static Reservation from(Model model, Portfolio portfolio, AvailableTime availableTime, String location){
-        return Reservation.builder()
-                .model(model)
-                .portfolio(portfolio)
-                .availableTime(availableTime)
-                .status(Status.EXPECTED)
-                .location(location)
-                .build();
-    }
 }
