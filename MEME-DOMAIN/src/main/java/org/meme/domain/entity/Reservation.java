@@ -7,11 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.meme.domain.common.BaseEntity;
 import org.meme.domain.enums.Status;
-import org.meme.domain.enums.Times;
-
-import java.time.LocalDate;
-
-import java.util.Set;
 
 @Builder
 @Getter
@@ -50,5 +45,17 @@ public class Reservation extends BaseEntity {
 
     @Column(nullable = false)
     private String location;
+
+    public boolean isReviewed(){
+        return this.status == Status.REVIEWED;
+    }
+
+    public boolean isCompleted(){
+        return this.status == Status.COMPLETED;
+    }
+
+    public void updateStatus(Status status){
+        this.status = status;
+    }
 
 }

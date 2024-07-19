@@ -71,7 +71,10 @@ public class ReviewConverter {
                 .artistNickName(reservation.getPortfolio().getArtist().getNickname())
                 .makeupName(reservation.getPortfolio().getMakeupName())
                 .portfolioImg(reservation.getPortfolio().getPortfolioImgList().get(0).getSrc())
-                .reservationDate(reservation.getDate())
+                .reservationYear(reservation.getYear())
+                .reservatioinMonth(reservation.getMonth())
+                .reservationiDay(reservation.getDay())
+                .reservationTimes(reservation.getTimes())
                 .shopLocation(reservation.getLocation())
                 .build();
     }
