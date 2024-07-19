@@ -82,6 +82,12 @@ public class PortfolioConverter {
                     .build();
     }
 
+    public static PortfolioImg toPortfolioImg(String src) {
+        return PortfolioImg.builder()
+                .src(src)
+                .build();
+    }
+
     public static PortfolioResponse.PortfolioImgDto toPortfolioImgDto(PortfolioImg img){
         return PortfolioResponse.PortfolioImgDto.builder()
                 .portfolioImgId(img.getPortfolioImgId())

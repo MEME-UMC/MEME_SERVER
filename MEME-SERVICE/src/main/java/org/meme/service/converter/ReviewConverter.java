@@ -76,6 +76,12 @@ public class ReviewConverter {
                 .build();
     }
 
+    public static ReviewImg toReviewImg(String src){
+        return ReviewImg.builder()
+                .src(src)
+                .build();
+    }
+
     public static ReviewResponse.ReviewImgDto toReviewImgDto(ReviewImg img){
         return ReviewResponse.ReviewImgDto.builder()
                 .reviewImgId(img.getReviewImgId())

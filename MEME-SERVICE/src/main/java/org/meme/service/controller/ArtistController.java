@@ -20,14 +20,6 @@ public class ArtistController {
         return BaseResponseDto.SuccessResponse(SuccessStatus.ARTIST_PROFILE_GET, artistService.getArtistProfile(userId, artistId));
     }
 
-    // TODO: AvailableTime
-    @Operation(summary = "아티스트 예약 가능 시간 편집")
-    @PatchMapping("/availabletime")
-    public BaseResponseDto patchAvailableTime() {
-        artistService.patchArtistAvailableTime();
-        return BaseResponseDto.SuccessResponse(SuccessStatus.ARTIST_AVAILABLE_TIME_PATCH);
-    }
-
     @Operation(summary = "아티스트 프로필 조회 (Artist Ver.)")
     @GetMapping("/profile/{artistId}")
     public BaseResponseDto getArtistProfile(@PathVariable(name = "artistId") Long artistId) {

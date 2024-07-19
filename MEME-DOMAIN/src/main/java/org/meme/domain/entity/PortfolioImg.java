@@ -21,12 +21,6 @@ public class PortfolioImg extends BaseEntity {
     @Column(nullable = false)
     private String src;
 
-    public static PortfolioImg from(String src){
-        return PortfolioImg.builder()
-                .src(src)
-                .build();
-    }
-
     public void updateSrc(String src) {
         this.src = src;
     }

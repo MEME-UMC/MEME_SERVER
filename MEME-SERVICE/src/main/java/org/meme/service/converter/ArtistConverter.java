@@ -8,10 +8,6 @@ import java.util.List;
 
 public class ArtistConverter {
      public static ArtistResponse.ArtistDto toArtistDto(Artist artist, boolean isFavorite){
-       // TODO: AvailableTime
-//        List<AvailableTimeDto> availableTimeDtoList = artist.getAvailableTimeList()
-//                .stream().map(AvailableTimeDto::from)
-//                .toList();
 
         List<PortfolioResponse.PortfolioSimpleDto> portfolioDtoList = artist.getPortfolioList()
                 .stream()
@@ -30,7 +26,6 @@ public class ArtistConverter {
                 .region(artist.getRegion())
                 .specialization(artist.getSpecialization())
                 .makeupLocation(artist.getMakeupLocation())
-//                .availableTimeList(availableTimeDtoList)
                 .simplePortfolioDtoList(portfolioDtoList)
                 .build();
     }

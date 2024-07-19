@@ -46,7 +46,7 @@ public class PortfolioService {
 
         // 포트폴리오 이미지 리스트 생성
         List<PortfolioImg> portfolioImgList = portfolioDto.getPortfolioImgSrc().stream()
-                .map(PortfolioImg::from)
+                .map(PortfolioConverter::toPortfolioImg)
                 .toList();
 
         // 포트폴리오 entity 생성
@@ -130,7 +130,7 @@ public class PortfolioService {
             Optional<PortfolioImg> portfolioImg = portfolioImgRepository.findBySrcAndPortfolio(portfolioImgSrc, portfolio);
             if (portfolioImg.isEmpty()) {
                 // 새로운 이미지 추가
-                PortfolioImg newPortfolioImg = PortfolioImg.from(portfolioImgSrc);
+                PortfolioImg newPortfolioImg = PortfolioConverter.toPortfolioImg(portfolioImgSrc);
                 newPortfolioImg.setPortfolio(portfolio);
                 portfolioImgRepository.save(newPortfolioImg);
                 updatedPortfolioImgList.add(newPortfolioImg);

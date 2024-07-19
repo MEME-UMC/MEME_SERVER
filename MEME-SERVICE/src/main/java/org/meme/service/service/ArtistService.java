@@ -39,15 +39,6 @@ public class ArtistService {
         return ArtistConverter.toArtistDto(artist, isFavorite);
     }
 
-    //아티스트 예약 가능 시간 편집
-    // TODO: AvailableTime
-    @Transactional
-    public void patchArtistAvailableTime() {
-//        Artist artist = artistRepository.findById(dto.getUserId())
-//                .orElseThrow(() -> new GlobalException(ErrorStatus.NOT_EXIST_ARTIST));
-
-    }
-
     //아티스트 프로필 조회 (Artist Ver.)
     public ArtistResponse.ArtistDto getArtistProfileFromArtist(Long artistId){
         Artist artist = artistRepository.findById(artistId)
