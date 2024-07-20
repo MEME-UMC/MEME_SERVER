@@ -39,16 +39,16 @@ public class ReviewService {
                 .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_RESERVATION));
 
         // 이미 리뷰 작성 완료
-        if (reservation.isReview())
+        if (reservation.isReviewed())
             throw new GeneralException(ErrorStatus.ALREADY_REVIEWED);
 
         // 예약 미완료
-        if (reservation.getStatus() != Status.COMPLETE)
+        if (!reservation.isCompleted())
             throw new GeneralException(ErrorStatus.INVALID_REVIEW_REQUEST);
 
         // 리뷰 이미지 리스트 생성
         List<ReviewImg> reviewImgList = reviewDto.getReviewImgSrc().stream()
-                .map(ReviewImg::from)
+                .map(ReviewConverter::toReviewImg)
                 .toList();
 
         // 리뷰 entity 생성
@@ -63,7 +63,8 @@ public class ReviewService {
         model.updateReviewList(review);
 
         reviewRepository.save(review);
-        reservation.updateIsReview(true);
+
+        reservation.updateStatus(Status.REVIEWED);
         return review.getReviewId();
     }
 
@@ -105,10 +106,10 @@ public class ReviewService {
         List<Reservation> reservationList = model.getReservationList();
 
         //status != COMPLETE 이면 리스트에서 제거
-        reservationList.removeIf(Reservation::isAvailableReview);
+        reservationList.removeIf(reservation -> !reservation.isCompleted());
 
         //리뷰 작성 완료시 리스트에서 제거
-        reservationList.removeIf(Reservation::isReview);
+        reservationList.removeIf(Reservation::isReviewed);
 
         return reservationList.stream()
                 .map(ReviewConverter::toReviewAvailableListDto)
@@ -146,7 +147,7 @@ public class ReviewService {
             Optional<ReviewImg> reviewImg = reviewImgRepository.findBySrcAndReview(reviewImgSrc, review);
             if (reviewImg.isEmpty()) {
                 // 새로운 이미지 추가
-                ReviewImg newReviewImg = ReviewImg.from(reviewImgSrc);
+                ReviewImg newReviewImg = ReviewConverter.toReviewImg(reviewImgSrc);
                 newReviewImg.setReview(review);
                 reviewImgRepository.save(newReviewImg);
                 updatedReviewImgList.add(newReviewImg);

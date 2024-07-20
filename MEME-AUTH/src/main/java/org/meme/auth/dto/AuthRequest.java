@@ -54,7 +54,6 @@ public class AuthRequest {
         private List<Category> specialization;
         private MakeupLocation makeup_location;
         private String shop_location;
-        private Map<DayOfWeek, Times> availableDayOfWeekAndTime;
     }
 
     @Data @Builder
