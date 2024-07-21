@@ -1,4 +1,4 @@
-package org.meme.notification.service;
+package org.meme.notification;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,10 +11,10 @@ import org.meme.notification.config.FcmKeyProperties;
 import org.meme.notification.dto.FcmMessageDto;
 import org.meme.notification.entity.NotificationDocument;
 import org.meme.notification.repository.NotificationRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.*;
 import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -29,6 +29,10 @@ public class NotificationService {
 
     private final FcmKeyProperties fcmKeyProperties;
     private final NotificationRepository notificationRepository;
+    private final SlackService slackService;
+
+    @Value("${slack.channel}")
+    private String slackChannel;
 
     @Transactional
     public List<NotificationDocument> getNotificationsByUserId(Long userId) {
@@ -53,6 +57,8 @@ public class NotificationService {
                     .build());
 
             String message = makeMessage(fcmSendDto, token);
+            // 테스트
+            // slackService.sendSlackMessage(message, slackChannel);
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.getMessageConverters()
                     .add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));

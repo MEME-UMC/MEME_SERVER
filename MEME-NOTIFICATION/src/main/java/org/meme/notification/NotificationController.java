@@ -1,4 +1,4 @@
-package org.meme.notification.service;
+package org.meme.notification;
 
 import lombok.extern.slf4j.Slf4j;
 import org.meme.domain.common.BaseResponseDto;
