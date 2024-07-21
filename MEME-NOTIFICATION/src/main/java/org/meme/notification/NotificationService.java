@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.meme.domain.dto.FcmSendDto;
 import org.meme.notification.config.FcmKeyProperties;
+import org.meme.notification.converter.NotificationConverter;
 import org.meme.notification.dto.FcmMessageDto;
 import org.meme.notification.entity.NotificationDocument;
 import org.meme.notification.repository.NotificationRepository;
@@ -49,12 +50,7 @@ public class NotificationService {
         int successCount = 0;
 
         for (String token : fcmSendDto.getToken()) {
-            notificationRepository.save(NotificationDocument.builder()
-                    .userId(fcmSendDto.getUserId())
-                    .token(fcmSendDto.getToken())
-                    .title(fcmSendDto.getTitle())
-                    .body(fcmSendDto.getBody())
-                    .build());
+            notificationRepository.save(NotificationConverter.toDocument(fcmSendDto));
 
             String message = makeMessage(fcmSendDto, token);
             // 테스트
