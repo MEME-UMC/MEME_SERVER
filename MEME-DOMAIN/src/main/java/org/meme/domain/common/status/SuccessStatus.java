@@ -74,7 +74,12 @@ public enum SuccessStatus {
     ADD_ENABLE_DATE_SUCCESS(HttpStatus.OK, 200, "영업 가능 날짜 등록에 성공하였습니다."),
     ADD_ENABLE_TIME_SUCCESS(HttpStatus.OK, 200, "영업 가능 시간대 등록에 성공하였습니다."),
     GET_ENABLE_DATE_SUCCESS(HttpStatus.OK, 200, "영업 가능 날짜 조회에 성공하였습니다."),
-    GET_ENABLE_TIME_SUCCESS(HttpStatus.OK, 200, "영업 가능 시간대 조회에 성공하였습니다.");
+    GET_ENABLE_TIME_SUCCESS(HttpStatus.OK, 200, "영업 가능 시간대 조회에 성공하였습니다."),
+
+    // NotificationController
+    ELK_SEARCH_SUCCESS(HttpStatus.OK, 200, "엘라스틱서치 검색 성공"),
+    ELK_CREATE_SUCCESS(HttpStatus.OK, 200, "엘라스틱서치 생성 성공"),
+    FCM_SEND_SUCCESS(HttpStatus.OK, 200, "푸시 메시지 전송 성공");
 
     private final HttpStatus httpStatus;
     private final int code;

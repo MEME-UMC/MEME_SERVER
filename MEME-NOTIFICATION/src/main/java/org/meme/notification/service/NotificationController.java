@@ -1,19 +1,17 @@
 package org.meme.notification.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.meme.domain.common.BaseResponseDto;
+import org.meme.domain.common.status.SuccessStatus;
 import org.meme.domain.dto.FcmSendDto;
-import org.meme.notification.dto.ApiResponseWrapper;
-import org.meme.notification.dto.SuccessCode;
 import org.meme.notification.entity.NotificationDocument;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.List;
 
-@Slf4j
+@Slf4j(topic = "MEME-NOTIFICATION")
 @RestController
 public class NotificationController {
 
@@ -24,39 +22,32 @@ public class NotificationController {
     }
 
     @GetMapping("/api/notification")
-    public ResponseEntity<ApiResponseWrapper<Object>> elasticsearchSearchTest(@RequestBody Long userId) {
-        ApiResponseWrapper<Object> arw = ApiResponseWrapper
-                .builder()
-                .result(notificationService.getNotificationsByUserId(userId))
-                .resultCode(SuccessCode.SELECT_SUCCESS.getStatus())
-                .resultMsg(SuccessCode.SELECT_SUCCESS.getMessage())
-                .build();
-        return new ResponseEntity<>(arw, HttpStatusCode.valueOf(200));
+    public BaseResponseDto elasticsearchSearchTest(@RequestParam Long userId) {
+        log.debug("[+] ELK 아이템 조회 ");
+        return BaseResponseDto.SuccessResponse(SuccessStatus.ELK_SEARCH_SUCCESS, notificationService.getNotificationsByUserId(userId));
     }
 
     @PostMapping("/api/notification")
-    public ResponseEntity<ApiResponseWrapper<Object>> elasticsearchCreateTest(@RequestBody NotificationDocument itemDocument) {
-        ApiResponseWrapper<Object> arw = ApiResponseWrapper
-                .builder()
-                .result(notificationService.createItem(itemDocument))
-                .resultCode(SuccessCode.SELECT_SUCCESS.getStatus())
-                .resultMsg(SuccessCode.SELECT_SUCCESS.getMessage())
-                .build();
-        return new ResponseEntity<>(arw, HttpStatusCode.valueOf(200));
+    public BaseResponseDto elasticsearchCreateTest(@RequestBody NotificationDocument itemDocument) {
+        log.debug("[+] ELK 새롭게 아이템 생성 ");
+        return BaseResponseDto.SuccessResponse(SuccessStatus.ELK_CREATE_SUCCESS, notificationService.createItem(itemDocument));
     }
 
-
     @PostMapping("/api/fcm/v1/send")
-    public ResponseEntity<ApiResponseWrapper<Object>> pushMessageTest(@RequestBody @Validated FcmSendDto fcmSendDto) throws IOException {
+    public BaseResponseDto pushMessageTest(@RequestBody @Validated FcmSendDto fcmSendDto) throws IOException {
         log.debug("[+] 푸시 메시지를 전송합니다. ");
-        int result = notificationService.sendMessageTo(fcmSendDto);
+        return BaseResponseDto.SuccessResponse(SuccessStatus.FCM_SEND_SUCCESS, notificationService.sendMessageTo(fcmSendDto));
+    }
 
-        ApiResponseWrapper<Object> arw = ApiResponseWrapper
-                .builder()
-                .result(result)
-                .resultCode(SuccessCode.SELECT_SUCCESS.getStatus())
-                .resultMsg(SuccessCode.SELECT_SUCCESS.getMessage())
-                .build();
-        return new ResponseEntity<>(arw, HttpStatusCode.valueOf(200));
+    @KafkaListener(topics = "model_signup", groupId = "notification_service")
+    public void consumeModelMessage(FcmSendDto fcmSendDto) throws IOException {
+        log.info("Consumed model message: {}", fcmSendDto);
+        notificationService.sendMessageTo(fcmSendDto);
+    }
+
+    @KafkaListener(topics = "artist_signup", groupId = "notification_service")
+    public void consumeArtistMessage(FcmSendDto fcmSendDto) throws IOException{
+        log.info("Consumed artist message: {}", fcmSendDto);
+        notificationService.sendMessageTo(fcmSendDto);
     }
 }
