@@ -11,7 +11,7 @@ import org.meme.domain.common.status.SuccessStatus;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/portfolio")
+@RequestMapping("/api/v2/portfolio")
 public class PortfolioController {
     private final PortfolioService portfolioService;
 

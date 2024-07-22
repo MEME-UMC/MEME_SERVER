@@ -52,6 +52,7 @@ public class PortfolioResponse {
         private Boolean isBlock;
         private String averageStars;
         private int reviewCount; //리뷰 개수
+        private String durationTime; //소요 시간
         private List<PortfolioImgDto> portfolioImgDtoList;
     }
 

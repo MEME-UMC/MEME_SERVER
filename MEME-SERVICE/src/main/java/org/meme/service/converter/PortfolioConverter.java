@@ -79,6 +79,7 @@ public class PortfolioConverter {
                     .portfolioImgDtoList(portfolioImgDtoList)
                     .averageStars(portfolio.getAverageStars())
                     .reviewCount(portfolio.getReviewList().size())
+                    .durationTime(portfolio.getDurationTime())
                     .build();
     }
 
