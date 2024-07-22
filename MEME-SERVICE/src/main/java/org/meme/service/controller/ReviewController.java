@@ -11,7 +11,7 @@ import org.meme.service.service.ReviewService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/review")
+@RequestMapping("/api/v2/review")
 public class ReviewController {
     private final ReviewService reviewService;
 
