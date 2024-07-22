@@ -7,9 +7,7 @@ import java.util.List;
 @Getter
 public class Notification {
     private Long userId;
-
     private String title;
-
     private String body;
     private List<String> token;
 }

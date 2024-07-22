@@ -60,3 +60,6 @@ fcm:
     scope: ${FCM_SCOPE}
     path: ${FCM_PATH}
 
+slack:
+  token: ${SLACK_TOKEN}
+  channel: ${SLACK_CHANNEL}

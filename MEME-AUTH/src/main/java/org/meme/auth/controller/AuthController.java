@@ -2,6 +2,7 @@ package org.meme.auth.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.meme.domain.common.BaseResponseDto;
 import org.meme.domain.common.status.ErrorStatus;
 import org.meme.domain.common.status.SuccessStatus;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 
+@Slf4j(topic = "MEME-AUTH")
 @RequiredArgsConstructor
 @RestController
 public class AuthController {
@@ -29,6 +31,7 @@ public class AuthController {
      */
     @PostMapping("/api/v1/signup/model")
     public BaseResponseDto<AuthResponse.JoinDto> signupModel(@RequestBody AuthRequest.ModelJoinDto modelJoinDto) throws AuthException {
+        log.info("Sign up Model From: {}", modelJoinDto.getNickname());
         return BaseResponseDto.SuccessResponse(SuccessStatus.USER_JOIN_SUCCESS, authService.signupModel(modelJoinDto));
     }
 
