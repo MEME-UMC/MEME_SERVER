@@ -27,6 +27,7 @@ public enum SuccessStatus {
     PORTFOLIO_CREATE(HttpStatus.OK,200, "포트폴리오 생성이 완료되었습니다"),
     PORTFOLIO_GET(HttpStatus.OK,200, "포트폴리오 조회가 완료되었습니다"),
     PORTFOLIO_UPDATE(HttpStatus.OK,200, "포트폴리오 수정이 완료되었습니다"),
+    PORTFOLIO_BLOCK(HttpStatus.OK, 200, "포트폴리오 블락 상태 변경이 완료되었습니다."),
 
     /**model**/
     MODEL_PROFILE_UPDATE(HttpStatus.OK,200, "모델 프로필 수정이 완료되었습니다"),

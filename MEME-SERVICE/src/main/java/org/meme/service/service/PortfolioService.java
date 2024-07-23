@@ -2,19 +2,15 @@ package org.meme.service.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.meme.domain.entity.*;
 import org.meme.service.converter.PortfolioConverter;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
-import org.meme.domain.entity.Artist;
 import org.meme.domain.repository.ArtistRepository;
-import org.meme.domain.entity.FavoritePortfolio;
 import org.meme.domain.repository.FavoritePortfolioRepository;
-import org.meme.domain.entity.Model;
 import org.meme.domain.repository.ModelRepository;
 import org.meme.service.dto.request.PortfolioRequest.*;
 import org.meme.service.dto.response.PortfolioResponse.*;
-import org.meme.domain.entity.Portfolio;
-import org.meme.domain.entity.PortfolioImg;
 import org.meme.domain.repository.PortfolioImgRepository;
 import org.meme.domain.repository.PortfolioRepository;
 import org.meme.domain.common.status.ErrorStatus;
@@ -174,6 +170,23 @@ public class PortfolioService {
         return portfolioList.getContent().stream()
                 .map(PortfolioConverter::toPortfolioSimpleDto)
                 .toList();
+    }
+
+    // 포트폴리오 블락 상태 변경
+    @Transactional
+    public void blockPortfolio(Long userId, Long portfolioId){
+        Artist artist = artistRepository.findById(userId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_ARTIST));
+        Portfolio portfolio = portfolioRepository.findById(portfolioId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_PORTFOLIO));
+
+        if (portfolio.getArtist() != artist)
+            throw new GeneralException(ErrorStatus.NOT_AUTHORIZED_PORTFOLIO);
+
+        if (portfolio.isBlock())
+            portfolio.setBlock(false);
+        else
+            portfolio.setBlock(true);
     }
 
     private Pageable setPageRequest(int page, String sortBy) {
