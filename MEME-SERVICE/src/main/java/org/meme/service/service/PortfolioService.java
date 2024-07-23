@@ -33,8 +33,7 @@ public class PortfolioService {
     //포트폴리오 생성
     @Transactional
     public Long createPortfolio(CreatePortfolioDto portfolioDto) {
-        Artist artist = artistRepository.findById(portfolioDto.getArtistId())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_ARTIST));
+        Artist artist = findArtistById(portfolioDto.getArtistId());
 
         //포트폴리오 이름이 이미 존재할 시
         if (portfolioRepository.existsByMakeupName(portfolioDto.getMakeupName()))
@@ -60,9 +59,7 @@ public class PortfolioService {
     // 포트폴리오 전체 조회
     @Transactional
     public PortfolioPageDto getPortfolio(Long artistId, int page) {
-        Artist artist = artistRepository.findById(artistId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_ARTIST));
-
+        Artist artist = findArtistById(artistId);
         List<Portfolio> portfolioList = artist.getPortfolioList();
 
         //isblock이면 리스트에서 제거
@@ -76,10 +73,8 @@ public class PortfolioService {
 
     // 포트폴리오 하나만 조회
     public PortfolioDetailDto getPortfolioDetails(Long userId, Long portfolioId) {
-        Model model = modelRepository.findById(userId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_MODEL));
-        Portfolio portfolio = portfolioRepository.findById(portfolioId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_PORTFOLIO));
+        Model model = findModelById(userId);
+        Portfolio portfolio = findPortfolioById(portfolioId);
 
         if (portfolio.isBlock())
             throw new GeneralException(ErrorStatus.BLOCKED_PORTFOLIO);
@@ -95,11 +90,8 @@ public class PortfolioService {
     // 포트폴리오 수정/삭제
     @Transactional
     public void updatePortfolio(UpdatePortfolioDto updatePortfolioDto) {
-        Artist artist = artistRepository.findById(updatePortfolioDto.getArtistId())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_ARTIST));
-
-        Portfolio portfolio = portfolioRepository.findById(updatePortfolioDto.getPortfolioId())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_PORTFOLIO));
+        Artist artist = findArtistById(updatePortfolioDto.getArtistId());
+        Portfolio portfolio = findPortfolioById(updatePortfolioDto.getPortfolioId());
 
         if (portfolio.isBlock() && updatePortfolioDto.getIsBlock())
             throw new GeneralException(ErrorStatus.BLOCKED_PORTFOLIO);
@@ -175,10 +167,8 @@ public class PortfolioService {
     // 포트폴리오 블락 상태 변경
     @Transactional
     public void blockPortfolio(Long userId, Long portfolioId){
-        Artist artist = artistRepository.findById(userId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_ARTIST));
-        Portfolio portfolio = portfolioRepository.findById(portfolioId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_PORTFOLIO));
+        Artist artist = findArtistById(userId);
+        Portfolio portfolio = findPortfolioById(portfolioId);
 
         if (portfolio.getArtist() != artist)
             throw new GeneralException(ErrorStatus.NOT_AUTHORIZED_PORTFOLIO);
@@ -187,6 +177,21 @@ public class PortfolioService {
             portfolio.setBlock(false);
         else
             portfolio.setBlock(true);
+    }
+
+    private Artist findArtistById(Long artistId){
+        return artistRepository.findById(artistId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_ARTIST));
+    }
+
+    private Model findModelById(Long modelId){
+        return modelRepository.findById(modelId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_MODEL));
+    }
+
+    private Portfolio findPortfolioById(Long portfolioId){
+        return portfolioRepository.findById(portfolioId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_PORTFOLIO));
     }
 
     private Pageable setPageRequest(int page, String sortBy) {

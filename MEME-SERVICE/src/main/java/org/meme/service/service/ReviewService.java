@@ -33,8 +33,7 @@ public class ReviewService {
     //리뷰 작성
     @Transactional
     public Long createReview(ReviewRequest.ReviewDto reviewDto) {
-        Model model = modelRepository.findById(reviewDto.getModelId())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_MODEL));
+        Model model = findModelById(reviewDto.getModelId());
         Reservation reservation = reservationRepository.findByReservationIdAndModelId(reviewDto.getReservationId(), reviewDto.getModelId())
                 .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_RESERVATION));
 
@@ -70,15 +69,13 @@ public class ReviewService {
 
     //리뷰 상세 조회
     public ReviewResponse.ReviewDetailsDto getReviewDetails(Long reviewId){
-        Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_REVIEW));
+        Review review = findReviewById(reviewId);
         return ReviewConverter.toReviewDetailDto(review);
     }
 
     //내가 쓴 리뷰 조회
     public List<ReviewResponse.MyReviewDto> getMyReview(Long modelId){
-        Model model = modelRepository.findById(modelId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_MODEL));
+        Model model = findModelById(modelId);
 
         //리뷰 리스트 조회
         List<Review> reviewList = reviewRepository.findByModel(model);
@@ -89,8 +86,7 @@ public class ReviewService {
 
     //리뷰 리스트 조회
     public ReviewResponse.ReviewListPageDto getReviewList(Long portfolioId, int page) {
-        Portfolio portfolio = portfolioRepository.findById(portfolioId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_PORTFOLIO));
+        Portfolio portfolio = findPortfolioById(portfolioId);
 
         // list를 page로 변환
         List<Review> reviewList = portfolio.getReviewList();
@@ -101,8 +97,7 @@ public class ReviewService {
 
     //리뷰 작성 가능 예약 리스트 조회
     public List<ReviewResponse.ReviewAvailableListDto> getReviewReservationList(Long modelId){
-        Model model = modelRepository.findById(modelId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_MODEL));
+        Model model = findModelById(modelId);
         List<Reservation> reservationList = model.getReservationList();
 
         //status != COMPLETE 이면 리스트에서 제거
@@ -119,10 +114,8 @@ public class ReviewService {
     //리뷰 수정
     @Transactional
     public ReviewResponse.ReviewDetailsDto updateReview(ReviewRequest.UpdateReviewDto updateReviewDto){
-        Model model = modelRepository.findById(updateReviewDto.getModelId())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_MODEL));
-        Review review = reviewRepository.findById(updateReviewDto.getReviewId())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_REVIEW));
+        Model model = findModelById(updateReviewDto.getModelId());
+        Review review = findReviewById(updateReviewDto.getReviewId());
 
         if (!review.getModel().equals(model))
             throw new GeneralException(ErrorStatus.INVALID_MODEL_FOR_REVIEW);
@@ -173,14 +166,27 @@ public class ReviewService {
     //리뷰 삭제
     @Transactional
     public void deleteReview(ReviewRequest.DeleteReviewDto reviewDto){
-        Model model = modelRepository.findById(reviewDto.getModelId())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_MODEL));
-        Review review = reviewRepository.findById(reviewDto.getReviewId())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_REVIEW));
+        Model model = findModelById(reviewDto.getModelId());
+        Review review = findReviewById(reviewDto.getReviewId());
         if(!review.getModel().equals(model))
             throw new GeneralException(ErrorStatus.INVALID_MODEL_FOR_REVIEW);
 
         reviewRepository.delete(review);
+    }
+
+    private Model findModelById(Long modelId){
+        return modelRepository.findById(modelId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_MODEL));
+    }
+
+    private Portfolio findPortfolioById(Long portfolioId){
+        return portfolioRepository.findById(portfolioId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_PORTFOLIO));
+    }
+
+    private Review findReviewById(Long reviewId){
+        return reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_REVIEW));
     }
 
     private Page<Review> getPage(int page, List<Review> list){
