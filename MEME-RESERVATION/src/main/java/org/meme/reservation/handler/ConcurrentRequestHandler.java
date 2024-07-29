@@ -1,6 +1,8 @@
 package org.meme.reservation.handler;
 
 import lombok.RequiredArgsConstructor;
+import org.meme.domain.common.exception.ReservationConflictException;
+import org.meme.domain.common.exception.ReservationException;
 import org.meme.domain.entity.Model;
 import org.meme.domain.entity.Portfolio;
 import org.meme.domain.entity.Reservation;
@@ -9,11 +11,15 @@ import org.meme.reservation.converter.ReservationConverter;
 import org.meme.reservation.dto.ReservationRequest;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.concurrent.*;
+
+import static org.meme.domain.common.status.ErrorStatus.RESERVATION_CANNOT_ACQUIRE_LOCK;
+import static org.meme.domain.common.status.ErrorStatus.RESERVATION_CONFLICT;
 
 @RequiredArgsConstructor
 @Service
@@ -21,89 +27,51 @@ public class ConcurrentRequestHandler {
 
     private final ReservationRepository reservationRepository;
     private final RedissonClient redissonClient;
-    private final Map<String, Set<String>> processedSlotsMap = new HashMap<>();
 
+    @Async
     @Transactional
-    public void handleConcurrency(ReservationRequest.SaveDto requestDto, Model model, Portfolio portfolio) throws RuntimeException {
-        // 쓰레드풀 생성을 위한 ExecutorService 객체 생성 (쓰레드 수를 CPU 코어 수로 제한)
-        int availableProcessors = Runtime.getRuntime().availableProcessors();
-        ExecutorService executorService = Executors.newFixedThreadPool(availableProcessors);
-
-        // 요청들을 담을 리스트 생성
-        List<ReservationRequest.SaveDto> requests = List.of(requestDto);
-
-        // Future 객체들을 담을 리스트 생성
-        List<Future<Reservation>> reservationInfos = new ArrayList<>();
-
-        // 각 요청을 처리
-        for (ReservationRequest.SaveDto request : requests) {
-            Future<Reservation> info = executorService.submit(() -> handleRequest(requestDto, model, portfolio));
-            reservationInfos.add(info);
-        }
-
-        try {
-            for (Future<Reservation> info : reservationInfos) {
-                System.out.println(info.get().getTimes());
-            }
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-
-        // ExecutorService 종료
-        executorService.shutdown();
-        try {
-            if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
-                executorService.shutdownNow();
-            }
-        } catch (InterruptedException e) {
-            executorService.shutdownNow();
-        }
-    }
-
-    @Transactional
-    public Reservation handleRequest(ReservationRequest.SaveDto requestDto, Model model, Portfolio portfolio) {
-        // Lock 이름 생성 및 RLock 생성
-        String lockName = getLockName(requestDto);
-        RLock rlock = redissonClient.getLock(lockName);
+    public CompletableFuture<Reservation> handleConcurrency(ReservationRequest.SaveDto requestDto, Model model, Portfolio portfolio) {
+        String lockName = getLockName(requestDto);  // 락 이름
+        RLock rlock = redissonClient.getLock(lockName);  // 락 생성
 
         Reservation reservationInfo = null;
 
         try {
             if (rlock.tryLock(10, TimeUnit.SECONDS)) {  // 1. 락을 선점합니다.
-                // 2. 예약 내역을 조회합니다. (portfolio_id, year, month, day)
-                List<Reservation> reservations = reservationRepository.findByPortfolioAndYearAndMonthAndDay(portfolio, requestDto.getYear(), requestDto.getMonth(), requestDto.getDay())
-                        .orElseThrow(() -> new RuntimeException("Could not find any reservations"));
 
-                // 2-1. 예약 내역이 존재하면, 시간대를 파악합니다.
-                if (!reservations.isEmpty()) {
+                // 2. 요청이 들어온 포트폴리오, 연도, 월, 일에 대해 예약 내역을 조회합니다.
+                Optional<List<Reservation>> optionalReservations = reservationRepository.findByPortfolioAndYearAndMonthAndDay(
+                        portfolio, requestDto.getYear(), requestDto.getMonth(), requestDto.getDay());
+
+                // 3. 예약 내역이 존재하면, 시간대가 겹치는지 파악합니다.
+                if (optionalReservations.isPresent()) {
+                    List<Reservation> reservations = optionalReservations.get();
                     Set<String> existingTimes = new HashSet<>();
-                    for (Reservation reservation : reservations) {
-                        String[] split = reservation.getTimes().split(",");
-                        existingTimes.addAll(Arrays.asList(split));
-                    }
+                    for (Reservation reservation : reservations)
+                        existingTimes.addAll(Arrays.asList(reservation.getTimes().split(",")));
 
-                    // 이미 예약된 시간대라면
+                    // 3-1. 이미 예약된 시간대와 겹친다면 예외를 반환합니다.
                     if (haveOverlappingTimes(existingTimes, requestDto.getTimes())) {
-                        // System.out.println("Reservation has overlapping times");
-                        throw new RuntimeException("Reservation has overlapping times");
+                        throw new ReservationConflictException(RESERVATION_CONFLICT);
                     }
                 }
 
-                // 3. 예약 내용을 DB에 저장합니다.
-                Reservation reservation = ReservationConverter.toReservationEntity(requestDto, model, portfolio);
-                reservationInfo = reservationRepository.save(reservation);
+                // 4. 요청 받은 예약 내용을 DB에 저장합니다.
+                reservationInfo = reservationRepository.save(
+                        ReservationConverter.toReservationEntity(requestDto, model, portfolio)
+                );
 
-                // 4. 락을 해제합니다.
+                // 5. 락을 해제합니다.
                 rlock.unlock();
 
-            } else {
-                System.out.println("Cannot acquire lock");
+            } else {  // 락을 선점하지 못 했을 경우 InterruptedException 발생
+                throw new InterruptedException();
             }
-        } catch (InterruptedException | RuntimeException e) {
-            e.printStackTrace();
+        } catch (InterruptedException e) {
+            throw new ReservationException(RESERVATION_CANNOT_ACQUIRE_LOCK);
         }
 
-        return reservationInfo;
+        return CompletableFuture.completedFuture(reservationInfo).thenApply(reservation -> reservation);
     }
 
     private String getLockName(ReservationRequest.SaveDto request) {
