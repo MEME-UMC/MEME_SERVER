@@ -13,12 +13,12 @@ import java.util.concurrent.Executors;
 @Configuration
 public class AsyncConfig implements AsyncConfigurer {
     @Override
-    public Executor getAsyncExecutor() {
+    public Executor getAsyncExecutor() {  // 쓰레드 풀 지정하는 메서드
         return Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     }
 
     @Override
-    public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
+    public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {  // 예외 처리를 위한 메서드
         return new SimpleAsyncUncaughtExceptionHandler();
     }
 }
