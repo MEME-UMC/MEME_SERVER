@@ -15,8 +15,9 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @PostMapping("/api/v2/{portfolioId}/reservation")
-    public void makeReservation(@RequestBody ReservationRequest.SaveDto requestDto, @PathVariable("portfolioId") Long portfolioId) {
+    public BaseResponseDto<?> makeReservation(@RequestBody ReservationRequest.SaveDto requestDto, @PathVariable("portfolioId") Long portfolioId) {
         reservationService.makeReservation(requestDto, portfolioId);
+        return BaseResponseDto.SuccessResponse(SuccessStatus.RESERVATION_SUCCESS);
     }
 
     @GetMapping("/api/v2/{portfolioId}/schedule/{year}/{month}")

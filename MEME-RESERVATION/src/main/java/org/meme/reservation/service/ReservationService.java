@@ -1,6 +1,8 @@
 package org.meme.reservation.service;
 
 import lombok.RequiredArgsConstructor;
+import org.meme.domain.common.exception.ReservationException;
+import org.meme.domain.common.status.ErrorStatus;
 import org.meme.domain.entity.*;
 import org.meme.domain.enums.DayOfWeek;
 import org.meme.domain.repository.*;
@@ -17,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 @RequiredArgsConstructor
 @Service
@@ -33,13 +36,17 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
 
     @Transactional
-    public void makeReservation(ReservationRequest.SaveDto requestDto, Long portfolioId) {
+    public ReservationResponse.SuccessDto makeReservation(ReservationRequest.SaveDto requestDto, Long portfolioId) {
         Model model = modelRepository.findById(requestDto.getModel_id())
                 .orElseThrow(() -> new IllegalArgumentException("Model not found"));
         Portfolio portfolio = portfolioRepository.findById(portfolioId)
                 .orElseThrow(() -> new IllegalArgumentException("Portfolio not found"));
-
-        concurrentRequestHandler.handleConcurrency(requestDto, model, portfolio);
+        try {
+            return concurrentRequestHandler.handleConcurrency(requestDto, model, portfolio)
+                    .thenApply(ReservationConverter::toSuccessDto).get();
+        } catch (ExecutionException | InterruptedException e) {
+            throw new ReservationException(ErrorStatus.RESERVATION_NOT_FOUND);
+        }
     }
 
     public ReservationResponse.ScheduleYearAndMonthDto getScheduleByYearAndMonth(Long portfolioId, int year, int month) {
