@@ -15,6 +15,16 @@ public class ReservationResponse {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    public static class SuccessDto {
+        private int year;
+        private int month;
+        private int day;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class DateDto {
         private Long artist_id;
         private List<LocalDate> enable_dates;

@@ -40,6 +40,14 @@ public class ReservationConverter {
                 .build();
     }
 
+    public static ReservationResponse.SuccessDto toSuccessDto(Reservation reservation) {
+        return ReservationResponse.SuccessDto.builder()
+                .year(reservation.getYear())
+                .month(reservation.getMonth())
+                .day(reservation.getDay())
+                .build();
+    }
+
     public static ReservationResponse.DateDto toDateDto(ArtistEnableDate artistEnableDate) {
         return ReservationResponse.DateDto.builder()
                 .artist_id(artistEnableDate.getArtist().getUserId())
