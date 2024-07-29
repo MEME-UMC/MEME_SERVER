@@ -62,7 +62,10 @@ public enum ErrorStatus implements BaseErrorCode {
     ANOTHER_USER(HttpStatus.UNAUTHORIZED, 401, "토큰 탈취 위협이 있습니다."),
     USER_NOT_FOUND(HttpStatus.UNAUTHORIZED, 401, "사용자를 찾을 수 없습니다."),
 
-
+    // Reservation Error
+    RESERVATION_CONFLICT(HttpStatus.CONFLICT, 409, "이미 존재하는 예약입니다."),
+    RESERVATION_CANNOT_ACQUIRE_LOCK(HttpStatus.FORBIDDEN, 403, "접근이 불가합니다."),
+    RESERVATION_NOT_FOUND(HttpStatus.NOT_FOUND, 404, "예약 정보를 가져올 수 없습니다."),
 
     /**
      * Code : 400

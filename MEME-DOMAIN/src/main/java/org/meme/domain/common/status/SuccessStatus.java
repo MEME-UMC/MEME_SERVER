@@ -69,7 +69,7 @@ public enum SuccessStatus {
     CONTACT_GET(HttpStatus.OK,200, "문의 조회가 완료되었습니다."),
 
     // ReservationController
-    MAKE_RESERVATION_SUCCESS(HttpStatus.OK, 200, "예약을 완료하였습니다."),
+    RESERVATION_SUCCESS(HttpStatus.OK, 200, "예약을 완료하였습니다."),
     GET_SCHEDULE_SUCCESS(HttpStatus.OK, 200, "일정 조회를 성공하였습니다."),
     ADD_ENABLE_DATE_SUCCESS(HttpStatus.OK, 200, "영업 가능 날짜 등록에 성공하였습니다."),
     ADD_ENABLE_TIME_SUCCESS(HttpStatus.OK, 200, "영업 가능 시간대 등록에 성공하였습니다."),
