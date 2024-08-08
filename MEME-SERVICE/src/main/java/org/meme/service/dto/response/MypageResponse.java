@@ -32,6 +32,8 @@ public class MypageResponse {
         private String nickname;
         private Gender gender;
         private String introduction;
+        private String phoneNumber;
+        private String instagramId;
         private WorkExperience workExperience;
         private List<Region> region;
         private List<Category> specialization;

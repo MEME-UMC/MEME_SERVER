@@ -21,6 +21,8 @@ public class ArtistResponse {
         private String profileImg;
         private String email;
         private String introduction;
+        private String phoneNumber;
+        private String instagramId;
         private WorkExperience workExperience;
         private String shopLocation; //샵 위치
         private List<Region> region;

@@ -26,6 +26,8 @@ public class MypageConverter {
                 .nickname(artist.getNickname())
                 .gender(artist.getGender())
                 .introduction(artist.getIntroduction())
+                .phoneNumber(artist.getPhoneNumber())
+                .instagramId(artist.getInstagramId())
                 .workExperience(artist.getWorkExperience())
                 .region(artist.getRegion())
                 .specialization(artist.getSpecialization())

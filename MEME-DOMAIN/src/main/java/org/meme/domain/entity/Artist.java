@@ -20,6 +20,12 @@ public class Artist extends User {
 
     @Column(length = 500, nullable = true)
     private String introduction;
+
+    @Column(nullable = false)
+    private String phoneNumber;
+
+    @Column(nullable = true)
+    private String instagramId;
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = true)
