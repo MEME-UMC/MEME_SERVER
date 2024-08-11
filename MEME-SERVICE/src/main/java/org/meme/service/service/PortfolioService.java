@@ -2,19 +2,15 @@ package org.meme.service.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.meme.domain.entity.*;
 import org.meme.service.converter.PortfolioConverter;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
-import org.meme.domain.entity.Artist;
 import org.meme.domain.repository.ArtistRepository;
-import org.meme.domain.entity.FavoritePortfolio;
 import org.meme.domain.repository.FavoritePortfolioRepository;
-import org.meme.domain.entity.Model;
 import org.meme.domain.repository.ModelRepository;
 import org.meme.service.dto.request.PortfolioRequest.*;
 import org.meme.service.dto.response.PortfolioResponse.*;
-import org.meme.domain.entity.Portfolio;
-import org.meme.domain.entity.PortfolioImg;
 import org.meme.domain.repository.PortfolioImgRepository;
 import org.meme.domain.repository.PortfolioRepository;
 import org.meme.domain.common.status.ErrorStatus;
@@ -37,8 +33,7 @@ public class PortfolioService {
     //포트폴리오 생성
     @Transactional
     public Long createPortfolio(CreatePortfolioDto portfolioDto) {
-        Artist artist = artistRepository.findById(portfolioDto.getArtistId())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_ARTIST));
+        Artist artist = findArtistById(portfolioDto.getArtistId());
 
         //포트폴리오 이름이 이미 존재할 시
         if (portfolioRepository.existsByMakeupName(portfolioDto.getMakeupName()))
@@ -46,7 +41,7 @@ public class PortfolioService {
 
         // 포트폴리오 이미지 리스트 생성
         List<PortfolioImg> portfolioImgList = portfolioDto.getPortfolioImgSrc().stream()
-                .map(PortfolioImg::from)
+                .map(PortfolioConverter::toPortfolioImg)
                 .toList();
 
         // 포트폴리오 entity 생성
@@ -64,9 +59,7 @@ public class PortfolioService {
     // 포트폴리오 전체 조회
     @Transactional
     public PortfolioPageDto getPortfolio(Long artistId, int page) {
-        Artist artist = artistRepository.findById(artistId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_ARTIST));
-
+        Artist artist = findArtistById(artistId);
         List<Portfolio> portfolioList = artist.getPortfolioList();
 
         //isblock이면 리스트에서 제거
@@ -80,10 +73,8 @@ public class PortfolioService {
 
     // 포트폴리오 하나만 조회
     public PortfolioDetailDto getPortfolioDetails(Long userId, Long portfolioId) {
-        Model model = modelRepository.findById(userId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_MODEL));
-        Portfolio portfolio = portfolioRepository.findById(portfolioId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_PORTFOLIO));
+        Model model = findModelById(userId);
+        Portfolio portfolio = findPortfolioById(portfolioId);
 
         if (portfolio.isBlock())
             throw new GeneralException(ErrorStatus.BLOCKED_PORTFOLIO);
@@ -99,11 +90,8 @@ public class PortfolioService {
     // 포트폴리오 수정/삭제
     @Transactional
     public void updatePortfolio(UpdatePortfolioDto updatePortfolioDto) {
-        Artist artist = artistRepository.findById(updatePortfolioDto.getArtistId())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_ARTIST));
-
-        Portfolio portfolio = portfolioRepository.findById(updatePortfolioDto.getPortfolioId())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_PORTFOLIO));
+        Artist artist = findArtistById(updatePortfolioDto.getArtistId());
+        Portfolio portfolio = findPortfolioById(updatePortfolioDto.getPortfolioId());
 
         if (portfolio.isBlock() && updatePortfolioDto.getIsBlock())
             throw new GeneralException(ErrorStatus.BLOCKED_PORTFOLIO);
@@ -130,7 +118,7 @@ public class PortfolioService {
             Optional<PortfolioImg> portfolioImg = portfolioImgRepository.findBySrcAndPortfolio(portfolioImgSrc, portfolio);
             if (portfolioImg.isEmpty()) {
                 // 새로운 이미지 추가
-                PortfolioImg newPortfolioImg = PortfolioImg.from(portfolioImgSrc);
+                PortfolioImg newPortfolioImg = PortfolioConverter.toPortfolioImg(portfolioImgSrc);
                 newPortfolioImg.setPortfolio(portfolio);
                 portfolioImgRepository.save(newPortfolioImg);
                 updatedPortfolioImgList.add(newPortfolioImg);
@@ -174,6 +162,36 @@ public class PortfolioService {
         return portfolioList.getContent().stream()
                 .map(PortfolioConverter::toPortfolioSimpleDto)
                 .toList();
+    }
+
+    // 포트폴리오 블락 상태 변경
+    @Transactional
+    public void blockPortfolio(Long userId, Long portfolioId){
+        Artist artist = findArtistById(userId);
+        Portfolio portfolio = findPortfolioById(portfolioId);
+
+        if (portfolio.getArtist() != artist)
+            throw new GeneralException(ErrorStatus.NOT_AUTHORIZED_PORTFOLIO);
+
+        if (portfolio.isBlock())
+            portfolio.setBlock(false);
+        else
+            portfolio.setBlock(true);
+    }
+
+    private Artist findArtistById(Long artistId){
+        return artistRepository.findById(artistId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_ARTIST));
+    }
+
+    private Model findModelById(Long modelId){
+        return modelRepository.findById(modelId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_MODEL));
+    }
+
+    private Portfolio findPortfolioById(Long portfolioId){
+        return portfolioRepository.findById(portfolioId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_PORTFOLIO));
     }
 
     private Pageable setPageRequest(int page, String sortBy) {

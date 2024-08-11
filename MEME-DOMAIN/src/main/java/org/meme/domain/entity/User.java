@@ -3,6 +3,7 @@ package org.meme.domain.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -67,6 +68,7 @@ public class User {
     private Provider provider;
 
     @ElementCollection
+    @Builder.Default
     private Set<String> deviceTokens = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")

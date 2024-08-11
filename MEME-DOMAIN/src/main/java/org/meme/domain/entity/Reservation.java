@@ -57,4 +57,16 @@ public class Reservation extends BaseEntity {
         this.portfolio = portfolio;
         portfolio.getReservations().add(this);
     }
+    public boolean isReviewed(){
+        return this.status == Status.REVIEWED;
+    }
+
+    public boolean isCompleted(){
+        return this.status == Status.COMPLETED;
+    }
+
+    public void updateStatus(Status status){
+        this.status = status;
+    }
+
 }

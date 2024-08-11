@@ -11,7 +11,7 @@ import org.meme.domain.common.status.SuccessStatus;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/portfolio")
+@RequestMapping("/api/v2/portfolio")
 public class PortfolioController {
     private final PortfolioService portfolioService;
 
@@ -39,6 +39,13 @@ public class PortfolioController {
     public BaseResponseDto updatePortfolio(@RequestBody UpdatePortfolioDto portfolioDto) {
         portfolioService.updatePortfolio(portfolioDto);
         return BaseResponseDto.SuccessResponse(SuccessStatus.PORTFOLIO_UPDATE);
+    }
+
+    @Operation(summary = "포트폴리오 블락 상태 변경", description = "포트폴리오의 블락 상태를 변경하는 API입니다.")
+    @PatchMapping("/block/{userId}/{portfolioId}")
+    public BaseResponseDto blockPortfolio(@PathVariable(name = "userId") Long userId, @PathVariable(name = "portfolioId") Long portfolioId){
+        portfolioService.blockPortfolio(userId, portfolioId);
+        return BaseResponseDto.SuccessResponse(SuccessStatus.PORTFOLIO_BLOCK);
     }
 
     /**

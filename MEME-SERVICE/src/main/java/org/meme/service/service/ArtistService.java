@@ -1,6 +1,5 @@
 package org.meme.service.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.meme.domain.common.status.ErrorStatus;
 import org.meme.domain.entity.FavoriteArtist;
@@ -26,10 +25,8 @@ public class ArtistService {
 
     //아티스트 프로필 조회 (Model Ver.)
     public ArtistResponse.ArtistDto getArtistProfile(Long userId, Long artistId){
-        Model model = modelRepository.findById(userId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_MODEL));
-        Artist artist = artistRepository.findById(artistId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_ARTIST));
+        Model model = findModelById(userId);
+        Artist artist = findArtistById(artistId);
 
         boolean isFavorite = false;
         Optional<FavoriteArtist> favoriteArtist = favoriteArtistRepository.findByModelAndArtistId(model, artistId);
@@ -39,19 +36,19 @@ public class ArtistService {
         return ArtistConverter.toArtistDto(artist, isFavorite);
     }
 
-    //아티스트 예약 가능 시간 편집
-    // TODO: AvailableTime
-    @Transactional
-    public void patchArtistAvailableTime() {
-//        Artist artist = artistRepository.findById(dto.getUserId())
-//                .orElseThrow(() -> new GlobalException(ErrorStatus.NOT_EXIST_ARTIST));
-
-    }
-
     //아티스트 프로필 조회 (Artist Ver.)
     public ArtistResponse.ArtistDto getArtistProfileFromArtist(Long artistId){
-        Artist artist = artistRepository.findById(artistId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_ARTIST));
+        Artist artist = findArtistById(artistId);
         return ArtistConverter.toArtistDto(artist, true);
+    }
+
+    private Artist findArtistById(Long artistId){
+        return artistRepository.findById(artistId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_ARTIST));
+    }
+
+    private Model findModelById(Long modelId){
+        return modelRepository.findById(modelId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_MODEL));
     }
 }

@@ -30,48 +30,42 @@ public class MypageService {
     //모델 프로필 관리
     @Transactional
     public void updateModelProfile(MypageRequest.ModelProfileDto request) {
-        Model model = modelRepository.findById(request.getUserId())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_MODEL));
+        Model model = findModelById(request.getUserId());
         updateModelEntity(model, request);
     }
 
     //모델 프로필 관리 조회
     public MypageResponse.ModelProfileDto getModelProfile(Long userId) {
-        Model model = modelRepository.findById(userId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_MODEL));
+        Model model = findModelById(userId);
         return MypageConverter.toModelProfileDto(model);
     }
 
     //아티스트 프로필 관리/수정
     @Transactional
     public void updateArtistProfile(MypageRequest.ArtistProfileDto profileDto) {
-        Artist artist = artistRepository.findById(profileDto.getUserId())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_ARTIST));
+        Artist artist = findArtistById(profileDto.getUserId());
         updateArtistEntity(artist, profileDto);
     }
 
     //아티스트 프로필 조회 (관리 조회 용)
     public MypageResponse.ArtistProfileDto getArtistProfile(Long userId) {
-        Artist artist = artistRepository.findById(userId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_ARTIST));
+        Artist artist = findArtistById(userId);
         return MypageConverter.toArtistProfileDto(artist);
     }
 
     // 마이페이지 조회
     @Transactional
     public MypageResponse.MypageDetailDto getProfile(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_USER));
+        User user = findUserById(userId);
         return MypageConverter.toMypageDetailDto(user);
     }
 
     //문의하기
     @Transactional
     public void createInquiry(MypageRequest.InquiryDto inquiryDto) {
-        User user = userRepository.findById(inquiryDto.getUserId())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_USER));
-
+        User user = findUserById(inquiryDto.getUserId());
         Inquiry inquiry = MypageConverter.toInquiry(inquiryDto, user);
+
         user.updateInquiryList(inquiry);
         inquiryRepository.save(inquiry);
     }
@@ -79,8 +73,7 @@ public class MypageService {
     // 문의하기 조회
     @Transactional
     public List<MypageResponse.InquiryDto> getInquiry(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_USER));
+        User user = findUserById(userId);
 
         List<Inquiry> inquiryList = user.getInquiryList();
         return inquiryList.stream()
@@ -120,5 +113,20 @@ public class MypageService {
             artist.setMakeupLocation(request.getMakeupLocation());
         if (request.getShopLocation() != null)
             artist.setShopLocation(request.getShopLocation());
+    }
+
+    private User findUserById(Long userId){
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_USER));
+    }
+
+    private Artist findArtistById(Long artistId){
+        return artistRepository.findById(artistId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_ARTIST));
+    }
+
+    private Model findModelById(Long modelId){
+        return modelRepository.findById(modelId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_MODEL));
     }
 }

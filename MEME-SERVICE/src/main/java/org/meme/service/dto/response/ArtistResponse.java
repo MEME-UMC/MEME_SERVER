@@ -26,7 +26,6 @@ public class ArtistResponse {
         private List<Region> region;
         private List<Category> specialization;
         private MakeupLocation makeupLocation;
-//        private List<AvailableTimeDto> availableTimeList;
         private List<PortfolioResponse.PortfolioSimpleDto> simplePortfolioDtoList;
     }
 

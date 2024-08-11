@@ -58,7 +58,10 @@ public class ReviewResponse {
         private String artistNickName;
         private String makeupName;
         private String portfolioImg;
-        private LocalDate reservationDate;
+        private int reservationYear;
+        private int reservatioinMonth;
+        private int reservationiDay;
+        private String reservationTimes;
         private String shopLocation; //샵 위치
     }
 

@@ -79,7 +79,14 @@ public class PortfolioConverter {
                     .portfolioImgDtoList(portfolioImgDtoList)
                     .averageStars(portfolio.getAverageStars())
                     .reviewCount(portfolio.getReviewList().size())
+                    .durationTime(portfolio.getDurationTime())
                     .build();
+    }
+
+    public static PortfolioImg toPortfolioImg(String src) {
+        return PortfolioImg.builder()
+                .src(src)
+                .build();
     }
 
     public static PortfolioResponse.PortfolioImgDto toPortfolioImgDto(PortfolioImg img){

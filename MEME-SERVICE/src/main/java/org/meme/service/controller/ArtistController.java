@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v2")
 public class ArtistController {
 
     private final ArtistService artistService;
@@ -18,14 +18,6 @@ public class ArtistController {
     @GetMapping("/profile/{userId}/{artistId}")
     public BaseResponseDto getArtistProfile(@PathVariable(name = "userId") Long userId, @PathVariable(name = "artistId") Long artistId) {
         return BaseResponseDto.SuccessResponse(SuccessStatus.ARTIST_PROFILE_GET, artistService.getArtistProfile(userId, artistId));
-    }
-
-    // TODO: AvailableTime
-    @Operation(summary = "아티스트 예약 가능 시간 편집")
-    @PatchMapping("/availabletime")
-    public BaseResponseDto patchAvailableTime() {
-        artistService.patchArtistAvailableTime();
-        return BaseResponseDto.SuccessResponse(SuccessStatus.ARTIST_AVAILABLE_TIME_PATCH);
     }
 
     @Operation(summary = "아티스트 프로필 조회 (Artist Ver.)")

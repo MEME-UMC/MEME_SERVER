@@ -33,8 +33,7 @@ public class FavoriteService {
     //관심 아티스트 조회
     @Transactional
     public FavoriteResponse.FavoriteArtistPageDto getFavoriteArtist(Long modelId, int page){
-        Model model = modelRepository.findById(modelId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_MODEL));
+        Model model = findModelById(modelId);
 
         //paging
         List<FavoriteArtist> favoriteArtistList = model.getFavoriteArtistList();
@@ -43,8 +42,7 @@ public class FavoriteService {
         //관심 아티스트 리스트
         List<ArtistResponse.ArtistSimpleDto> content = favoriteArtistPage.getContent().stream()
                 .map(favoriteArtist -> {
-                    Artist artist = artistRepository.findById(favoriteArtist.getArtistId())
-                            .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_ARTIST));
+                    Artist artist = findArtistById(favoriteArtist.getArtistId());
                     //해당 아티스트를 관심 아티스트로 설정한 모델 수 카운트
                     Long modelCount = favoriteArtistRepository.countByArtistId(artist.getUserId());
                     return ArtistConverter.toArtistSimpleDto(artist, modelCount);
@@ -57,8 +55,7 @@ public class FavoriteService {
     //관심 메이크업 조회
     @Transactional
     public FavoriteResponse.FavoritePortfolioPageDto getFavoritePortfolio(Long modelId, int page){
-        Model model = modelRepository.findById(modelId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_MODEL));
+        Model model = findModelById(modelId);
 
         //list를 page로 변환
         List<FavoritePortfolio> favoritePortfolioList = model.getFavoritePortfolioList();
@@ -70,11 +67,8 @@ public class FavoriteService {
     //관심 아티스트 추가
     @Transactional
     public void addFavoriteArtist(FavoriteRequest.FavoriteArtistDto favoriteArtistDto) {
-        Model model = modelRepository.findById(favoriteArtistDto.getModelId())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_MODEL));
-
-        Artist artist = artistRepository.findById(favoriteArtistDto.getArtistId())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_ARTIST));
+        Model model = findModelById(favoriteArtistDto.getModelId());
+        Artist artist = findArtistById(favoriteArtistDto.getArtistId());
 
         //이미 관심 아티스트가 존재하는 경우
         if (favoriteArtistRepository.existsByModelAndArtistId(model, artist.getUserId())) {
@@ -89,11 +83,8 @@ public class FavoriteService {
     //관심 메이크업 추가
     @Transactional
     public void addFavoritePortfolio(FavoriteRequest.FavoritePortfolioDto favoritePortfolioDto) {
-        Model model = modelRepository.findById(favoritePortfolioDto.getModelId())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_MODEL));
-
-        Portfolio portfolio = portfolioRepository.findById(favoritePortfolioDto.getPortfolioId())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_PORTFOLIO));
+        Model model = findModelById(favoritePortfolioDto.getModelId());
+        Portfolio portfolio = findPortfolioById(favoritePortfolioDto.getPortfolioId());
 
         //이미 관심 포트폴리오가 존재하는 경우
         if (favoritePortfolioRepository.existsByModelAndPortfolio(model,portfolio)) {
@@ -108,29 +99,46 @@ public class FavoriteService {
     //관심 아티스트 삭제
     @Transactional
     public void deleteFavoriteArtist(FavoriteRequest.FavoriteArtistDto favoriteArtistDto){
-        Model model = modelRepository.findById(favoriteArtistDto.getModelId())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_MODEL));
+        Model model = findModelById(favoriteArtistDto.getModelId());
+        Artist artist = findArtistById(favoriteArtistDto.getArtistId());
 
-        Artist artist = artistRepository.findById(favoriteArtistDto.getArtistId())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_ARTIST));
-
-        FavoriteArtist favoriteArtist = favoriteArtistRepository.findByModelAndArtistId(model, artist.getUserId())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_FAVORITE_ARTIST));
+        FavoriteArtist favoriteArtist = findFavoriteArtistByModelAndArtistId(model, artist.getUserId());
         favoriteArtistRepository.delete(favoriteArtist);
     }
 
     //관심 메이크업 삭제
     @Transactional
     public void deleteFavoritePortfolio(FavoriteRequest.FavoritePortfolioDto favoritePortfolioDto) {
-        Model model = modelRepository.findById(favoritePortfolioDto.getModelId())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_MODEL));
+        Model model = findModelById(favoritePortfolioDto.getModelId());
+        Portfolio portfolio = findPortfolioById(favoritePortfolioDto.getPortfolioId());
 
-        Portfolio portfolio = portfolioRepository.findById(favoritePortfolioDto.getPortfolioId())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_PORTFOLIO));
-
-        FavoritePortfolio favoritePortfolio = favoritePortfolioRepository.findByModelAndPortfolio(model, portfolio)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_FAVORITE_PORTFOLIO));
+        FavoritePortfolio favoritePortfolio = findFavoritePortfolioByModelAndPortfolio(model, portfolio);
         favoritePortfolioRepository.delete(favoritePortfolio);
+    }
+
+    private Artist findArtistById(Long artistId){
+        return artistRepository.findById(artistId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_ARTIST));
+    }
+
+    private Model findModelById(Long modelId){
+        return modelRepository.findById(modelId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_MODEL));
+    }
+
+    private Portfolio findPortfolioById(Long portfolioId){
+        return portfolioRepository.findById(portfolioId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_PORTFOLIO));
+    }
+
+    private FavoritePortfolio findFavoritePortfolioByModelAndPortfolio(Model model, Portfolio portfolio){
+        return favoritePortfolioRepository.findByModelAndPortfolio(model, portfolio)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_FAVORITE_PORTFOLIO));
+    }
+
+    private FavoriteArtist findFavoriteArtistByModelAndArtistId(Model model, Long artistId){
+        return favoriteArtistRepository.findByModelAndArtistId(model, artistId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_FAVORITE_ARTIST));
     }
 
     private Page getPage(int page, List list){
