@@ -24,14 +24,14 @@ jobs:
           ./gradlew clean build
 
       - name: Log in to Docker Hub
-        run: echo "${{ env.DOCKER_PASSWORD }}" | docker login -u "${{ env.DOCKER_USERNAME }}" --password-stdin
+        run: echo "${{ vars.DOCKER_PASSWORD }}" | docker login -u "${{ vars.DOCKER_USERNAME }}" --password-stdin
 
       - name: Build and push Docker image for MEME-AUTH
         uses: docker/build-push-action@v5
         with:
           context: ./MEME-AUTH  # MEME-AUTH 모듈의 경로
           push: true
-          tags: ${{ env.DOCKER_USERNAME }}/${{ env.MEME_AUTH }}:latest
+          tags: ${{ vars.DOCKER_USERNAME }}/${{ vars.MEME_AUTH }}:latest
           platforms: linux/amd64,linux/arm64
 
       # MEME-RESERVATION 모듈 빌드
@@ -46,7 +46,7 @@ jobs:
         with:
           context: ./MEME-RESERVATION  # MEME-RESERVATION 모듈의 경로
           push: true
-          tags: ${{ env.DOCKER_USERNAME }}/${{ env.MEME_RESERVATION }}:latest
+          tags: ${{ vars.DOCKER_USERNAME }}/${{ vars.MEME_RESERVATION }}:latest
           platforms: linux/amd64,linux/arm64
 
   deploy:
@@ -58,7 +58,7 @@ jobs:
 
       - name: Trigger Docker update script on Raspberry Pi
         run: |
-          sshpass -p ${{ env.PI_PASSWORD }} ssh -o StrictHostKeyChecking=no ${{ env.PI_USER }}@${{ env.PI_HOST }} << EOF
+          sshpass -p ${{ vars.PI_PASSWORD }} ssh -o StrictHostKeyChecking=no ${{ vars.PI_USER }}@${{ vars.PI_HOST }} << EOF
           echo "Connected to Raspberry Pi"
           
           # meme-bash.sh 스크립트 실행
