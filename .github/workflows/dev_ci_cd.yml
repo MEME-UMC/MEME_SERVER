@@ -70,5 +70,7 @@ jobs:
           echo "Connected to Raspberry Pi"
           
           # meme-bash.sh 스크립트 실행
-          bash /home/sunwupark/Downloads/MeMe/meme-bash.sh
+          cd /home/sunwupark/Downloads/MeMe
+          chmod +x meme-bash.sh
+          ./meme-bash.sh
           EOF
