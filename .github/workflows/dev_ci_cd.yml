@@ -68,9 +68,9 @@ jobs:
         run: |
           sshpass -p ${{ vars.PI_PASSWORD }} ssh -o StrictHostKeyChecking=no ${{ vars.PI_USER }}@${{ vars.PI_HOST }} << EOF
           echo "Connected to Raspberry Pi"
-          
-          # meme-bash.sh 스크립트 실행
+
+          # meme-bash.sh 스크립트 실행을 백그라운드에서 실행
           cd /home/sunwupark/Downloads/MeMe
           chmod +x meme-bash.sh
-          ./meme-bash.sh
+          nohup ./meme-bash.sh > /dev/null 2>&1 &
           EOF

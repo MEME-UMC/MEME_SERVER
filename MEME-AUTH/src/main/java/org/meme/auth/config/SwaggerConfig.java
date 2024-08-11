@@ -15,8 +15,8 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI MemeAPI() {
         Info info = new Info()
-                .title("MoMo API Docs")
-                .description("MoMo API 명세서")
+                .title("MeMe API Docs")
+                .description("MeMe API 명세서")
                 .version("1.0.0");
 
         String jwtSchemeName = "accessToken";
