@@ -49,4 +49,12 @@ public class Reservation extends BaseEntity {
     private String makeupName;
     private String artistName;
     private int price;
+
+    public void pendingReservation(Model model, Portfolio portfolio) {
+        this.model = model;
+        model.getReservations().add(this);
+
+        this.portfolio = portfolio;
+        portfolio.getReservations().add(this);
+    }
 }
