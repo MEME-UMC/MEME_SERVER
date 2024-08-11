@@ -46,4 +46,7 @@ public class Reservation extends BaseEntity {
     @Column(nullable = false)
     private String location;
 
+    private String makeupName;
+    private String artistName;
+    private int price;
 }
