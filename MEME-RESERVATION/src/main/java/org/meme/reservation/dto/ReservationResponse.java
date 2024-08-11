@@ -66,7 +66,7 @@ public class ReservationResponse {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class ArtistReservationSimpleDto {
+    public static class ReservationSimpleDto {
         private String makeupName;
         private String artistName;
         private String location;

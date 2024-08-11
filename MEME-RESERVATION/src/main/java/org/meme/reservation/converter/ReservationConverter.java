@@ -129,12 +129,12 @@ public class ReservationConverter {
         return times;
     }
 
-    public static ReservationResponse.ArtistReservationSimpleDto toReservationSimpleDto(Reservation reservation) {
+    public static ReservationResponse.ReservationSimpleDto toReservationSimpleDto(Reservation reservation) {
         String[] reservationTimes = getReservationTimes(reservation.getTimes());
         String startTime = reservationTimes[0];
         String endTime = reservationTimes[reservationTimes.length - 1];
 
-        return ReservationResponse.ArtistReservationSimpleDto.builder()
+        return ReservationResponse.ReservationSimpleDto.builder()
                 .makeupName(reservation.getMakeupName())
                 .artistName(reservation.getArtistName())
                 .location(reservation.getLocation())

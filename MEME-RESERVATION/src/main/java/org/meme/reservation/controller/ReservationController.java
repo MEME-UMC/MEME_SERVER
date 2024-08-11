@@ -2,7 +2,6 @@ package org.meme.reservation.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.meme.domain.common.BaseResponseDto;
-import org.meme.domain.common.status.SuccessStatus;
 import org.meme.reservation.dto.ReservationRequest;
 import org.meme.reservation.dto.ReservationResponse;
 import org.meme.reservation.service.ReservationService;
@@ -111,12 +110,13 @@ public class ReservationController {
     }
 
     @GetMapping("/api/v2/mypage/{artistId}/reservations")
-    public BaseResponseDto<List<ReservationResponse.ArtistReservationSimpleDto>> getReservationsByArtist(@PathVariable("artistId") Long artistId) {
+    public BaseResponseDto<List<ReservationResponse.ReservationSimpleDto>> getReservationSimplesByArtist(@PathVariable("artistId") Long artistId) {
         return BaseResponseDto.SuccessResponse(RESERVATION_GET_BY_ARTIST, reservationService.getReservationSimplesByArtist(artistId));
     }
 
     @GetMapping("/api/v2/mypage/{modelId}/reservations")
-    public BaseResponseDto<List<ReservationResponse.ArtistReservationSimpleDto>> getReservationsByModel(@PathVariable("modelId") Long modelId) {
+    public BaseResponseDto<List<ReservationResponse.ReservationSimpleDto>> getReservationSimplesByModel(@PathVariable("modelId") Long modelId) {
         return BaseResponseDto.SuccessResponse(RESERVATION_GET_BY_MODEL, reservationService.getReservationSimplesByModel(modelId));
     }
+
 }

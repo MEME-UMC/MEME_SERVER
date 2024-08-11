@@ -115,16 +115,16 @@ public class ReservationService {
         enableTime.updateEnableTimes(enableTimes);
     }
 
-    public List<ReservationResponse.ArtistReservationSimpleDto> getReservationSimplesByArtist(Long artistId) {
+    public List<ReservationResponse.ReservationSimpleDto> getReservationSimplesByArtist(Long artistId) {
         Artist artist = getArtistById(artistId);
         List<Portfolio> portfolioList = artist.getPortfolioList();
 
-        List<ReservationResponse.ArtistReservationSimpleDto> reservationSimpleDtos = new ArrayList<>();
+        List<ReservationResponse.ReservationSimpleDto> reservationSimpleDtos = new ArrayList<>();
 
         for (Portfolio portfolio : portfolioList) {
             List<Reservation> reservations = portfolio.getReservations();  // 포트폴리오의 예약 목록 조회
             for (Reservation reservation : reservations) {
-                ReservationResponse.ArtistReservationSimpleDto reservationSimpleDto = ReservationConverter.toReservationSimpleDto(reservation);
+                ReservationResponse.ReservationSimpleDto reservationSimpleDto = ReservationConverter.toReservationSimpleDto(reservation);
                 reservationSimpleDtos.add(reservationSimpleDto);
             }
         }
@@ -132,14 +132,14 @@ public class ReservationService {
         return reservationSimpleDtos;
     }
 
-    public List<ReservationResponse.ArtistReservationSimpleDto> getReservationSimplesByModel(Long modelId) {
+    public List<ReservationResponse.ReservationSimpleDto> getReservationSimplesByModel(Long modelId) {
         Model model = getModelById(modelId);
         List<Reservation> reservations = model.getReservations();
 
-        List<ReservationResponse.ArtistReservationSimpleDto> reservationSimpleDtos = new ArrayList<>();
+        List<ReservationResponse.ReservationSimpleDto> reservationSimpleDtos = new ArrayList<>();
 
         for (Reservation reservation : reservations) {
-            ReservationResponse.ArtistReservationSimpleDto reservationSimpleDto = ReservationConverter.toReservationSimpleDto(reservation);
+            ReservationResponse.ReservationSimpleDto reservationSimpleDto = ReservationConverter.toReservationSimpleDto(reservation);
             reservationSimpleDtos.add(reservationSimpleDto);
         }
 
