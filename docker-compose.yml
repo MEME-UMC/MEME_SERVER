@@ -1,0 +1,66 @@
+version: '3'
+
+services:
+  auth:
+    container_name: auth
+    image: sunwupark/meme-server-auth
+    expose:
+      - 8080
+    ports:
+      - "8080:8080"
+    networks:
+      - meme
+    environment:
+      - APPLE_CLIENT_ID=umc.MEME
+      - DB_PASSWORD=1234
+      - DB_USERNAME=root
+      - JWT_SECRET_KEY=c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
+      - KAKAO_REST_API_KEY=3d9ba27e79e64cf857e8e91bbfc88346
+      - DB_SCHEMA=meme_db
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql_container:3306/meme_db?useSSL=false&useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
+      - REDIS_URL=www.dungdungcloud.shop
+  reservation:
+    container_name: reservation
+    image: sunwupark/meme-server-reservation
+    expose:
+      - 8083
+    ports:
+      - "8083:8083"
+    networks:
+      - meme
+    environment:
+      - DB_PASSWORD=1234
+      - DB_USERNAME=root
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql_container:3306/meme_db?useSSL=false&useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
+      - REDIS_URL=www.dungdungcloud.shop
+#  notification:
+#    container_name: notification
+#    image: sunwupark/meme-server-notification
+#    expose:
+#      - 8082
+#    ports:
+#      - "8082:8082"
+#    networks:
+#      - meme
+#    environment:
+#      - APPLE_CLIENT_ID=umc.MEME
+#      - DB_PASSWORD=1234
+#      - DB_USERNAME=root
+#      - JWT_SECRET_KEY=c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
+#      - KAKAO_REST_API_KEY=3d9ba27e79e64cf857e8e91bbfc88346
+#      - DB_SCHEMA=meme_db
+#      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql_container:3306/meme_db?useSSL=false&useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
+#      - REDIS_URL=www.dungdungcloud.shop
+  #
+  #  service:
+  #    container_name: service
+  #    image: sunwupark/meme-server-service
+  #    expose:
+  #      - 8083
+  #    ports:
+  #      - "8083:8083"
+#
+networks:
+  meme:
+    driver: bridge
+    external: true
