@@ -81,7 +81,7 @@ public enum SuccessStatus {
     GET_ENABLE_DATE_SUCCESS(HttpStatus.OK, 200, "영업 가능 날짜 조회에 성공하였습니다."),
     GET_ENABLE_TIME_SUCCESS(HttpStatus.OK, 200, "영업 가능 시간대 조회에 성공하였습니다."),
     UPDATE_ENABLE_DATE_SUCCESS(HttpStatus.OK, 200, "영업 가능 날짜 수정에 성공하였습니다."),
-    UPDATE_ENABLE_TIME_SUCCESS(HttpStatus.OK, 200, "영업 가능 시간대 수정에 성공하였습니다.");
+    UPDATE_ENABLE_TIME_SUCCESS(HttpStatus.OK, 200, "영업 가능 시간대 수정에 성공하였습니다."),
 
     // NotificationController
     ELK_SEARCH_SUCCESS(HttpStatus.OK, 200, "엘라스틱서치 검색 성공"),
