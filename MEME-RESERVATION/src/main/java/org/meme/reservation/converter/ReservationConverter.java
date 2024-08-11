@@ -2,6 +2,7 @@ package org.meme.reservation.converter;
 
 import org.meme.domain.entity.*;
 import org.meme.domain.enums.DayOfWeek;
+import org.meme.domain.enums.Status;
 import org.meme.reservation.dto.ReservationRequest;
 import org.meme.reservation.dto.ReservationResponse;
 
@@ -19,7 +20,7 @@ public class ReservationConverter {
                 .year(saveDto.getYear())
                 .day(saveDto.getDay())
                 .times(intoString(saveDto.getTimes()))
-                .status(saveDto.getStatus())
+                .status(Status.PENDING)
                 .location(saveDto.getLocation())
                 .build();
     }
