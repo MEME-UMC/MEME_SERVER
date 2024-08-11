@@ -61,6 +61,9 @@ public class ConcurrentRequestHandler {
                         ReservationConverter.toReservationEntity(requestDto, model, portfolio)
                 );
 
+                // 4-1. 모델, 포트폴리오 내 예약 정보 추가
+                reservationInfo.pendingReservation(model, portfolio);
+
                 // 5. 락을 해제합니다.
                 rlock.unlock();
 

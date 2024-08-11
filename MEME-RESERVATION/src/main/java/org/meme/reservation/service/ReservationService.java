@@ -15,10 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 @RequiredArgsConstructor
@@ -118,9 +115,45 @@ public class ReservationService {
         enableTime.updateEnableTimes(enableTimes);
     }
 
+    public List<ReservationResponse.ArtistReservationSimpleDto> getReservationSimplesByArtist(Long artistId) {
+        Artist artist = getArtistById(artistId);
+        List<Portfolio> portfolioList = artist.getPortfolioList();
+
+        List<ReservationResponse.ArtistReservationSimpleDto> reservationSimpleDtos = new ArrayList<>();
+
+        for (Portfolio portfolio : portfolioList) {
+            List<Reservation> reservations = portfolio.getReservations();  // 포트폴리오의 예약 목록 조회
+            for (Reservation reservation : reservations) {
+                ReservationResponse.ArtistReservationSimpleDto reservationSimpleDto = ReservationConverter.toReservationSimpleDto(reservation);
+                reservationSimpleDtos.add(reservationSimpleDto);
+            }
+        }
+
+        return reservationSimpleDtos;
+    }
+
+    public List<ReservationResponse.ArtistReservationSimpleDto> getReservationSimplesByModel(Long modelId) {
+        Model model = getModelById(modelId);
+        List<Reservation> reservations = model.getReservations();
+
+        List<ReservationResponse.ArtistReservationSimpleDto> reservationSimpleDtos = new ArrayList<>();
+
+        for (Reservation reservation : reservations) {
+            ReservationResponse.ArtistReservationSimpleDto reservationSimpleDto = ReservationConverter.toReservationSimpleDto(reservation);
+            reservationSimpleDtos.add(reservationSimpleDto);
+        }
+
+        return reservationSimpleDtos;
+    }
+
     private Artist getArtistById(Long artistId) {
         return artistRepository.findById(artistId)
                 .orElseThrow(() -> new IllegalArgumentException("Artist not found"));
+    }
+
+    private Model getModelById(Long modelId) {
+        return modelRepository.findById(modelId)
+                .orElseThrow(() -> new RuntimeException("Model not found"));
     }
 
     private Map<Integer, List<String>> getReservations(List<Reservation> reservationInYearAndMonth) {
