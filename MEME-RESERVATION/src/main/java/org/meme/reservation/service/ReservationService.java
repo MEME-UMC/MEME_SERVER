@@ -146,6 +146,20 @@ public class ReservationService {
         return reservationSimpleDtos;
     }
 
+    public ReservationResponse.ReservationDetailArtistSightDto getReservationDetailByArtist(Long reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
+
+        return ReservationConverter.toReservationDetailArtistSightDto(reservation);
+    }
+
+    public ReservationResponse.ReservationDetailModelSightDto getReservationDetailByModel(Long reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
+
+        return ReservationConverter.toReservationDetailModelSightDto(reservation);
+    }
+
     private Artist getArtistById(Long artistId) {
         return artistRepository.findById(artistId)
                 .orElseThrow(() -> new IllegalArgumentException("Artist not found"));

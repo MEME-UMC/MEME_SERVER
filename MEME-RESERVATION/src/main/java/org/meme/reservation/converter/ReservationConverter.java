@@ -6,6 +6,7 @@ import org.meme.domain.enums.Status;
 import org.meme.reservation.dto.ReservationRequest;
 import org.meme.reservation.dto.ReservationResponse;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -140,6 +141,8 @@ public class ReservationConverter {
                 .location(reservation.getLocation())
                 .price(reservation.getPrice())
                 .status(reservation.getStatus())
+                .year(reservation.getYear())
+                .month(reservation.getMonth())
                 .startTime(startTime)
                 .endTime(endTime)
                 .build();
@@ -147,5 +150,50 @@ public class ReservationConverter {
 
     private static String[] getReservationTimes(String times) {
         return times.split(SPLIT_COMMA);
+    }
+
+    private static String getDateString(Reservation reservation) {
+        return reservation.getYear() + "년 " + reservation.getMonth() + "월 " + reservation.getDay() + "일";
+    }
+
+    private static String getTimeString(Reservation reservation) {
+        String[] reservationTimes = getReservationTimes(reservation.getTimes());
+        return reservationTimes[0] + " - " + reservationTimes[reservationTimes.length - 1];
+    }
+
+    private static String getPriceString(Reservation reservation) {
+        DecimalFormat formatter = new DecimalFormat("###,###");
+        return formatter.format(reservation.getPrice()) + "원";
+    }
+
+    public static ReservationResponse.ReservationDetailArtistSightDto toReservationDetailArtistSightDto(Reservation reservation) {
+        Model model = reservation.getModel();
+
+        return ReservationResponse.ReservationDetailArtistSightDto.builder()
+                .model_name(model.getNickname())
+                .model_email(model.getEmail())
+                .model_gender(model.getGender())
+                .model_skin_type(model.getSkinType())
+                .model_personal_color(model.getPersonalColor())
+                .reservation_name(reservation.getMakeupName())
+                .reservation_date(getDateString(reservation))
+                .reservation_time(getTimeString(reservation))
+                .reservation_price(getPriceString(reservation))
+                .reservation_status(reservation.getStatus())
+                .build();
+    }
+
+    public static ReservationResponse.ReservationDetailModelSightDto toReservationDetailModelSightDto(Reservation reservation) {
+        Artist artist = reservation.getPortfolio().getArtist();
+
+        return ReservationResponse.ReservationDetailModelSightDto.builder()
+                .aritst_name(artist.getNickname())
+                .artist_email(artist.getEmail())
+                .reservation_name(reservation.getMakeupName())
+                .reservation_date(getDateString(reservation))
+                .reservation_time(getTimeString(reservation))
+                .reservation_price(getPriceString(reservation))
+                .reservation_status(reservation.getStatus())
+                .build();
     }
 }

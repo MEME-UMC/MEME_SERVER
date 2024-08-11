@@ -4,8 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.meme.domain.enums.DayOfWeek;
-import org.meme.domain.enums.Status;
+import org.meme.domain.enums.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -71,6 +70,8 @@ public class ReservationResponse {
         private String artistName;
         private String location;
         private int price;
+        private int year;
+        private int month;
         private String startTime;
         private String endTime;
         private Status status;
@@ -80,7 +81,36 @@ public class ReservationResponse {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class ArtistReservationDetailDto {
+    public static class ReservationDetailArtistSightDto {
+        // 아티스트에게 보이는 모델 정보
+        private String model_name;
+        private String model_email;
+        private Gender model_gender;
+        private SkinType model_skin_type;
+        private PersonalColor model_personal_color;
 
+        // 공통 정보
+        private String reservation_name;
+        private String reservation_date;   // 2024년 08월 11일
+        private String reservation_time;   // 18:00 - 19:00
+        private String reservation_price;  // 100,000원
+        private Status reservation_status;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ReservationDetailModelSightDto {
+        // 모델에게 보이는 아티스트 정보
+        private String aritst_name;
+        private String artist_email;
+
+        // 공통 정보
+        private String reservation_name;
+        private String reservation_date;   // 8월 11일 (일)
+        private String reservation_time;   // 18:00 - 19:00
+        private String reservation_price;  // 100,000원
+        private Status reservation_status;
     }
 }

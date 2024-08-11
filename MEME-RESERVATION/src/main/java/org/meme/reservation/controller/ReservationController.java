@@ -109,14 +109,43 @@ public class ReservationController {
         return BaseResponseDto.SuccessResponse(UPDATE_ENABLE_TIME_SUCCESS);
     }
 
+    /**
+     * 예약 간단 조회 (아티스트)
+     * @param artistId
+     * @return
+     */
     @GetMapping("/api/v2/mypage/{artistId}/reservations")
     public BaseResponseDto<List<ReservationResponse.ReservationSimpleDto>> getReservationSimplesByArtist(@PathVariable("artistId") Long artistId) {
         return BaseResponseDto.SuccessResponse(RESERVATION_GET_BY_ARTIST, reservationService.getReservationSimplesByArtist(artistId));
     }
 
+    /**
+     * 예약 간단 조회 (모델)
+     * @param modelId
+     * @return
+     */
     @GetMapping("/api/v2/mypage/{modelId}/reservations")
     public BaseResponseDto<List<ReservationResponse.ReservationSimpleDto>> getReservationSimplesByModel(@PathVariable("modelId") Long modelId) {
         return BaseResponseDto.SuccessResponse(RESERVATION_GET_BY_MODEL, reservationService.getReservationSimplesByModel(modelId));
     }
 
+    /**
+     * 예약 상세 조회 (아티스트)
+     * @param reservationId
+     * @return
+     */
+    @GetMapping("/api/v2/reservation/artist/{reservationId}")
+    public BaseResponseDto<ReservationResponse.ReservationDetailArtistSightDto> getReservationDetailByArtist(@PathVariable("reservationId") Long reservationId) {
+        return BaseResponseDto.SuccessResponse(RESERVATION_DETAIL_GET_BY_ARTIST, reservationService.getReservationDetailByArtist(reservationId));
+    }
+
+    /**
+     * 예약 상세 조회 (모델)
+     * @param reservationId
+     * @return
+     */
+    @GetMapping("/api/v2/reservation/model/{reservationId}")
+    public BaseResponseDto<ReservationResponse.ReservationDetailModelSightDto> getReservationDetailByModel(@PathVariable("reservationId") Long reservationId) {
+        return BaseResponseDto.SuccessResponse(RESERVATION_DETAIL_GET_BY_MODEL, reservationService.getReservationDetailByModel(reservationId));
+    }
 }
