@@ -21,7 +21,7 @@ public class Reservation extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User model;
+    private Model model;
 
     @ManyToOne
     @JoinColumn(name = "portfolio_id", nullable = false)
@@ -48,7 +48,7 @@ public class Reservation extends BaseEntity {
 
     private String makeupName;
     private String artistName;
-    private int price;
+    private int price;  // 실제 가격과 예약 시 할인 가격이 적용될 수도 있지 않을까
 
     public void pendingReservation(Model model, Portfolio portfolio) {
         this.model = model;

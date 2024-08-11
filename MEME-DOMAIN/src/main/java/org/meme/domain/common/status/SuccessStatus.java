@@ -62,6 +62,8 @@ public enum SuccessStatus {
     ARTIST_TIME_GET(HttpStatus.OK,200, "아티스트의 예약 가능 시간 조회가 완료되었습니다."),
     RESERVATION_GET_BY_ARTIST(HttpStatus.OK,200, "예약 내역 조회가 완료되었습니다."),
     RESERVATION_GET_BY_MODEL(HttpStatus.OK,200, "예약 내역 조회가 완료되었습니다."),
+    RESERVATION_DETAIL_GET_BY_ARTIST(HttpStatus.OK,200, "예약 상세 조회가 완료되었습니다."),
+    RESERVATION_DETAIL_GET_BY_MODEL(HttpStatus.OK,200, "예약 상세 조회가 완료되었습니다."),
 
     /**mypage**/
     MYPAGE_GET(HttpStatus.OK,200, "마이페이지 조회가 완료되었습니다"),
