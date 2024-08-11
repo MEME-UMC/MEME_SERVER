@@ -46,7 +46,6 @@ public class AuthService {
     private final TokenRepository tokenRepository;  // 필수 - 토큰 저장 및 삭제
     private final UserRepository userRepository;  // 필수 - 사용자 정보 조회
     private final RedisRepository redisRepository;  // 필수 - 자식 클래스 의존성 주입 시 필요
-    private final KafkaTemplate<String, FcmSendDto> kafkaTemplate;
 
     private final static String TOKEN_PREFIX = "Bearer ";
     private static final String USERNAME = "username";
@@ -65,14 +64,6 @@ public class AuthService {
 
         String[] tokenPair = login(user);
 
-        FcmSendDto fcmSendDto = FcmSendDto.builder()
-                .userId(user.getUserId())
-                .title("Congratulate your Signup")
-                .body("MODEL SIGNUP " + userEmail)
-                .token(user.getDeviceTokens().stream().toList())
-                .build();
-
-        kafkaTemplate.send("model_signup", fcmSendDto);
         return TokenConverter.toJoinDto(user, tokenPair, ROLE_MODEL);
     }
 
@@ -85,14 +76,7 @@ public class AuthService {
         User user = checkUserDeviceToken(userEmail, artistJoinDto);
 
         String[] tokenPair = login(user);
-        FcmSendDto fcmSendDto = FcmSendDto.builder()
-                .userId(user.getUserId())
-                .title("Congratulate your Signup")
-                .body("Artist SIGNUP " + userEmail)
-                .token(user.getDeviceTokens().stream().toList())
-                .build();
 
-        kafkaTemplate.send("artist_signup", fcmSendDto);
         return TokenConverter.toJoinDto(user, tokenPair, ROLE_ARTIST);
     }
 
