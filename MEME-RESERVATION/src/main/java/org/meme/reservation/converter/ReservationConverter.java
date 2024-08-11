@@ -12,6 +12,8 @@ import java.util.*;
 
 public class ReservationConverter {
 
+    final static String SPLIT_COMMA = ",";
+
     public static Reservation toReservationEntity(ReservationRequest.SaveDto saveDto, Model model, Portfolio portfolio) {
         return Reservation.builder()
                 .model(model)
@@ -67,7 +69,7 @@ public class ReservationConverter {
     }
 
     private static String intoString(Set<String> times) {
-        StringJoiner joiner = new StringJoiner(",");
+        StringJoiner joiner = new StringJoiner(SPLIT_COMMA);
         for (String time : times) {
             joiner.add(time);
         }
@@ -75,7 +77,7 @@ public class ReservationConverter {
     }
 
     public static String intoDateString(List<LocalDate> dates) {
-        StringJoiner joiner = new StringJoiner(",");
+        StringJoiner joiner = new StringJoiner(SPLIT_COMMA);
         for (LocalDate date : dates) {
             joiner.add(date.toString());
         }
@@ -88,7 +90,7 @@ public class ReservationConverter {
         for (Map.Entry<DayOfWeek, List<String>> entry : enableTimes.entrySet()) {
             DayOfWeek day = entry.getKey();
             List<String> times = entry.getValue();
-            StringJoiner timeJoiner = new StringJoiner(",");
+            StringJoiner timeJoiner = new StringJoiner(SPLIT_COMMA);
             for (String time : times) {
                 timeJoiner.add(time);
             }
@@ -101,7 +103,7 @@ public class ReservationConverter {
     public static List<LocalDate> intoDates(String enableDates) {
         List<LocalDate> dates = new ArrayList<>();
 
-        String[] split = enableDates.split(",");
+        String[] split = enableDates.split(SPLIT_COMMA);
         for (String date : split) {
             dates.add(LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE));
         }
@@ -119,11 +121,31 @@ public class ReservationConverter {
             String timesString = parts[1];
 
             DayOfWeek day = DayOfWeek.valueOf(dayString);
-            List<String> timesInDay = Arrays.asList(timesString.split(","));
+            List<String> timesInDay = Arrays.asList(timesString.split(SPLIT_COMMA));
 
             times.put(day, timesInDay);
         }
 
         return times;
+    }
+
+    public static ReservationResponse.ArtistReservationSimpleDto toReservationSimpleDto(Reservation reservation) {
+        String[] reservationTimes = getReservationTimes(reservation.getTimes());
+        String startTime = reservationTimes[0];
+        String endTime = reservationTimes[reservationTimes.length - 1];
+
+        return ReservationResponse.ArtistReservationSimpleDto.builder()
+                .makeupName(reservation.getMakeupName())
+                .artistName(reservation.getArtistName())
+                .location(reservation.getLocation())
+                .price(reservation.getPrice())
+                .status(reservation.getStatus())
+                .startTime(startTime)
+                .endTime(endTime)
+                .build();
+    }
+
+    private static String[] getReservationTimes(String times) {
+        return times.split(SPLIT_COMMA);
     }
 }

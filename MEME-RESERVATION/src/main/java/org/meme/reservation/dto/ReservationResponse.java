@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.meme.domain.enums.DayOfWeek;
+import org.meme.domain.enums.Status;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -59,5 +60,27 @@ public class ReservationResponse {
         private boolean saleTime;      // 예약 가능 여부
         private LocalDate unitStartDay;  // 단위 날짜
         private String unitStartTime;    // 단위 시간
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ArtistReservationSimpleDto {
+        private String makeupName;
+        private String artistName;
+        private String location;
+        private int price;
+        private String startTime;
+        private String endTime;
+        private Status status;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ArtistReservationDetailDto {
+
     }
 }
