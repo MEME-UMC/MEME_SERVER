@@ -61,6 +61,10 @@ public enum SuccessStatus {
     RESERVATION_UPDATE(HttpStatus.OK,200, "예약 상태 변경이 완료되었습니다"),
     ARTIST_LOCATION_GET(HttpStatus.OK,200, "아티스트의 예약 가능 장소 조회가 완료되었습니다"),
     ARTIST_TIME_GET(HttpStatus.OK,200, "아티스트의 예약 가능 시간 조회가 완료되었습니다."),
+    RESERVATION_GET_BY_ARTIST(HttpStatus.OK,200, "예약 내역 조회가 완료되었습니다."),
+    RESERVATION_GET_BY_MODEL(HttpStatus.OK,200, "예약 내역 조회가 완료되었습니다."),
+    RESERVATION_DETAIL_GET_BY_ARTIST(HttpStatus.OK,200, "예약 상세 조회가 완료되었습니다."),
+    RESERVATION_DETAIL_GET_BY_MODEL(HttpStatus.OK,200, "예약 상세 조회가 완료되었습니다."),
 
     /**mypage**/
     MYPAGE_GET(HttpStatus.OK,200, "마이페이지 조회가 완료되었습니다"),
@@ -70,12 +74,14 @@ public enum SuccessStatus {
     CONTACT_GET(HttpStatus.OK,200, "문의 조회가 완료되었습니다."),
 
     // ReservationController
-    MAKE_RESERVATION_SUCCESS(HttpStatus.OK, 200, "예약을 완료하였습니다."),
+    RESERVATION_SUCCESS(HttpStatus.OK, 200, "예약을 완료하였습니다."),
     GET_SCHEDULE_SUCCESS(HttpStatus.OK, 200, "일정 조회를 성공하였습니다."),
     ADD_ENABLE_DATE_SUCCESS(HttpStatus.OK, 200, "영업 가능 날짜 등록에 성공하였습니다."),
     ADD_ENABLE_TIME_SUCCESS(HttpStatus.OK, 200, "영업 가능 시간대 등록에 성공하였습니다."),
     GET_ENABLE_DATE_SUCCESS(HttpStatus.OK, 200, "영업 가능 날짜 조회에 성공하였습니다."),
     GET_ENABLE_TIME_SUCCESS(HttpStatus.OK, 200, "영업 가능 시간대 조회에 성공하였습니다."),
+    UPDATE_ENABLE_DATE_SUCCESS(HttpStatus.OK, 200, "영업 가능 날짜 수정에 성공하였습니다."),
+    UPDATE_ENABLE_TIME_SUCCESS(HttpStatus.OK, 200, "영업 가능 시간대 수정에 성공하였습니다.");
 
     // NotificationController
     ELK_SEARCH_SUCCESS(HttpStatus.OK, 200, "엘라스틱서치 검색 성공"),

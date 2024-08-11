@@ -30,4 +30,8 @@ public class ArtistEnableDate {
         this.month = month;
         this.enableDates = enableDates;
     }
+
+    public void updateEnableDates(String enableDates) {
+        this.enableDates = enableDates;
+    }
 }

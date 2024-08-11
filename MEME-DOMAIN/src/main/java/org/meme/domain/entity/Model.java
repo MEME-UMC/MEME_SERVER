@@ -38,6 +38,10 @@ public class Model extends User {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "model")
     private List<Review> reviewList;
 
+    // daeun) OK 시 이거로 적용하기
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "model")
+    private List<Reservation> reservations;
+
     public void updateFavoriteArtistList(FavoriteArtist artist){
         this.favoriteArtistList.add(artist);
     }

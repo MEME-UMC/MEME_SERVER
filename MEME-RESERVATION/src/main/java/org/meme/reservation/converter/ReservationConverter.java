@@ -2,14 +2,18 @@ package org.meme.reservation.converter;
 
 import org.meme.domain.entity.*;
 import org.meme.domain.enums.DayOfWeek;
+import org.meme.domain.enums.Status;
 import org.meme.reservation.dto.ReservationRequest;
 import org.meme.reservation.dto.ReservationResponse;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class ReservationConverter {
+
+    final static String SPLIT_COMMA = ",";
 
     public static Reservation toReservationEntity(ReservationRequest.SaveDto saveDto, Model model, Portfolio portfolio) {
         return Reservation.builder()
@@ -19,8 +23,11 @@ public class ReservationConverter {
                 .year(saveDto.getYear())
                 .day(saveDto.getDay())
                 .times(intoString(saveDto.getTimes()))
-                .status(saveDto.getStatus())
+                .status(Status.PENDING)
                 .location(saveDto.getLocation())
+                .artistName(portfolio.getArtist().getNickname())
+                .makeupName(portfolio.getMakeupName())
+                .price(portfolio.getPrice())
                 .build();
     }
 
@@ -40,6 +47,14 @@ public class ReservationConverter {
                 .build();
     }
 
+    public static ReservationResponse.SuccessDto toSuccessDto(Reservation reservation) {
+        return ReservationResponse.SuccessDto.builder()
+                .year(reservation.getYear())
+                .month(reservation.getMonth())
+                .day(reservation.getDay())
+                .build();
+    }
+
     public static ReservationResponse.DateDto toDateDto(ArtistEnableDate artistEnableDate) {
         return ReservationResponse.DateDto.builder()
                 .artist_id(artistEnableDate.getArtist().getUserId())
@@ -55,29 +70,28 @@ public class ReservationConverter {
     }
 
     private static String intoString(Set<String> times) {
-        StringJoiner joiner = new StringJoiner(",");
+        StringJoiner joiner = new StringJoiner(SPLIT_COMMA);
         for (String time : times) {
             joiner.add(time);
         }
         return joiner.toString();
     }
 
-    private static String intoDateString(List<LocalDate> dates) {
-        StringJoiner joiner = new StringJoiner(",");
+    public static String intoDateString(List<LocalDate> dates) {
+        StringJoiner joiner = new StringJoiner(SPLIT_COMMA);
         for (LocalDate date : dates) {
             joiner.add(date.toString());
         }
         return joiner.toString();
     }
 
-    // MON_18:00,18:30,19:00;
-    private static String intoTimeString(Map<DayOfWeek, List<String>> enableTimes) {
+    public static String intoTimeString(Map<DayOfWeek, List<String>> enableTimes) {
         StringJoiner mainJoiner = new StringJoiner(";");
 
         for (Map.Entry<DayOfWeek, List<String>> entry : enableTimes.entrySet()) {
             DayOfWeek day = entry.getKey();
             List<String> times = entry.getValue();
-            StringJoiner timeJoiner = new StringJoiner(",");
+            StringJoiner timeJoiner = new StringJoiner(SPLIT_COMMA);
             for (String time : times) {
                 timeJoiner.add(time);
             }
@@ -90,7 +104,7 @@ public class ReservationConverter {
     public static List<LocalDate> intoDates(String enableDates) {
         List<LocalDate> dates = new ArrayList<>();
 
-        String[] split = enableDates.split(",");
+        String[] split = enableDates.split(SPLIT_COMMA);
         for (String date : split) {
             dates.add(LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE));
         }
@@ -108,11 +122,78 @@ public class ReservationConverter {
             String timesString = parts[1];
 
             DayOfWeek day = DayOfWeek.valueOf(dayString);
-            List<String> timesInDay = Arrays.asList(timesString.split(","));
+            List<String> timesInDay = Arrays.asList(timesString.split(SPLIT_COMMA));
 
             times.put(day, timesInDay);
         }
 
         return times;
+    }
+
+    public static ReservationResponse.ReservationSimpleDto toReservationSimpleDto(Reservation reservation) {
+        String[] reservationTimes = getReservationTimes(reservation.getTimes());
+        String startTime = reservationTimes[0];
+        String endTime = reservationTimes[reservationTimes.length - 1];
+
+        return ReservationResponse.ReservationSimpleDto.builder()
+                .makeupName(reservation.getMakeupName())
+                .artistName(reservation.getArtistName())
+                .location(reservation.getLocation())
+                .price(reservation.getPrice())
+                .status(reservation.getStatus())
+                .year(reservation.getYear())
+                .month(reservation.getMonth())
+                .startTime(startTime)
+                .endTime(endTime)
+                .build();
+    }
+
+    private static String[] getReservationTimes(String times) {
+        return times.split(SPLIT_COMMA);
+    }
+
+    private static String getDateString(Reservation reservation) {
+        return reservation.getYear() + "년 " + reservation.getMonth() + "월 " + reservation.getDay() + "일";
+    }
+
+    private static String getTimeString(Reservation reservation) {
+        String[] reservationTimes = getReservationTimes(reservation.getTimes());
+        return reservationTimes[0] + " - " + reservationTimes[reservationTimes.length - 1];
+    }
+
+    private static String getPriceString(Reservation reservation) {
+        DecimalFormat formatter = new DecimalFormat("###,###");
+        return formatter.format(reservation.getPrice()) + "원";
+    }
+
+    public static ReservationResponse.ReservationDetailArtistSightDto toReservationDetailArtistSightDto(Reservation reservation) {
+        Model model = reservation.getModel();
+
+        return ReservationResponse.ReservationDetailArtistSightDto.builder()
+                .model_name(model.getNickname())
+                .model_email(model.getEmail())
+                .model_gender(model.getGender())
+                .model_skin_type(model.getSkinType())
+                .model_personal_color(model.getPersonalColor())
+                .reservation_name(reservation.getMakeupName())
+                .reservation_date(getDateString(reservation))
+                .reservation_time(getTimeString(reservation))
+                .reservation_price(getPriceString(reservation))
+                .reservation_status(reservation.getStatus())
+                .build();
+    }
+
+    public static ReservationResponse.ReservationDetailModelSightDto toReservationDetailModelSightDto(Reservation reservation) {
+        Artist artist = reservation.getPortfolio().getArtist();
+
+        return ReservationResponse.ReservationDetailModelSightDto.builder()
+                .aritst_name(artist.getNickname())
+                .artist_email(artist.getEmail())
+                .reservation_name(reservation.getMakeupName())
+                .reservation_date(getDateString(reservation))
+                .reservation_time(getTimeString(reservation))
+                .reservation_price(getPriceString(reservation))
+                .reservation_status(reservation.getStatus())
+                .build();
     }
 }

@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.meme.domain.enums.DayOfWeek;
-import org.meme.domain.enums.Status;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -24,7 +23,6 @@ public class ReservationRequest {
         private int month;
         private int day;
         private Set<String> times;
-        private Status status;
         private String location;
     }
 
