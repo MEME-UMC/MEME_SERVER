@@ -22,6 +22,9 @@ public class ReservationConverter {
                 .times(intoString(saveDto.getTimes()))
                 .status(Status.PENDING)
                 .location(saveDto.getLocation())
+                .artistName(portfolio.getArtist().getNickname())
+                .makeupName(portfolio.getMakeupName())
+                .price(portfolio.getPrice())
                 .build();
     }
 
