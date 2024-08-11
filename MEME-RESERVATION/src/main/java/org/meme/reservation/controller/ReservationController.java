@@ -116,7 +116,7 @@ public class ReservationController {
     }
 
     @GetMapping("/api/v2/mypage/{modelId}/reservations")
-    public BaseResponseDto<?> getReservationsByModel(@PathVariable("modelId") Long modelId) {
+    public BaseResponseDto<List<ReservationResponse.ArtistReservationSimpleDto>> getReservationsByModel(@PathVariable("modelId") Long modelId) {
         return BaseResponseDto.SuccessResponse(RESERVATION_GET_BY_MODEL, reservationService.getReservationSimplesByModel(modelId));
     }
 }
