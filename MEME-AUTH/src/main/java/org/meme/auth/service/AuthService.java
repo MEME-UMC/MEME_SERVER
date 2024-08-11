@@ -23,7 +23,6 @@ import org.meme.domain.repository.TokenRepository;
 import org.meme.domain.entity.User;
 import org.meme.domain.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
