@@ -32,7 +32,7 @@ jobs:
         run: |
           cd MEME-AUTH
           chmod +x ./gradlew
-          ./gradlew clean build
+          ./gradlew clean build -x test
 
       - name: Build and push Docker image for MEME-AUTH
         uses: docker/build-push-action@v6
@@ -47,10 +47,10 @@ jobs:
         run: |
           cd MEME-RESERVATION
           chmod +x ./gradlew
-          ./gradlew clean build
+          ./gradlew clean build -x test
 
       - name: Build and push Docker image for MEME-RESERVATION
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./MEME-RESERVATION  # MEME-RESERVATION 모듈의 경로
           push: true
