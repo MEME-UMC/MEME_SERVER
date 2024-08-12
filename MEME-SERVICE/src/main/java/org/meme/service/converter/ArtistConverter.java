@@ -21,6 +21,8 @@ public class ArtistConverter {
                 .nickname(artist.getNickname())
                 .profileImg(artist.getProfileImg())
                 .email(artist.getEmail())
+                .phoneNumber(artist.getPhoneNumber())
+                .instagramId(artist.getInstagramId())
                 .introduction(artist.getIntroduction())
                 .workExperience(artist.getWorkExperience())
                 .region(artist.getRegion())

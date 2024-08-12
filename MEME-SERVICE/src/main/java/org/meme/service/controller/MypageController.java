@@ -39,7 +39,7 @@ public class MypageController {
     @Operation(summary = "아티스트 프로필 관리 조회(수정 전 정보 불러오기 용)")
     @GetMapping("/profile/artist/{userId}")
     public BaseResponseDto getArtistProfile(@PathVariable(name = "userId") Long userId) {
-        return BaseResponseDto.SuccessResponse(SuccessStatus.ARTIST_PROFILE_GET, mypageService.getProfile(userId));
+        return BaseResponseDto.SuccessResponse(SuccessStatus.ARTIST_PROFILE_GET, mypageService.getArtistProfile(userId));
     }
 
     // mypage
