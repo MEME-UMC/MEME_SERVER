@@ -148,4 +148,37 @@ public class ReservationController {
     public BaseResponseDto<ReservationResponse.ReservationDetailModelSightDto> getReservationDetailByModel(@PathVariable("reservationId") Long reservationId) {
         return BaseResponseDto.SuccessResponse(RESERVATION_DETAIL_GET_BY_MODEL, reservationService.getReservationDetailByModel(reservationId));
     }
+
+    /**
+     * 예약 승인 (아티스트)
+     * @param reservationId
+     * @return
+     */
+    @PatchMapping("/api/v2/reservation/artist/{reservationId}/approved")
+    public BaseResponseDto<?> changeStatusApprovedByArtist(@PathVariable("reservationId") Long reservationId) {
+        reservationService.changeReservationStatusApproved(reservationId);
+        return BaseResponseDto.SuccessResponse(RESERVATION_STATUS_APPROVED_BY_ARTIST);
+    }
+
+    /**
+     * 예약 취소 (아티스트)
+     * @param reservationId
+     * @return
+     */
+    @PatchMapping("/api/v2/reservation/artist/{reservationId}/canceled")
+    public BaseResponseDto<?> changeStatusCanceledByArtist(@PathVariable("reservationId") Long reservationId) {
+        reservationService.changeReservationStatusCanceled(reservationId);
+        return BaseResponseDto.SuccessResponse(RESERVATION_STATUS_CANCELED_BY_ARTIST);
+    }
+
+    /**
+     * 예약 취소 (모델)
+     * @param reservationId
+     * @return
+     */
+    @PatchMapping("/api/v2/reservation/model/{reservationId}/canceled")
+    public BaseResponseDto<?> changeStatusCanceledByModel(@PathVariable("reservationId") Long reservationId) {
+        reservationService.changeReservationStatusCanceled(reservationId);
+        return BaseResponseDto.SuccessResponse(RESERVATION_STATUS_CANCELED_BY_MODEL);
+    }
 }

@@ -50,6 +50,9 @@ public class Reservation extends BaseEntity {
     private String artistName;
     private int price;  // 실제 가격과 예약 시 할인 가격이 적용될 수도 있지 않을까
 
+    @Version
+    private int version;  // Optimistic Lock
+
     public void pendingReservation(Model model, Portfolio portfolio) {
         this.model = model;
         model.getReservations().add(this);
