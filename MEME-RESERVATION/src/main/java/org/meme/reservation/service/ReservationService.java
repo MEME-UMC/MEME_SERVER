@@ -18,6 +18,8 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
+import static org.meme.domain.enums.Status.*;
+
 @RequiredArgsConstructor
 @Service
 public class ReservationService {
@@ -158,6 +160,25 @@ public class ReservationService {
                 .orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
 
         return ReservationConverter.toReservationDetailModelSightDto(reservation);
+    }
+
+    public void changeReservationStatusApproved(Long reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
+
+        if (reservation.getStatus() == PENDING) {
+            reservation.updateStatus(APPROVED);
+        }
+    }
+
+    public void changeReservationStatusCanceled(Long reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
+
+        if (reservation.getStatus() == PENDING) {
+            reservation.updateStatus(CANCELED);
+            reservationRepository.delete(reservation);
+        }
     }
 
     private Artist getArtistById(Long artistId) {
