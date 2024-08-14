@@ -23,6 +23,7 @@ public class PortfolioConverter {
                 .price(dto.getPrice())
                 .portfolioImgList(new ArrayList<PortfolioImg>())
                 .averageStars("0.00")
+                .durationTime(dto.getDurationTime())
                 .isBlock(false)
                 .build();
     }

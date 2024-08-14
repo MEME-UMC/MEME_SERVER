@@ -162,6 +162,7 @@ public class ReservationService {
         return ReservationConverter.toReservationDetailModelSightDto(reservation);
     }
 
+    @Transactional
     public void changeReservationStatusApproved(Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
@@ -171,6 +172,7 @@ public class ReservationService {
         }
     }
 
+    @Transactional
     public void changeReservationStatusCanceled(Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
