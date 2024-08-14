@@ -65,9 +65,9 @@ public enum SuccessStatus {
     RESERVATION_GET_BY_MODEL(HttpStatus.OK,200, "예약 내역 조회가 완료되었습니다."),
     RESERVATION_DETAIL_GET_BY_ARTIST(HttpStatus.OK,200, "예약 상세 조회가 완료되었습니다."),
     RESERVATION_DETAIL_GET_BY_MODEL(HttpStatus.OK,200, "예약 상세 조회가 완료되었습니다."),
-    RESERVATION_STATUS_APPROVED_BY_ARTIST(HttpStatus.OK,200, "예약 상세 조회가 완료되었습니다."),
-    RESERVATION_STATUS_CANCELED_BY_ARTIST(HttpStatus.OK,200, "예약 상세 조회가 완료되었습니다."),
-    RESERVATION_STATUS_CANCELED_BY_MODEL(HttpStatus.OK,200, "예약 상세 조회가 완료되었습니다."),
+    RESERVATION_STATUS_APPROVED_BY_ARTIST(HttpStatus.OK,200, "예약 승인이 완료되었습니다."),
+    RESERVATION_STATUS_CANCELED_BY_ARTIST(HttpStatus.OK,200, "예약 취소가 완료되었습니다."),
+    RESERVATION_STATUS_CANCELED_BY_MODEL(HttpStatus.OK,200, "예약 취소가 완료되었습니다."),
 
     /**mypage**/
     MYPAGE_GET(HttpStatus.OK,200, "마이페이지 조회가 완료되었습니다"),
