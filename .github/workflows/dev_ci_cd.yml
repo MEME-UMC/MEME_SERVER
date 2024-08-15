@@ -57,6 +57,21 @@ jobs:
           tags: ${{ vars.DOCKER_USERNAME }}/${{ vars.MEME_RESERVATION }}:latest
           platforms: linux/amd64,linux/arm64
 
+      # MEME-RESERVATION 모듈 빌드
+      - name: Build MEME-SERVICE with Gradle
+        run: |
+          cd MEME-SERVICE
+          chmod +x ./gradlew
+          ./gradlew clean build -x test
+
+      - name: Build and push Docker image for MEME-SERVICE
+        uses: docker/build-push-action@v6
+        with:
+          context: ./MEME-SERVICE  # MEME-RESERVATION 모듈의 경로
+          push: true
+          tags: ${{ vars.DOCKER_USERNAME }}/${{ vars.MEME_SERVICE }}:latest
+          platforms: linux/amd64,linux/arm64
+
   deploy:
     runs-on: ubuntu-latest
     needs: build
