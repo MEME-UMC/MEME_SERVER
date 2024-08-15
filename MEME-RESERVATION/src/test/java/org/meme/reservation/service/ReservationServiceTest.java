@@ -55,7 +55,7 @@ class ReservationServiceTest {
         // When
         when(reservationRepository.findByPortfolioAndYearAndMonthAndDay(any(Portfolio.class), anyInt(), anyInt(), anyInt()))
                 .thenReturn(Optional.empty());  // null 값 반환
-        ReservationResponse.SuccessDto successDto = reservationService.makeReservation(request, 1L);
+        ReservationResponse.SuccessDto successDto = reservationService.makeReservation(request);
 
         // Then
         Assertions.assertNotNull(successDto);
@@ -80,7 +80,7 @@ class ReservationServiceTest {
 
         // Then
         Assertions.assertThrows(ReservationException.class,
-                () -> reservationService.makeReservation(request, 1L));
+                () -> reservationService.makeReservation(request));
     }
 
     private List<Reservation> getReservations() {
