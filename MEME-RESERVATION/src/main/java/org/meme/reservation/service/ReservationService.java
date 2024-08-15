@@ -35,10 +35,10 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
 
     @Transactional
-    public ReservationResponse.SuccessDto makeReservation(ReservationRequest.SaveDto requestDto, Long portfolioId) {
+    public ReservationResponse.SuccessDto makeReservation(ReservationRequest.SaveDto requestDto) {
         Model model = modelRepository.findById(requestDto.getModel_id())
                 .orElseThrow(() -> new IllegalArgumentException("Model not found"));
-        Portfolio portfolio = portfolioRepository.findById(portfolioId)
+        Portfolio portfolio = portfolioRepository.findById(requestDto.getPortfolio_id())
                 .orElseThrow(() -> new IllegalArgumentException("Portfolio not found"));
         try {
             return concurrentRequestHandler.handleConcurrency(requestDto, model, portfolio)

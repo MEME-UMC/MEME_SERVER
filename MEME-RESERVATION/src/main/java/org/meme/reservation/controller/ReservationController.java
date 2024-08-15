@@ -20,12 +20,11 @@ public class ReservationController {
     /**
      * 예약하기
      * @param requestDto
-     * @param portfolioId
      * @return
      */
-    @PostMapping("/api/v2/{portfolioId}/reservation")
-    public BaseResponseDto<?> makeReservation(@RequestBody ReservationRequest.SaveDto requestDto, @PathVariable("portfolioId") Long portfolioId) {
-        reservationService.makeReservation(requestDto, portfolioId);
+    @PostMapping("/api/v2/reservation")
+    public BaseResponseDto<?> makeReservation(@RequestBody ReservationRequest.SaveDto requestDto) {
+        reservationService.makeReservation(requestDto);
         return BaseResponseDto.SuccessResponse(RESERVATION_SUCCESS);
     }
 
@@ -114,7 +113,7 @@ public class ReservationController {
      * @param artistId
      * @return
      */
-    @GetMapping("/api/v2/mypage/{artistId}/reservations")
+    @GetMapping("/api/v2/reservation/artist/{artistId}")
     public BaseResponseDto<List<ReservationResponse.ReservationSimpleDto>> getReservationSimplesByArtist(@PathVariable("artistId") Long artistId) {
         return BaseResponseDto.SuccessResponse(RESERVATION_GET_BY_ARTIST, reservationService.getReservationSimplesByArtist(artistId));
     }
@@ -124,7 +123,7 @@ public class ReservationController {
      * @param modelId
      * @return
      */
-    @GetMapping("/api/v2/mypage/{modelId}/reservations")
+    @GetMapping("/api/v2/reservation/model/{modelId}")
     public BaseResponseDto<List<ReservationResponse.ReservationSimpleDto>> getReservationSimplesByModel(@PathVariable("modelId") Long modelId) {
         return BaseResponseDto.SuccessResponse(RESERVATION_GET_BY_MODEL, reservationService.getReservationSimplesByModel(modelId));
     }
