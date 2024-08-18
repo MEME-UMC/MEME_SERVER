@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import static org.meme.domain.enums.Status.*;
@@ -44,6 +45,7 @@ public class ReservationService {
             return concurrentRequestHandler.handleConcurrency(requestDto, model, portfolio)
                     .thenApply(ReservationConverter::toSuccessDto).get();
         } catch (ExecutionException | InterruptedException e) {
+            System.out.println("ReservationService.makeReservation");
             throw new ReservationException(ErrorStatus.RESERVATION_NOT_FOUND);
         }
     }
