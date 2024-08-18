@@ -52,7 +52,7 @@ public class Portfolio extends BaseEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "portfolio")
     private List<Review> reviewList;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "portfolio")
+    @OneToMany(mappedBy = "portfolio")
     private List<Reservation> reservations;
 
     public void updateReservationList(Reservation reservation){

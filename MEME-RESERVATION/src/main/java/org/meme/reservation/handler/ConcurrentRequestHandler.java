@@ -52,6 +52,7 @@ public class ConcurrentRequestHandler {
 
                     // 3-1. 이미 예약된 시간대와 겹친다면 예외를 반환합니다.
                     if (haveOverlappingTimes(existingTimes, requestDto.getTimes())) {
+                        System.out.println("ConcurrentRequestHandler.handleConcurrency");
                         throw new ReservationConflictException(RESERVATION_CONFLICT);
                     }
                 }
