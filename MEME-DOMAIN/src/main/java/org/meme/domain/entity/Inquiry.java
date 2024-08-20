@@ -24,6 +24,9 @@ public class Inquiry extends BaseEntity {
     @Column(nullable = false)
     private String inquiryText;
 
+    @Column(nullable = false)
+    private String email;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

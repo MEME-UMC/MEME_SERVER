@@ -46,6 +46,7 @@ public class MypageRequest {
     public static class InquiryDto {
         private Long userId;
         private String inquiryTitle;
+        private String email;
         private String inquiryText;
     }
 
