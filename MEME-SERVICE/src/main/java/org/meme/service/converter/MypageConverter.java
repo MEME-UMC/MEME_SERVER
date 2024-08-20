@@ -51,6 +51,7 @@ public class MypageConverter {
         return Inquiry.builder()
                 .inquiryText(dto.getInquiryText())
                 .inquiryTitle(dto.getInquiryTitle())
+                .email(dto.getEmail())
                 .user(user)
                 .build();
     }
@@ -59,7 +60,7 @@ public class MypageConverter {
         return MypageResponse.InquiryDto.builder()
                 .inquiryText(inquiry.getInquiryText())
                 .inquiryTitle(inquiry.getInquiryTitle())
-                .userEmail(inquiry.getUser().getEmail())
+                .userEmail(inquiry.getEmail())
                 .build();
     }
 
