@@ -1,9 +1,9 @@
 package org.meme.service.domain.converter;
 
-import org.meme.domain.entity.Artist;
-import org.meme.domain.entity.Inquiry;
-import org.meme.domain.entity.Model;
-import org.meme.domain.entity.User;
+import org.meme.service.domain.entity.Artist;
+import org.meme.service.domain.entity.Inquiry;
+import org.meme.service.domain.entity.Model;
+import org.meme.service.domain.entity.User;
 import org.meme.service.domain.dto.request.MypageRequest;
 import org.meme.service.domain.dto.response.MypageResponse;
 

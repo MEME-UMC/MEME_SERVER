@@ -2,11 +2,11 @@ package org.meme.service.domain.service;
 
 import lombok.RequiredArgsConstructor;
 import org.meme.domain.common.status.ErrorStatus;
-import org.meme.domain.entity.FavoriteArtist;
+import org.meme.service.domain.entity.FavoriteArtist;
 import org.meme.service.domain.entity.Model;
-import org.meme.domain.repository.ArtistRepository;
-import org.meme.domain.repository.FavoriteArtistRepository;
-import org.meme.domain.repository.ModelRepository;
+import org.meme.service.domain.repository.ArtistRepository;
+import org.meme.service.domain.repository.FavoriteArtistRepository;
+import org.meme.service.domain.repository.ModelRepository;
 import org.meme.service.domain.converter.ArtistConverter;
 import org.meme.service.domain.dto.response.ArtistResponse;
 import org.springframework.stereotype.Service;

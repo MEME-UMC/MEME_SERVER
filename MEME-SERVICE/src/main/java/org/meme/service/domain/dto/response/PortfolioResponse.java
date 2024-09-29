@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.meme.domain.enums.Category;
-import org.meme.domain.enums.MakeupLocation;
-import org.meme.domain.enums.Region;
+import org.meme.service.domain.enums.Category;
+import org.meme.service.domain.enums.MakeupLocation;
+import org.meme.service.domain.enums.Region;
 
 import java.util.List;
 

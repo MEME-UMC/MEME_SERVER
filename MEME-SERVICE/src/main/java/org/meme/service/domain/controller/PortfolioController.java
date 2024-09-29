@@ -3,6 +3,7 @@ package org.meme.service.domain.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.meme.domain.common.BaseResponseDto;
+import org.meme.service.domain.dto.request.PortfolioRequest;
 import org.springframework.web.bind.annotation.*;
 import org.meme.service.domain.service.PortfolioService;
 import org.meme.domain.common.status.SuccessStatus;
@@ -16,7 +17,7 @@ public class PortfolioController {
 
     @Operation(summary = "포트폴리오 생성", description = "포트폴리오를 생성하는 API입니다.")
     @PostMapping()
-    public BaseResponseDto createPortfolio(@RequestBody CreatePortfolioDto portfolioDto) {
+    public BaseResponseDto createPortfolio(@RequestBody PortfolioRequest.CreatePortfolioDto portfolioDto) {
         return BaseResponseDto.SuccessResponse(SuccessStatus.PORTFOLIO_CREATE, portfolioService.createPortfolio(portfolioDto));
     }
 
@@ -35,7 +36,7 @@ public class PortfolioController {
 
     @Operation(summary = "포트폴리오 수정/삭제", description = "포트폴리오를 수정/삭제하는 API입니다.")
     @PatchMapping()
-    public BaseResponseDto updatePortfolio(@RequestBody UpdatePortfolioDto portfolioDto) {
+    public BaseResponseDto updatePortfolio(@RequestBody PortfolioRequest.UpdatePortfolioDto portfolioDto) {
         portfolioService.updatePortfolio(portfolioDto);
         return BaseResponseDto.SuccessResponse(SuccessStatus.PORTFOLIO_UPDATE);
     }

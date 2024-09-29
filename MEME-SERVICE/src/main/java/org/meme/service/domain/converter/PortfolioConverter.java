@@ -2,10 +2,10 @@ package org.meme.service.domain.converter;
 
 import org.meme.domain.common.exception.GeneralException;
 import org.meme.domain.common.status.ErrorStatus;
-import org.meme.domain.entity.Artist;
-import org.meme.domain.entity.FavoritePortfolio;
-import org.meme.domain.entity.Portfolio;
-import org.meme.domain.entity.PortfolioImg;
+import org.meme.service.domain.entity.Artist;
+import org.meme.service.domain.entity.FavoritePortfolio;
+import org.meme.service.domain.entity.Portfolio;
+import org.meme.service.domain.entity.PortfolioImg;
 import org.meme.service.domain.dto.request.PortfolioRequest;
 import org.meme.service.domain.dto.response.PortfolioResponse;
 import org.springframework.data.domain.Page;

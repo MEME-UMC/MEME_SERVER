@@ -1,6 +1,6 @@
 package org.meme.service.domain.converter;
 
-import org.meme.domain.entity.*;
+import org.meme.service.domain.entity.*;
 import org.meme.service.domain.dto.response.ArtistResponse;
 import org.meme.service.domain.dto.response.FavoriteResponse;
 import org.meme.service.domain.dto.response.PortfolioResponse;

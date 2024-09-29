@@ -7,9 +7,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.meme.domain.entity.Inquiry;
-import org.meme.domain.enums.Gender;
-import org.meme.domain.enums.Provider;
+import org.meme.service.domain.entity.Inquiry;
+import org.meme.service.domain.enums.Gender;
+import org.meme.service.domain.enums.Provider;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 

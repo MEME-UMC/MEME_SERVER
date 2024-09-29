@@ -2,15 +2,17 @@ package org.meme.service.domain.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.meme.service.domain.dto.request.PortfolioRequest;
+import org.meme.service.domain.dto.response.PortfolioResponse;
 import org.meme.service.domain.entity.*;
 import org.meme.service.domain.converter.PortfolioConverter;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
-import org.meme.domain.repository.ArtistRepository;
-import org.meme.domain.repository.FavoritePortfolioRepository;
-import org.meme.domain.repository.ModelRepository;
-import org.meme.domain.repository.PortfolioImgRepository;
-import org.meme.domain.repository.PortfolioRepository;
+import org.meme.service.domain.repository.ArtistRepository;
+import org.meme.service.domain.repository.FavoritePortfolioRepository;
+import org.meme.service.domain.repository.ModelRepository;
+import org.meme.service.domain.repository.PortfolioImgRepository;
+import org.meme.service.domain.repository.PortfolioRepository;
 import org.meme.domain.common.status.ErrorStatus;
 import org.meme.domain.common.exception.GeneralException;
 
@@ -30,7 +32,7 @@ public class PortfolioService {
 
     //포트폴리오 생성
     @Transactional
-    public Long createPortfolio(CreatePortfolioDto portfolioDto) {
+    public Long createPortfolio(PortfolioRequest.CreatePortfolioDto portfolioDto) {
         Artist artist = findArtistById(portfolioDto.getArtistId());
 
         //포트폴리오 이름이 이미 존재할 시
@@ -56,7 +58,7 @@ public class PortfolioService {
 
     // 포트폴리오 전체 조회
     @Transactional
-    public PortfolioPageDto getPortfolio(Long artistId, int page) {
+    public PortfolioResponse.PortfolioPageDto getPortfolio(Long artistId, int page) {
         Artist artist = findArtistById(artistId);
         List<Portfolio> portfolioList = artist.getPortfolioList();
 
@@ -70,7 +72,7 @@ public class PortfolioService {
     }
 
     // 포트폴리오 하나만 조회
-    public PortfolioDetailDto getPortfolioDetails(Long userId, Long portfolioId) {
+    public PortfolioResponse.PortfolioDetailDto getPortfolioDetails(Long userId, Long portfolioId) {
         Model model = findModelById(userId);
         Portfolio portfolio = findPortfolioById(portfolioId);
 
@@ -87,7 +89,7 @@ public class PortfolioService {
 
     // 포트폴리오 수정/삭제
     @Transactional
-    public void updatePortfolio(UpdatePortfolioDto updatePortfolioDto) {
+    public void updatePortfolio(PortfolioRequest.UpdatePortfolioDto updatePortfolioDto) {
         Artist artist = findArtistById(updatePortfolioDto.getArtistId());
         Portfolio portfolio = findPortfolioById(updatePortfolioDto.getPortfolioId());
 
@@ -143,7 +145,7 @@ public class PortfolioService {
      * recommend
      **/
     //리뷰 많은 순 포트폴리오 추천
-    public List<PortfolioSimpleDto> recommendReview() {
+    public List<PortfolioResponse.PortfolioSimpleDto> recommendReview() {
         Pageable pageable = setPageRequest(0, "review");
         Page<Portfolio> portfolioList = portfolioRepository.findAllNotBlocked(pageable);
 
@@ -153,7 +155,7 @@ public class PortfolioService {
     }
 
     //최신 등록 순 포트폴리오 추천
-    public List<PortfolioSimpleDto> recommendRecent() {
+    public List<PortfolioResponse.PortfolioSimpleDto> recommendRecent() {
         Pageable pageable = setPageRequest(0, "recent");
         Page<Portfolio> portfolioList = portfolioRepository.findAllNotBlocked(pageable);
 
@@ -218,7 +220,7 @@ public class PortfolioService {
                 pageable, list.size());
     }
 
-    private void updatePortfolioEntity(Portfolio portfolio, UpdatePortfolioDto request) {
+    private void updatePortfolioEntity(Portfolio portfolio, PortfolioRequest.UpdatePortfolioDto request) {
         if(request.getCategory() != null)
             portfolio.setCategory(request.getCategory());
         if(request.getPrice() >= 0)

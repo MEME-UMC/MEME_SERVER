@@ -1,6 +1,7 @@
 package org.meme.service.domain.converter;
 
-import org.meme.domain.entity.*;
+import org.meme.service.domain.entity.Reservation;
+import org.meme.service.domain.entity.*;
 import org.meme.service.domain.dto.request.ReviewRequest;
 import org.meme.service.domain.dto.response.ReviewResponse;
 import org.springframework.data.domain.Page;

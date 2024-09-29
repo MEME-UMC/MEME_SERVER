@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.meme.service.common.BaseEntity;
 import org.meme.service.domain.entity.Artist;
-import org.meme.domain.entity.Reservation;
+import org.meme.service.domain.entity.Reservation;
 import org.meme.service.domain.entity.Review;
 import org.meme.service.domain.enums.Category;
 
@@ -68,7 +68,6 @@ public class Portfolio extends BaseEntity {
 
     public void updateReviewList(Review review){
         this.reviewList.add(review);
-        //별점 업데이트
         updateAverageStars();
     }
 
