@@ -35,16 +35,9 @@ public class ReviewService {
     @Transactional
     public Long createReview(ReviewRequest.ReviewDto reviewDto) {
         Model model = findModelById(reviewDto.getModelId());
-        Reservation reservation = reservationRepository.findByReservationIdAndModelId(reviewDto.getReservationId(), reviewDto.getModelId())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_RESERVATION));
+        Reservation reservation = findReservationByIdAndModel(reviewDto.getReservationId(), reviewDto.getModelId());
 
-        // 이미 리뷰 작성 완료
-        if (reservation.isReviewed())
-            throw new GeneralException(ErrorStatus.ALREADY_REVIEWED);
-
-        // 예약 미완료
-        if (!reservation.isCompleted())
-            throw new GeneralException(ErrorStatus.INVALID_REVIEW_REQUEST);
+        validateReservationStatus(reservation);
 
         // 리뷰 이미지 리스트 생성
         List<ReviewImg> reviewImgList = reviewDto.getReviewImgSrc().stream()
@@ -175,6 +168,16 @@ public class ReviewService {
         reviewRepository.delete(review);
     }
 
+    private void validateReservationStatus(Reservation reservation) {
+        // 이미 리뷰 작성 완료
+        if (reservation.isReviewed())
+            throw new GeneralException(ErrorStatus.ALREADY_REVIEWED);
+
+        // 예약 미완료
+        if (!reservation.isCompleted())
+            throw new GeneralException(ErrorStatus.INVALID_REVIEW_REQUEST);
+    }
+
     private Model findModelById(Long modelId){
         return modelRepository.findById(modelId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_MODEL));
@@ -188,6 +191,11 @@ public class ReviewService {
     private Review findReviewById(Long reviewId){
         return reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_REVIEW));
+    }
+
+    private Reservation findReservationByIdAndModel(Long reservationId, Long modelId){
+        return reservationRepository.findByReservationIdAndModelId(reservationId, modelId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_RESERVATION));
     }
 
     private Page<Review> getPage(int page, List<Review> list){
