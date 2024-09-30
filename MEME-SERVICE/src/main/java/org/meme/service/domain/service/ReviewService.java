@@ -147,7 +147,6 @@ public class ReviewService {
         List<ReviewImg> existedReviewImgList = review.getReviewImgList();
         for (ReviewImg reviewImg : existedReviewImgList){
             if (!updatedReviewImgList.contains(reviewImg)){
-                // 이미지 삭제
                 reviewImgRepository.delete(reviewImg);
             }
         }

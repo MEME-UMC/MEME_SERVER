@@ -1,7 +1,5 @@
 package org.meme.service.domain.converter;
 
-import org.meme.service.common.exception.GeneralException;
-import org.meme.service.common.status.ErrorStatus;
 import org.meme.service.domain.entity.Artist;
 import org.meme.service.domain.entity.FavoritePortfolio;
 import org.meme.service.domain.entity.Portfolio;
@@ -98,10 +96,6 @@ public class PortfolioConverter {
     }
 
     public static PortfolioResponse.PortfolioPageDto toPortfolioPageDto(Page<Portfolio> page){
-        //검색 결과가 없을 시
-        if(page.getContent().isEmpty())
-            throw new GeneralException(ErrorStatus.SEARCH_NOT_FOUNT);
-
         List<PortfolioResponse.PortfolioDto> content = page.stream()
                 .map(PortfolioConverter::toPortfolioDto)
                 .toList();

@@ -68,6 +68,10 @@ public class PortfolioService {
         //list를 page로 변환
         Page<Portfolio> portfolioPage = getPage(page, portfolioList);
 
+        //검색 결과가 없을 시
+        if(portfolioPage.getContent().isEmpty())
+            throw new GeneralException(ErrorStatus.SEARCH_NOT_FOUNT);
+
         return PortfolioConverter.toPortfolioPageDto(portfolioPage);
     }
 
@@ -132,12 +136,10 @@ public class PortfolioService {
         List<PortfolioImg> existedPortfolioImgList = portfolio.getPortfolioImgList();
         for (PortfolioImg portfolioImg : existedPortfolioImgList) {
             if (!updatedPortfolioImgList.contains(portfolioImg)) {
-                // 이미지 삭제
                 portfolioImgRepository.delete(portfolioImg);
             }
         }
 
-        // 포트폴리오 이미지 리스트 - 포트폴리오 연관관계 설정
         portfolio.updatePortfolioImgList(updatedPortfolioImgList);
     }
 
@@ -173,10 +175,7 @@ public class PortfolioService {
         if (portfolio.getArtist() != artist)
             throw new GeneralException(ErrorStatus.NOT_AUTHORIZED_PORTFOLIO);
 
-        if (portfolio.isBlock())
-            portfolio.setBlock(false);
-        else
-            portfolio.setBlock(true);
+        portfolio.setBlock(!portfolio.isBlock());
     }
 
     private Artist findArtistById(Long artistId){
@@ -215,7 +214,6 @@ public class PortfolioService {
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), list.size());
 
-        //list를 page로 변환
         return new PageImpl<>(list.subList(start, end),
                 pageable, list.size());
     }
