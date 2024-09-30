@@ -1,7 +1,7 @@
 package org.meme.service.domain.service;
 
 import lombok.RequiredArgsConstructor;
-import org.meme.domain.common.status.ErrorStatus;
+import org.meme.service.common.status.ErrorStatus;
 import org.meme.service.domain.entity.FavoriteArtist;
 import org.meme.service.domain.entity.Model;
 import org.meme.service.domain.repository.ArtistRepository;
@@ -11,7 +11,7 @@ import org.meme.service.domain.converter.ArtistConverter;
 import org.meme.service.domain.dto.response.ArtistResponse;
 import org.springframework.stereotype.Service;
 import org.meme.service.domain.entity.Artist;
-import org.meme.domain.common.exception.GeneralException;
+import org.meme.service.common.exception.GeneralException;
 
 import java.util.Optional;
 

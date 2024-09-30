@@ -1,7 +1,7 @@
 package org.meme.service.domain.converter;
 
-import org.meme.domain.common.exception.GeneralException;
-import org.meme.domain.common.status.ErrorStatus;
+import org.meme.service.common.exception.GeneralException;
+import org.meme.service.common.status.ErrorStatus;
 import org.meme.service.domain.entity.Artist;
 import org.meme.service.domain.entity.FavoritePortfolio;
 import org.meme.service.domain.entity.Portfolio;

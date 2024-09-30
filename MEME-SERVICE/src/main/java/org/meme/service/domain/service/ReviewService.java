@@ -2,7 +2,7 @@ package org.meme.service.domain.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.meme.domain.common.exception.GeneralException;
+import org.meme.service.common.exception.GeneralException;
 import org.meme.service.domain.entity.*;
 import org.meme.service.domain.enums.Status;
 import org.meme.service.domain.repository.*;
@@ -15,8 +15,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import org.meme.domain.common.status.ErrorStatus;
+import org.meme.service.common.status.ErrorStatus;
 
 import java.util.ArrayList;
 import java.util.List;

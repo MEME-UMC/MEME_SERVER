@@ -13,8 +13,8 @@ import org.meme.service.domain.repository.FavoritePortfolioRepository;
 import org.meme.service.domain.repository.ModelRepository;
 import org.meme.service.domain.repository.PortfolioImgRepository;
 import org.meme.service.domain.repository.PortfolioRepository;
-import org.meme.domain.common.status.ErrorStatus;
-import org.meme.domain.common.exception.GeneralException;
+import org.meme.service.common.status.ErrorStatus;
+import org.meme.service.common.exception.GeneralException;
 
 
 import java.util.ArrayList;

@@ -2,11 +2,11 @@ package org.meme.service.domain.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.meme.domain.common.BaseResponseDto;
+import org.meme.service.common.BaseResponseDto;
 import org.meme.service.domain.dto.request.PortfolioRequest;
 import org.springframework.web.bind.annotation.*;
 import org.meme.service.domain.service.PortfolioService;
-import org.meme.domain.common.status.SuccessStatus;
+import org.meme.service.common.status.SuccessStatus;
 
 
 @RestController
