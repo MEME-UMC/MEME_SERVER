@@ -24,7 +24,7 @@ public class AuthController {
     private final AuthService authService;
 
     /**
-     * 소셜 로그인 API
+     * 소셜 로그인
      * @param joinDto
      * @return
      * @throws AuthException
@@ -41,7 +41,7 @@ public class AuthController {
      * @return
      * @throws AuthException
      */
-    @PostMapping("/api/v1/reissue")
+    @PostMapping("/reissue")
     public BaseResponseDto<?> reissue(@RequestBody AuthRequest.ReissueDto reissueDto) throws AuthException {
         AuthResponse.TokenDto reissueResult = authService.reissue(reissueDto);
 
@@ -58,7 +58,7 @@ public class AuthController {
      * @return
      * @throws AuthException
      */
-    @PostMapping("/api/v1/auth/logout")
+    @PostMapping("/auth/logout")
     public BaseResponseDto<?> logout(HttpServletRequest request) throws AuthException {
         authService.logout(request.getHeader("Authorization"));
         return BaseResponseDto.SuccessResponse(SuccessStatus.LOGOUT_SUCCESS);
@@ -71,7 +71,7 @@ public class AuthController {
      * @return
      * @throws AuthException
      */
-    @PostMapping("/api/v1/auth/withdraw")
+    @PostMapping("/auth/withdraw")
     public BaseResponseDto<?> withdraw(HttpServletRequest request) throws AuthException {
         authService.withdraw(request.getHeader("Authorization"));
         return BaseResponseDto.SuccessResponse(SuccessStatus.WITHDRAW_SUCCESS);
@@ -83,7 +83,7 @@ public class AuthController {
      * @param idTokenDto
      * @return
      */
-    @PostMapping("/api/v1/check/user")
+    @PostMapping("/check/user")
     public BaseResponseDto<?> checkUserExists(@RequestBody AuthRequest.IdTokenDto idTokenDto) {
         AuthResponse.UserInfoDto userInfoDto = authService.checkUserExistsFindByEmail(idTokenDto);
         if (userInfoDto.isUser_status())
@@ -98,7 +98,7 @@ public class AuthController {
      * @param nicknameDto
      * @return
      */
-    @PostMapping("/api/v1/check/nickname")
+    @PostMapping("/check/nickname")
     public BaseResponseDto<?> checkNicknameDuplicate(@RequestBody AuthRequest.NicknameDto nicknameDto) {
         boolean nicknameIsDuplicate = authService.checkNicknameDuplicate(nicknameDto);
         if (nicknameIsDuplicate)
