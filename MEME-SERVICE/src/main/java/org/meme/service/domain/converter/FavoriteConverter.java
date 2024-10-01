@@ -31,7 +31,7 @@ public class FavoriteConverter {
     // favoritePortfolio
     public static FavoritePortfolio toFavoritePortfolio(Model model, Portfolio portfolio){
         return FavoritePortfolio.builder()
-                .model(model)
+                .model(model.getUser())
                 .portfolio(portfolio)
                 .build();
     }
