@@ -21,15 +21,15 @@ public class UserConverter {
                 .build();
     }
 
-    public static org.meme.auth.domain.Model toModelEntity() {
-        return org.meme.auth.domain.Model
-                .builder().build();
-    }
+//    public static org.meme.auth.domain.Model toModelEntity() {
+//        return org.meme.auth.domain.Model
+//                .builder().build();
+//    }
 
-    public static org.meme.auth.domain.Artist toArtistEntity() {
-        return org.meme.auth.domain.Artist
-                .builder().build();
-    }
+//    public static org.meme.auth.domain.Artist toArtistEntity() {
+//        return org.meme.auth.domain.Artist
+//                .builder().build();
+//    }
 
     public static AuthResponse.UserInfoDto toUserInfoDtoExists(User user, String[] tokenPair) {
         return AuthResponse.UserInfoDto.builder()
