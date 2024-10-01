@@ -1,28 +1,18 @@
 package org.meme.auth.service;
 
 import lombok.RequiredArgsConstructor;
-import org.meme.domain.common.status.ErrorStatus;
+import org.meme.auth.common.exception.AuthException;
+import org.meme.auth.common.status.ErrorStatus;
 import org.meme.auth.converter.TokenConverter;
 import org.meme.auth.converter.UserConverter;
-import org.meme.domain.common.exception.AuthException;
+import org.meme.auth.domain.*;
+import org.meme.auth.dto.AuthRequest;
+import org.meme.auth.dto.AuthResponse;
 import org.meme.auth.infra.RedisRepository;
 import org.meme.auth.jwt.JwtTokenProvider;
 import org.meme.auth.oauth.provider.OAuthProvider;
 import org.meme.auth.oauth.provider.apple.AppleAuthProvider;
 import org.meme.auth.oauth.provider.kakao.KakaoAuthProvider;
-import org.meme.domain.dto.FcmSendDto;
-import org.meme.domain.entity.Artist;
-import org.meme.domain.repository.ArtistRepository;
-import org.meme.auth.dto.AuthRequest;
-import org.meme.auth.dto.AuthResponse;
-import org.meme.domain.enums.Provider;
-import org.meme.domain.entity.Model;
-import org.meme.domain.repository.ModelRepository;
-import org.meme.domain.entity.Token;
-import org.meme.domain.repository.TokenRepository;
-import org.meme.domain.entity.User;
-import org.meme.domain.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,8 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-import static org.meme.domain.enums.Provider.APPLE;
-import static org.meme.domain.enums.Provider.KAKAO;
+import static org.meme.auth.domain.Provider.APPLE;
+import static org.meme.auth.domain.Provider.KAKAO;
 
 @RequiredArgsConstructor
 @Service
@@ -52,31 +42,32 @@ public class AuthService {
     private final static String ROLE_ARTIST = "ARTIST";
     private final static int MAX_LENGTH_NICKNAME = 15;
 
+    // updated repository
+    private final org.meme.auth.domain.UserRepository updateUserRepository;
 
+    // 새로운 회원가입 메서드
     @Transactional
-    public AuthResponse.JoinDto signupModel(AuthRequest.ModelJoinDto modelJoinDto) throws AuthException {
-        checkNicknameLessThanMaxLength(modelJoinDto.getNickname());
-        String userEmail = getUserEmail(modelJoinDto.getId_token(), modelJoinDto.getProvider());
+    public AuthResponse.JoinDto socialJoin(AuthRequest.UserJoinDto signUpDto) {
+        // 1. ID 토큰 검증 후, 사용자 이메일 획득
+        String userEmail = getUserEmail(signUpDto.getId_token(), signUpDto.getProvider());
 
-        //TODO: 회원 중복 검사 로직
-        User user = checkUserDeviceToken(userEmail, modelJoinDto);
+        org.meme.auth.domain.User user = saveUser(signUpDto, userEmail);
+
+        Role userRole = signUpDto.getRole();
+        // 2. 사용자 엔티티 변환
+        if (userRole == Role.ARTIST) {
+            // MEMBER_SERVER로 요청보내 ArtistRepository 호출
+            // artistRepository.save(new Artist(user)); 처럼 사용
+        } else if (userRole == Role.MODEL) {
+            // MEMBER_SERVER로 요청보내 ModelRepository 호출
+            // modelRepository.save(new Model(user)); 처럼 사용
+        } else {
+            // 예외 처리
+        }
 
         String[] tokenPair = login(user);
 
-        return TokenConverter.toJoinDto(user, tokenPair, ROLE_MODEL);
-    }
-
-    @Transactional
-    public AuthResponse.JoinDto signupArtist(AuthRequest.ArtistJoinDto artistJoinDto) throws AuthException {
-        checkNicknameLessThanMaxLength(artistJoinDto.getNickname());
-        String userEmail = getUserEmail(artistJoinDto.getId_token(), artistJoinDto.getProvider());
-
-        //TODO: 회원 중복 검사 로직
-        User user = checkUserDeviceToken(userEmail, artistJoinDto);
-
-        String[] tokenPair = login(user);
-
-        return TokenConverter.toJoinDto(user, tokenPair, ROLE_ARTIST);
+        return TokenConverter.toJoinDto(user, tokenPair, userRole);
     }
 
     @Transactional
@@ -140,37 +131,12 @@ public class AuthService {
         return userRepository.existsByNickname(nicknameDto.getNickname());
     }
 
-    protected Model saveUser(AuthRequest.ModelJoinDto modelJoinDto, String userEmail) {
-        return modelRepository.save(UserConverter.toModel(modelJoinDto, userEmail, ROLE_MODEL));
+    private org.meme.auth.domain.User saveUser(AuthRequest.UserJoinDto signUpDto, String userEmail) {
+        return updateUserRepository.save(UserConverter.toUserEntity(signUpDto, userEmail));
     }
 
-    protected Artist saveUser(AuthRequest.ArtistJoinDto artistJoinDto, String userEmail) {
-        return artistRepository.save(UserConverter.toArtist(artistJoinDto, userEmail, ROLE_ARTIST));
-    }
-
-    private Model checkUserDeviceToken(String userEmail, AuthRequest.ModelJoinDto modelJoinDto) {
-        Model model = modelRepository.findByEmail(userEmail).orElseGet(() -> saveUser(modelJoinDto, userEmail));
-
-        if (!model.getDeviceTokens().contains(modelJoinDto.getDeviceToken())) {
-            model.getDeviceTokens().add(modelJoinDto.getDeviceToken());
-            model = modelRepository.save(model);
-        }
-
-        return model;
-    }
-
-    private User checkUserDeviceToken(String userEmail, AuthRequest.ArtistJoinDto artistJoinDto) {
-        Artist artist = artistRepository.findByEmail(userEmail).orElseGet(() -> saveUser(artistJoinDto, userEmail));
-
-        if (!artist.getDeviceTokens().contains(artistJoinDto.getDeviceToken())) {
-            artist.getDeviceTokens().add(artistJoinDto.getDeviceToken());
-            artist = artistRepository.save(artist);
-        }
-
-        return artist;
-    }
-
-    protected String[] login(User user) {
+    // new
+    private String[] login(org.meme.auth.domain.User user) {
         Authentication authentication = authenticate(user);
 
         String[] tokenPair = jwtTokenProvider.createTokenPair(authentication);
@@ -181,7 +147,8 @@ public class AuthService {
         return tokenPair;
     }
 
-    protected Authentication authenticate(User user) throws AuthException {
+    // new
+    private Authentication authenticate(org.meme.auth.domain.User user) throws AuthException {
         Authentication authentication;
 
         try {
@@ -237,13 +204,4 @@ public class AuthService {
             // NICKNAME_LENGTH_EXCEPTION로 바꿔야함!!1
             throw new AuthException(ErrorStatus.NICKNAME_NOT_EXIST);
     }
-
-    // TODO : Need Refactoring
-    // 현재 API 중단 상태 -> 추후 리팩토링 예정
-//    @Transactional
-//    public void signupArtistExtra(AuthRequest.ArtistExtraDto artistExtraDto) {
-//        Artist artist = artistRepository.findById(artistExtraDto.getUser_id())
-//                .orElseThrow(() -> new AuthException(ARTIST_NOT_FOUND));
-//        artist.update(artistExtraDto);
-//    }
 }

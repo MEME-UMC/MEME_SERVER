@@ -2,11 +2,13 @@ package org.meme.auth.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Getter
 @Entity
 public class Model {

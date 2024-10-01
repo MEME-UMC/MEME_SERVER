@@ -3,13 +3,13 @@ package org.meme.auth.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.meme.domain.enums.Gender;
-import org.meme.domain.enums.Provider;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Getter
 @Entity
 public class User {
@@ -34,10 +34,6 @@ public class User {
     private String password;
 
     @NotNull
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
-
-    @NotNull
     @Column(length = 15)
     private String nickname;
 
@@ -45,8 +41,12 @@ public class User {
     private String profileImg;
 
     @NotNull
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     @NotNull
-    private boolean details;
+    private Role role;
+
+    @NotNull
+    private boolean details;  // 세부 정보 입력 여부
 }

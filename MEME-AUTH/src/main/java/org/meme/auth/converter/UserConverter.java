@@ -1,46 +1,34 @@
 package org.meme.auth.converter;
 
 import org.meme.auth.config.SecurityConfig;
-import org.meme.domain.entity.Artist;
 import org.meme.auth.dto.AuthRequest;
 import org.meme.auth.dto.AuthResponse;
-import org.meme.domain.entity.Model;
-import org.meme.domain.entity.User;
-
-import java.util.Collections;
-import java.util.HashSet;
+import org.meme.auth.domain.User;
 
 public class UserConverter {
 
-    public static Model toModel(AuthRequest.ModelJoinDto modelJoinDto, String userEmail, String role) {
-        return Model.builder()
-                .role(role)
+    public static org.meme.auth.domain.User toUserEntity(AuthRequest.UserJoinDto signUpDto, String userEmail) {
+        return org.meme.auth.domain.User.builder()
+                .username(signUpDto.getUsername())
                 .email(userEmail)
-                .provider(modelJoinDto.getProvider())
-                .profileImg(modelJoinDto.getProfile_img())
-                .deviceTokens(new HashSet<>(Collections.singleton(modelJoinDto.getDeviceToken())))
-                .username(modelJoinDto.getUsername())
-                .nickname(modelJoinDto.getNickname())
+                .provider(signUpDto.getProvider())
                 .password(SecurityConfig.passwordEncoder().encode(userEmail))
-                .details(true)
-                .gender(modelJoinDto.getGender())
-                .skinType(modelJoinDto.getSkin_type())
-                .personalColor(modelJoinDto.getPersonal_color())
+                .nickname(signUpDto.getNickname())
+                .profileImg(signUpDto.getProfileImg())
+                .gender(signUpDto.getGender())
+                .role(signUpDto.getRole())
+                .details(false)
                 .build();
     }
 
-    public static Artist toArtist(AuthRequest.ArtistJoinDto artistJoinDto, String userEmail, String role) {
-        return Artist.builder()
-                .role(role)
-                .email(userEmail)
-                .provider(artistJoinDto.getProvider())
-                .profileImg(artistJoinDto.getProfile_img())
-                .deviceTokens(new HashSet<>(Collections.singleton(artistJoinDto.getDeviceToken())))
-                .username(artistJoinDto.getUsername())
-                .nickname(artistJoinDto.getNickname())
-                .password(SecurityConfig.passwordEncoder().encode(userEmail))
-                .details(false)
-                .build();
+    public static org.meme.auth.domain.Model toModelEntity() {
+        return org.meme.auth.domain.Model
+                .builder().build();
+    }
+
+    public static org.meme.auth.domain.Artist toArtistEntity() {
+        return org.meme.auth.domain.Artist
+                .builder().build();
     }
 
     public static AuthResponse.UserInfoDto toUserInfoDtoExists(User user, String[] tokenPair) {
