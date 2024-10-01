@@ -4,10 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.meme.domain.enums.*;
-
-import java.util.List;
-import java.util.Map;
+import org.meme.auth.domain.*;
 
 public class AuthRequest {
     @Data @Builder
@@ -43,17 +40,19 @@ public class AuthRequest {
     @Data @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class ArtistExtraDto {
-        private Long user_id;
-        private String profile_img;
-        private String nickname;
+    public static class UserJoinDto {
+        // 초기 사용자 정보
+        private String id_token;
+        private Provider provider;
+
+        // 사용자 역할
+        private Role role;
+
+        // 사용자 세부 정보
         private Gender gender;
-        private String introduction;
-        private WorkExperience work_experience;
-        private List<Region> region;
-        private List<Category> specialization;
-        private MakeupLocation makeup_location;
-        private String shop_location;
+        private String username;
+        private String nickname;
+        private String profileImg;
     }
 
     @Data @Builder

@@ -2,14 +2,13 @@ package org.meme.auth.oauth.provider.kakao;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.SignatureException;
-import org.meme.domain.common.status.ErrorStatus;
-import org.meme.domain.common.exception.AuthException;
+import org.meme.auth.common.exception.AuthException;
+import org.meme.auth.common.status.ErrorStatus;
 import org.meme.auth.infra.RedisRepository;
 import org.meme.auth.oauth.jsonwebkey.PublicKeyDto;
 import org.meme.auth.oauth.provider.OAuthProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 
 import java.io.BufferedReader;
 import java.io.IOException;
