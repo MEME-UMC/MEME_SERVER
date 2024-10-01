@@ -28,24 +28,18 @@ import static org.meme.auth.domain.Provider.KAKAO;
 @Service
 public class AuthService {
 
-    private final ModelRepository modelRepository;  // 필수 - 사용자 저장
-    private final ArtistRepository artistRepository;  // 필수 - 사용자 저장
     private final AuthenticationManager authenticationManager;  // 필수 - 로그인
     private final JwtTokenProvider jwtTokenProvider;  // 필수 - 토큰 생성
     private final TokenRepository tokenRepository;  // 필수 - 토큰 저장 및 삭제
-    private final UserRepository userRepository;  // 필수 - 사용자 정보 조회
     private final RedisRepository redisRepository;  // 필수 - 자식 클래스 의존성 주입 시 필요
 
     private final static String TOKEN_PREFIX = "Bearer ";
-    private static final String USERNAME = "username";
-    private final static String ROLE_MODEL = "MODEL";
-    private final static String ROLE_ARTIST = "ARTIST";
+    private static final String USERNAME_IN_TOKEN = "username";
     private final static int MAX_LENGTH_NICKNAME = 15;
 
     // updated repository
-    private final org.meme.auth.domain.UserRepository updateUserRepository;
+    private final UserRepository userRepository;
 
-    // 새로운 회원가입 메서드
     @Transactional
     public AuthResponse.JoinDto socialJoin(AuthRequest.UserJoinDto signUpDto) {
         // 1. ID 토큰 검증 후, 사용자 이메일 획득
@@ -106,7 +100,7 @@ public class AuthService {
     @Transactional
     public void withdraw(String requestHeader) throws AuthException {
         String requestAccessToken = resolveToken(requestHeader);
-        String username = (String) jwtTokenProvider.getClaims(requestAccessToken).get(USERNAME);
+        String username = (String) jwtTokenProvider.getClaims(requestAccessToken).get(USERNAME_IN_TOKEN);
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AuthException(ErrorStatus.USER_NOT_FOUND));
         userRepository.delete(user);
@@ -132,7 +126,7 @@ public class AuthService {
     }
 
     private org.meme.auth.domain.User saveUser(AuthRequest.UserJoinDto signUpDto, String userEmail) {
-        return updateUserRepository.save(UserConverter.toUserEntity(signUpDto, userEmail));
+        return userRepository.save(UserConverter.toUserEntity(signUpDto, userEmail));
     }
 
     // new
