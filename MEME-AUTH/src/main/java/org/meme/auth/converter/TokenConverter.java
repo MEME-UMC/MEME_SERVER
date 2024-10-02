@@ -8,9 +8,9 @@ public class TokenConverter {
 
     public static AuthResponse.JoinDto toJoinDto(User user, String[] tokenPair, Role role) {
         return AuthResponse.JoinDto.builder()
-                .access_token(tokenPair[0])
-                .refresh_token(tokenPair[1])
-                .user_id(user.getUserId())
+                .accessToken(tokenPair[0])
+                .refreshToken(tokenPair[1])
+                .userId(user.getUserId())
                 .details(user.isDetails())
                 .role(role)
                 .build();

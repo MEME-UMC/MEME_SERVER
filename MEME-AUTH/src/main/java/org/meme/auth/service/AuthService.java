@@ -43,7 +43,7 @@ public class AuthService {
     @Transactional
     public AuthResponse.JoinDto socialJoin(AuthRequest.UserJoinDto signUpDto) {
         // 1. ID 토큰 검증 후, 사용자 이메일 획득
-        String userEmail = getUserEmail(signUpDto.getId_token(), signUpDto.getProvider());
+        String userEmail = getUserEmail(signUpDto.getIdToken(), signUpDto.getProvider());
 
         org.meme.auth.domain.User user = saveUser(signUpDto, userEmail);
 
@@ -66,8 +66,8 @@ public class AuthService {
 
     @Transactional
     public AuthResponse.TokenDto reissue(AuthRequest.ReissueDto reissueDto) throws AuthException {
-        String requestAccessToken = reissueDto.getAccess_token();
-        String requestRefreshToken = reissueDto.getRefresh_token();
+        String requestAccessToken = reissueDto.getAccessToken();
+        String requestRefreshToken = reissueDto.getRefreshToken();
 
         Token requestToken = tokenRepository.findByAccessToken(requestAccessToken)
                 .orElseThrow(() -> new AuthException(ErrorStatus.CANNOT_FOUND_USER));
@@ -108,7 +108,7 @@ public class AuthService {
 
     @Transactional
     public AuthResponse.UserInfoDto checkUserExistsFindByEmail(AuthRequest.IdTokenDto idTokenDto) {
-        String userEmail = getUserEmail(idTokenDto.getId_token(), idTokenDto.getProvider());
+        String userEmail = getUserEmail(idTokenDto.getIdToken(), idTokenDto.getProvider());
         Optional<User> userOptional = userRepository.findByEmail(userEmail);
 
         if (userOptional.isEmpty())
