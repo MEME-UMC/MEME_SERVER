@@ -2,12 +2,13 @@ package org.meme.auth;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-@ComponentScan("org.meme.domain")
-@ComponentScan("org.meme.auth")
 @SpringBootApplication
+@EnableJpaRepositories(basePackages = "org.meme.auth.domain")
+@EntityScan(basePackages = "org.meme.auth.domain")
 @EnableJpaAuditing
 public class AuthApplication {
     public static void main(String[] args) {

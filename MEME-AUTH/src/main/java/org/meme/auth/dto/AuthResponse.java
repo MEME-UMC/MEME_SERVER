@@ -11,10 +11,10 @@ public class AuthResponse {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class JoinDto {
-        private String access_token;
-        private String refresh_token;
-        private Long user_id;
-        private boolean details;
+        private String accessToken;
+        private String refreshToken;
+        private Long userId;
+        private boolean details;  // 이거 좀 생각해보기
         private Role role;
     }
 
