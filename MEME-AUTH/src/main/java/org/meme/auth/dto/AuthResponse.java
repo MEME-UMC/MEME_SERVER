@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.meme.auth.domain.Role;
 
 public class AuthResponse {
     @Data @Builder
@@ -14,7 +15,7 @@ public class AuthResponse {
         private String refresh_token;
         private Long user_id;
         private boolean details;
-        private String role;
+        private Role role;
     }
 
     @Data @Builder
@@ -40,6 +41,6 @@ public class AuthResponse {
         private String refresh_token;
         private boolean user_status;
         private Long user_id;
-        private String role;
+        private Role role;
     }
 }

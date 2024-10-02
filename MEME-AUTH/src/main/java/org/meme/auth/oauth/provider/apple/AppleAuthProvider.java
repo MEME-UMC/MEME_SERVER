@@ -2,8 +2,8 @@ package org.meme.auth.oauth.provider.apple;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.SignatureException;
-import org.meme.domain.common.status.ErrorStatus;
-import org.meme.domain.common.exception.AuthException;
+import org.meme.auth.common.exception.AuthException;
+import org.meme.auth.common.status.ErrorStatus;
 import org.meme.auth.infra.RedisRepository;
 import org.meme.auth.oauth.jsonwebkey.PublicKeyDto;
 import org.meme.auth.oauth.provider.OAuthProvider;

@@ -1,16 +1,17 @@
 package org.meme.auth.converter;
 
+import org.meme.auth.domain.Role;
+import org.meme.auth.domain.User;
 import org.meme.auth.dto.AuthResponse;
-import org.meme.domain.entity.User;
 
 public class TokenConverter {
 
-    public static AuthResponse.JoinDto toJoinDto(User user, String[] tokenPair, String role) {
+    public static AuthResponse.JoinDto toJoinDto(User user, String[] tokenPair, Role role) {
         return AuthResponse.JoinDto.builder()
                 .access_token(tokenPair[0])
                 .refresh_token(tokenPair[1])
                 .user_id(user.getUserId())
-                .details(user.getDetails())
+                .details(user.isDetails())
                 .role(role)
                 .build();
     }
