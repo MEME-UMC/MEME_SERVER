@@ -30,8 +30,8 @@ public class ReviewConverter {
 
         return ReviewResponse.ReviewDto.builder()
                 .reviewId(review.getReviewId())
-                .modelNickName(review.getModel().getNickname())
-                .modelProfileImg(review.getModel().getProfileImg())
+                .modelNickName(review.getModel().getUser().getNickname())
+                .modelProfileImg(review.getModel().getUser().getProfileImg())
                 .star(review.getStar())
                 .comment(review.getComment())
                 .createdAt(review.getCreatedAt())
@@ -46,7 +46,7 @@ public class ReviewConverter {
                 .toList();
 
         return ReviewResponse.ReviewDetailsDto.builder()
-                .artistNickName(review.getPortfolio().getArtist().getNickname())
+                .artistNickName(review.getPortfolio().getArtist().getUser().getNickname())
                 .makeupName(review.getPortfolio().getMakeupName())
                 .star(review.getStar())
                 .comment(review.getComment())
@@ -57,7 +57,7 @@ public class ReviewConverter {
     public static ReviewResponse.MyReviewDto toMyReviewDto(Review review){
         return ReviewResponse.MyReviewDto.builder()
                 .reviewId(review.getReviewId())
-                .artistNickName(review.getPortfolio().getArtist().getNickname())
+                .artistNickName(review.getPortfolio().getArtist().getUser().getNickname())
                 .makeupName(review.getPortfolio().getMakeupName())
                 .portfolioImg(review.getPortfolio().getPortfolioImgList().get(0).getSrc()) //첫 번째 포트폴리오 이미지
                 .location(review.getPortfolio().getArtist().getShopLocation())
@@ -69,7 +69,7 @@ public class ReviewConverter {
         return ReviewResponse.ReviewAvailableListDto.builder()
                 .reservationId(reservation.getReservationId())
                 .portfolioId(reservation.getReservationId())
-                .artistNickName(reservation.getPortfolio().getArtist().getNickname())
+                .artistNickName(reservation.getPortfolio().getArtist().getUser().getNickname())
                 .makeupName(reservation.getPortfolio().getMakeupName())
                 .portfolioImg(reservation.getPortfolio().getPortfolioImgList().get(0).getSrc())
                 .reservationYear(reservation.getYear())

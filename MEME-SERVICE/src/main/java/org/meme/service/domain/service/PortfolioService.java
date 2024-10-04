@@ -1,6 +1,5 @@
 package org.meme.service.domain.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.meme.service.domain.dto.request.PortfolioRequest;
 import org.meme.service.domain.dto.response.PortfolioResponse;
@@ -15,6 +14,7 @@ import org.meme.service.domain.repository.PortfolioImgRepository;
 import org.meme.service.domain.repository.PortfolioRepository;
 import org.meme.service.common.status.ErrorStatus;
 import org.meme.service.common.exception.GeneralException;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.ArrayList;
@@ -23,6 +23,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class PortfolioService {
     private final ArtistRepository artistRepository;
     private final PortfolioRepository portfolioRepository;
