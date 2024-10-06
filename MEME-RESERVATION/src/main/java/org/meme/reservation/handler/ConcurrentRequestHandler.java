@@ -1,13 +1,13 @@
 package org.meme.reservation.handler;
 
 import lombok.RequiredArgsConstructor;
-import org.meme.domain.common.exception.ReservationConflictException;
-import org.meme.domain.common.exception.ReservationException;
-import org.meme.domain.entity.Model;
-import org.meme.domain.entity.Portfolio;
-import org.meme.domain.entity.Reservation;
-import org.meme.domain.repository.ReservationRepository;
+import org.meme.reservation.common.exception.ReservationConflictException;
+import org.meme.reservation.common.exception.ReservationException;
 import org.meme.reservation.converter.ReservationConverter;
+import org.meme.reservation.domain.Model;
+import org.meme.reservation.domain.Portfolio;
+import org.meme.reservation.domain.Reservation;
+import org.meme.reservation.domain.ReservationRepository;
 import org.meme.reservation.dto.ReservationRequest;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
@@ -18,8 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.concurrent.*;
 
-import static org.meme.domain.common.status.ErrorStatus.RESERVATION_CANNOT_ACQUIRE_LOCK;
-import static org.meme.domain.common.status.ErrorStatus.RESERVATION_CONFLICT;
+import static org.meme.reservation.common.status.ErrorStatus.RESERVATION_CANNOT_ACQUIRE_LOCK;
+import static org.meme.reservation.common.status.ErrorStatus.RESERVATION_CONFLICT;
 
 @RequiredArgsConstructor
 @Service
@@ -62,8 +62,8 @@ public class ConcurrentRequestHandler {
                         ReservationConverter.toReservationEntity(requestDto, model, portfolio)
                 );
 
-                // 4-1. 모델, 포트폴리오 내 예약 정보 추가
-                reservationInfo.pendingReservation(model, portfolio);
+                // TODO: 4-1. 모델, 포트폴리오 내 예약 정보 추가
+                // reservationInfo.pendingReservation(model, portfolio);
 
                 // 5. 락을 해제합니다.
                 rlock.unlock();
