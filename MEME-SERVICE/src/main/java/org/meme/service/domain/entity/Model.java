@@ -5,20 +5,26 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
-import org.meme.service.domain.entity.Reservation;
 import org.meme.service.domain.entity.*;
+import org.meme.service.domain.enums.Gender;
 import org.meme.service.domain.enums.PersonalColor;
 import org.meme.service.domain.enums.SkinType;
 
 import java.util.List;
 
-@SuperBuilder
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Model extends User {
+public class Model {
+
+    @Id
+    private Long userId;
+
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -47,12 +53,21 @@ public class Model extends User {
     public void updateFavoritePortfolioList(FavoritePortfolio portfolio){
         this.favoritePortfolioList.add(portfolio);
     }
-    public void updateReservationList(Reservation reservation){
-        this.reservationList.add(reservation);
-    }
 
     public void updateReviewList(Review review){
         this.reviewList.add(review);
+    }
+
+    public void updateProfileImg(String profileimg){
+        this.user.updateProfileImg(profileimg);
+    }
+
+    public void updateNickname(String nickname){
+        this.user.updateNickname(nickname);
+    }
+
+    public void updateGender(Gender gender){
+        this.user.updateGender(gender);
     }
 
 }

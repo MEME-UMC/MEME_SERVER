@@ -13,7 +13,7 @@ public class FavoriteConverter {
     public static FavoriteArtist toFavoriteArtist(Artist artist, Model model){
         return FavoriteArtist.builder()
                 .model(model)
-                .artistId(artist.getUserId())
+                .artist(artist)
                 .build();
     }
 

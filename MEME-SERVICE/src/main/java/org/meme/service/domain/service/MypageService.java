@@ -1,6 +1,5 @@
 package org.meme.service.domain.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.meme.service.common.exception.GeneralException;
 import org.meme.service.common.status.ErrorStatus;
@@ -16,11 +15,13 @@ import org.meme.service.domain.converter.MypageConverter;
 import org.meme.service.domain.dto.request.MypageRequest;
 import org.meme.service.domain.dto.response.MypageResponse;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MypageService {
     private final ModelRepository modelRepository;
     private final ArtistRepository artistRepository;

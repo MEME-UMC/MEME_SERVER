@@ -23,7 +23,7 @@ public class FavoritePortfolio extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name="user_id", nullable = false)
-    private User model;
+    private Model model;
 
     @ManyToOne
     @JoinColumn(name="portfolio_id", nullable = false)

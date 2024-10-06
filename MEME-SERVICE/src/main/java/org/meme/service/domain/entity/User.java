@@ -2,11 +2,7 @@ package org.meme.service.domain.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import lombok.*;
 import org.meme.service.domain.entity.Inquiry;
 import org.meme.service.domain.enums.Gender;
 import org.meme.service.domain.enums.Provider;
@@ -18,10 +14,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@SuperBuilder @Getter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Inheritance(strategy = InheritanceType.JOINED)
+//@Inheritance(strategy = InheritanceType.JOINED)
 @Entity
 public class User {
 
@@ -68,7 +64,7 @@ public class User {
     private Provider provider;
 
     @ElementCollection
-    @Builder.Default
+//    @Builder.Default
     private Set<String> deviceTokens = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
