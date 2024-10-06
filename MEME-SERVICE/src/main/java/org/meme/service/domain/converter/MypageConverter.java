@@ -11,9 +11,9 @@ public class MypageConverter {
     public static MypageResponse.ModelProfileDto toModelProfileDto(Model model){
         return MypageResponse.ModelProfileDto.builder()
                 .userId(model.getUserId())
-                .profileImg(model.getProfileImg())
-                .nickname(model.getNickname())
-                .gender(model.getGender())
+                .profileImg(model.getUser().getProfileImg())
+                .nickname(model.getUser().getNickname())
+                .gender(model.getUser().getGender())
                 .skinType(model.getSkinType())
                 .personalColor(model.getPersonalColor())
                 .build();
@@ -22,9 +22,9 @@ public class MypageConverter {
     public static MypageResponse.ArtistProfileDto toArtistProfileDto(Artist artist){
         return MypageResponse.ArtistProfileDto.builder()
                 .userId(artist.getUserId())
-                .profileImg(artist.getProfileImg())
-                .nickname(artist.getNickname())
-                .gender(artist.getGender())
+                .profileImg(artist.getUser().getProfileImg())
+                .nickname(artist.getUser().getNickname())
+                .gender(artist.getUser().getGender())
                 .introduction(artist.getIntroduction())
                 .phoneNumber(artist.getPhoneNumber())
                 .instagramId(artist.getInstagramId())

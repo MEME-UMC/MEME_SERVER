@@ -7,19 +7,24 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.meme.service.domain.entity.Portfolio;
-import org.meme.service.domain.enums.Category;
-import org.meme.service.domain.enums.MakeupLocation;
-import org.meme.service.domain.enums.Region;
-import org.meme.service.domain.enums.WorkExperience;
+import org.meme.service.domain.enums.*;
 
 import java.util.List;
 
-@SuperBuilder
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter @Setter
 @Entity
-public class Artist extends User{
+public class Artist {
+
+    @Id
+    private Long userId;
+
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(length = 500, nullable = true)
     private String introduction;
@@ -56,5 +61,17 @@ public class Artist extends User{
 
     public void updatePortfolioList(Portfolio portfolio){
         this.portfolioList.add(portfolio);
+    }
+
+    public void updateProfileImg(String profileimg){
+        this.user.updateProfileImg(profileimg);
+    }
+
+    public void updateNickname(String nickname){
+        this.user.updateNickname(nickname);
+    }
+
+    public void updateGender(Gender gender){
+        this.user.updateGender(gender);
     }
 }

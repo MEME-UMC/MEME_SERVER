@@ -1,6 +1,5 @@
 package org.meme.service.domain.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.meme.service.common.exception.GeneralException;
 import org.meme.service.domain.entity.*;
@@ -16,13 +15,16 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.meme.service.common.status.ErrorStatus;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ReviewService {
     private final ModelRepository modelRepository;
     private final ReviewRepository reviewRepository;
@@ -110,7 +112,7 @@ public class ReviewService {
         Model model = findModelById(updateReviewDto.getModelId());
         Review review = findReviewById(updateReviewDto.getReviewId());
 
-        if (!review.getModel().equals(model))
+        if (!review.getModel().getUserId().equals(model.getUserId()))
             throw new GeneralException(ErrorStatus.INVALID_MODEL_FOR_REVIEW);
 
         // 리뷰 이미지 수정
@@ -118,7 +120,7 @@ public class ReviewService {
             updateReviewImgList(review, updateReviewDto.getReviewImgSrcList());
 
         // 리뷰 수정
-        updateReviewEntity(review, updateReviewDto);
+        updateReview(review, updateReviewDto);
         return ReviewConverter.toReviewDetailDto(review);
     }
 
@@ -160,18 +162,17 @@ public class ReviewService {
     public void deleteReview(ReviewRequest.DeleteReviewDto reviewDto){
         Model model = findModelById(reviewDto.getModelId());
         Review review = findReviewById(reviewDto.getReviewId());
-        if(!review.getModel().equals(model))
+
+        if(!Objects.equals(review.getModel().getUserId(), model.getUserId()))
             throw new GeneralException(ErrorStatus.INVALID_MODEL_FOR_REVIEW);
 
         reviewRepository.delete(review);
     }
 
     private void validateReservationStatus(Reservation reservation) {
-        // 이미 리뷰 작성 완료
         if (reservation.isReviewed())
             throw new GeneralException(ErrorStatus.ALREADY_REVIEWED);
 
-        // 예약 미완료
         if (!reservation.isCompleted())
             throw new GeneralException(ErrorStatus.INVALID_REVIEW_REQUEST);
     }
@@ -207,7 +208,7 @@ public class ReviewService {
                 pageable, list.size());
     }
 
-    private void updateReviewEntity(Review review, ReviewRequest.UpdateReviewDto updateReviewDto){
+    private void updateReview(Review review, ReviewRequest.UpdateReviewDto updateReviewDto){
         if(updateReviewDto.getStar() > 0)
             review.setStar(updateReviewDto.getStar());
         if(updateReviewDto.getComment() != null)
