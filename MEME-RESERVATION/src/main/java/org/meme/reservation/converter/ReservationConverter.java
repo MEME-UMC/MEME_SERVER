@@ -1,8 +1,6 @@
 package org.meme.reservation.converter;
 
-import org.meme.domain.entity.*;
-import org.meme.domain.enums.DayOfWeek;
-import org.meme.domain.enums.Status;
+import org.meme.reservation.domain.*;
 import org.meme.reservation.dto.ReservationRequest;
 import org.meme.reservation.dto.ReservationResponse;
 
@@ -25,7 +23,7 @@ public class ReservationConverter {
                 .times(intoString(saveDto.getTimes()))
                 .status(Status.PENDING)
                 .location(saveDto.getLocation())
-                .artistName(portfolio.getArtist().getNickname())
+                .artistName(portfolio.getUser().getNickname())
                 .makeupName(portfolio.getMakeupName())
                 .price(portfolio.getPrice())
                 .build();
@@ -170,9 +168,11 @@ public class ReservationConverter {
         Model model = reservation.getModel();
 
         return ReservationResponse.ReservationDetailArtistSightDto.builder()
-                .model_name(model.getNickname())
-                .model_email(model.getEmail())
-                .model_gender(model.getGender())
+                // TODO: 참조가 한번 더 들어가기 때문에 고민
+                .model_name(model.getUser().getNickname())
+                .model_email(model.getUser().getEmail())
+                .model_gender(model.getUser().getGender())
+
                 .model_skin_type(model.getSkinType())
                 .model_personal_color(model.getPersonalColor())
                 .reservation_name(reservation.getMakeupName())
@@ -184,11 +184,13 @@ public class ReservationConverter {
     }
 
     public static ReservationResponse.ReservationDetailModelSightDto toReservationDetailModelSightDto(Reservation reservation) {
-        Artist artist = reservation.getPortfolio().getArtist();
+        User artist = reservation.getPortfolio().getUser();
 
         return ReservationResponse.ReservationDetailModelSightDto.builder()
+                // TODO: 참조가 살짝 복잡한 것 같아서 고민
                 .aritst_name(artist.getNickname())
                 .artist_email(artist.getEmail())
+
                 .reservation_name(reservation.getMakeupName())
                 .reservation_date(getDateString(reservation))
                 .reservation_time(getTimeString(reservation))

@@ -1,12 +1,10 @@
 package org.meme.reservation.service;
 
 import lombok.RequiredArgsConstructor;
-import org.meme.domain.common.exception.ReservationException;
-import org.meme.domain.common.status.ErrorStatus;
-import org.meme.domain.entity.*;
-import org.meme.domain.enums.DayOfWeek;
-import org.meme.domain.repository.*;
+import org.meme.reservation.common.exception.ReservationException;
+import org.meme.reservation.common.status.ErrorStatus;
 import org.meme.reservation.converter.ReservationConverter;
+import org.meme.reservation.domain.*;
 import org.meme.reservation.dto.ReservationRequest;
 import org.meme.reservation.dto.ReservationResponse;
 import org.meme.reservation.handler.ConcurrentRequestHandler;
@@ -16,10 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-import static org.meme.domain.enums.Status.*;
+import static org.meme.reservation.domain.Status.*;
 
 @RequiredArgsConstructor
 @Service
@@ -53,11 +50,11 @@ public class ReservationService {
     public ReservationResponse.ScheduleYearAndMonthDto getScheduleByYearAndMonth(Long portfolioId, int year, int month) {
         Portfolio portfolio = portfolioRepository.findById(portfolioId)
                 .orElseThrow(() -> new IllegalArgumentException("Portfolio not found"));
-        Long artistId = portfolio.getArtist().getUserId();
+        Long artistId = portfolio.getUser().getUserId();
 
-        ArtistEnableDate enableDate = enableDateRepository.findByArtist_UserId(artistId)
+        ArtistEnableDate enableDate = enableDateRepository.findByUserId(artistId)
                 .orElseThrow(() -> new IllegalArgumentException("Artist not found"));
-        ArtistEnableTime enableTime = enableTimeRepository.findByArtist_UserId(artistId)
+        ArtistEnableTime enableTime = enableTimeRepository.findByUserId(artistId)
                 .orElseThrow(() -> new IllegalArgumentException("Artist not found"));
 
         // 영업 가능 날짜 데이터 불러오기
@@ -90,13 +87,13 @@ public class ReservationService {
     }
 
     public ReservationResponse.DateDto getEnableDate(Long artistId) {
-        ArtistEnableDate artistEnableDate = enableDateRepository.findByArtist_UserId(artistId)
+        ArtistEnableDate artistEnableDate = enableDateRepository.findByUserId(artistId)
                 .orElseThrow(() -> new IllegalArgumentException("Artist not found"));
         return ReservationConverter.toDateDto(artistEnableDate);
     }
 
     public ReservationResponse.TimeDto getEnableTime(Long artistId) {
-        ArtistEnableTime artistEnableTime = enableTimeRepository.findByArtist_UserId(artistId)
+        ArtistEnableTime artistEnableTime = enableTimeRepository.findByUserId(artistId)
                 .orElseThrow(() -> new IllegalArgumentException("Artist not found"));
         return ReservationConverter.toTimeDto(artistEnableTime);
     }
@@ -105,7 +102,7 @@ public class ReservationService {
     public void updateEnableDate(ReservationRequest.EnableDateDto enableDateUpdateDto, Long artistId) {
         String enableDates = ReservationConverter.intoDateString(enableDateUpdateDto.getEnable_date());
 
-        ArtistEnableDate enableDate = enableDateRepository.findByArtist_UserId(artistId)
+        ArtistEnableDate enableDate = enableDateRepository.findByUserId(artistId)
                 .orElseThrow(() -> new IllegalArgumentException("Artist not found"));
         enableDate.updateEnableDates(enableDates);
     }
@@ -114,14 +111,15 @@ public class ReservationService {
     public void updateEnableTime(ReservationRequest.EnableTimeDto enableTimeUpdateDto, Long artistId) {
         String enableTimes = ReservationConverter.intoTimeString(enableTimeUpdateDto.getEnable_time());
 
-        ArtistEnableTime enableTime = enableTimeRepository.findByArtist_UserId(artistId)
+        ArtistEnableTime enableTime = enableTimeRepository.findByUserId(artistId)
                 .orElseThrow(() -> new IllegalArgumentException("Artist not found"));
         enableTime.updateEnableTimes(enableTimes);
     }
 
     public List<ReservationResponse.ReservationSimpleDto> getReservationSimplesByArtist(Long artistId) {
         Artist artist = getArtistById(artistId);
-        List<Portfolio> portfolioList = artist.getPortfolioList();
+        // List<Portfolio> portfolioList = artist.getPortfolioList();  // 기존 코드
+        List<Portfolio> portfolioList = portfolioRepository.findByUser_UserId(artistId).get();  // 임시 변경 코드
 
         List<ReservationResponse.ReservationSimpleDto> reservationSimpleDtos = new ArrayList<>();
 
@@ -138,7 +136,8 @@ public class ReservationService {
 
     public List<ReservationResponse.ReservationSimpleDto> getReservationSimplesByModel(Long modelId) {
         Model model = getModelById(modelId);
-        List<Reservation> reservations = model.getReservations();
+        // List<Reservation> reservations = model.getReservations();  // 기존 코드
+        List<Reservation> reservations = reservationRepository.findByModel_UserId(modelId).get();
 
         List<ReservationResponse.ReservationSimpleDto> reservationSimpleDtos = new ArrayList<>();
 

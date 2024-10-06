@@ -1,7 +1,7 @@
 package org.meme.reservation.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.meme.domain.common.BaseResponseDto;
+import org.meme.reservation.common.BaseResponseDto;
 import org.meme.reservation.dto.ReservationRequest;
 import org.meme.reservation.dto.ReservationResponse;
 import org.meme.reservation.service.ReservationService;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static org.meme.domain.common.status.SuccessStatus.*;
+import static org.meme.reservation.common.status.SuccessStatus.*;
 
 @RequiredArgsConstructor
 @RestController

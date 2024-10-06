@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.meme.domain.enums.*;
+import org.meme.reservation.domain.*;
 
 import java.time.LocalDate;
 import java.util.List;
