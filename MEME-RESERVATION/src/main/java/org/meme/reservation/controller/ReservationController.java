@@ -12,7 +12,7 @@ import java.util.List;
 import static org.meme.reservation.common.status.SuccessStatus.*;
 
 @RequiredArgsConstructor
-@RestController
+@RestController("/api/v2")
 public class ReservationController {
 
     private final ReservationService reservationService;
@@ -22,7 +22,7 @@ public class ReservationController {
      * @param requestDto
      * @return
      */
-    @PostMapping("/api/v2/reservation")
+    @PostMapping("/reservation")
     public BaseResponseDto<?> makeReservation(@RequestBody ReservationRequest.SaveDto requestDto) {
         reservationService.makeReservation(requestDto);
         return BaseResponseDto.SuccessResponse(RESERVATION_SUCCESS);
@@ -35,7 +35,7 @@ public class ReservationController {
      * @param month
      * @return
      */
-    @GetMapping("/api/v2/{portfolioId}/schedule/{year}/{month}")
+    @GetMapping("/{portfolioId}/schedule/{year}/{month}")
     public BaseResponseDto<ReservationResponse.ScheduleYearAndMonthDto> getScheduleByYearAndMonth(@PathVariable("portfolioId") Long portfolioId, @PathVariable("year") int year, @PathVariable("month") int month) {
         return BaseResponseDto.SuccessResponse(GET_SCHEDULE_SUCCESS, reservationService.getScheduleByYearAndMonth(portfolioId, year, month));
     }
@@ -46,7 +46,7 @@ public class ReservationController {
      * @param artistId
      * @return
      */
-    @PostMapping("/api/v2/mypage/{artistId}/enable/date")
+    @PostMapping("/mypage/{artistId}/enable/date")
     public BaseResponseDto<?> addEnableDate(@RequestBody ReservationRequest.EnableDateDto enableDateDto, @PathVariable("artistId") Long artistId) {
         reservationService.addEnableDate(enableDateDto, artistId);
         return BaseResponseDto.SuccessResponse(ADD_ENABLE_DATE_SUCCESS);
@@ -58,7 +58,7 @@ public class ReservationController {
      * @param artistId
      * @return
      */
-    @PostMapping("/api/v2/mypage/{artistId}/enable/time")
+    @PostMapping("/mypage/{artistId}/enable/time")
     public BaseResponseDto<?> addEnableTime(@RequestBody ReservationRequest.EnableTimeDto enableTimeDto, @PathVariable("artistId") Long artistId) {
         reservationService.addEnableTime(enableTimeDto, artistId);
         return BaseResponseDto.SuccessResponse(ADD_ENABLE_TIME_SUCCESS);
@@ -69,7 +69,7 @@ public class ReservationController {
      * @param artistId
      * @return
      */
-    @GetMapping("/api/v2/mypage/{artistId}/enable/date")
+    @GetMapping("/mypage/{artistId}/enable/date")
     public BaseResponseDto<ReservationResponse.DateDto> getEnableDate(@PathVariable("artistId") Long artistId) {
         return BaseResponseDto.SuccessResponse(GET_ENABLE_DATE_SUCCESS, reservationService.getEnableDate(artistId));
     }
@@ -79,7 +79,7 @@ public class ReservationController {
      * @param artistId
      * @return
      */
-    @GetMapping("/api/v2/mypage/{artistId}/enable/time")
+    @GetMapping("/mypage/{artistId}/enable/time")
     public BaseResponseDto<ReservationResponse.TimeDto> getEnableTime(@PathVariable("artistId") Long artistId) {
         return BaseResponseDto.SuccessResponse(GET_ENABLE_TIME_SUCCESS, reservationService.getEnableTime(artistId));
     }
@@ -90,7 +90,7 @@ public class ReservationController {
      * @param artistId
      * @return
      */
-    @PatchMapping("/api/v2/mypage/{artistId}/enable/date")
+    @PatchMapping("/mypage/{artistId}/enable/date")
     public BaseResponseDto<?> updateEnableDate(@RequestBody ReservationRequest.EnableDateDto enableDateUpdateDto, @PathVariable("artistId") Long artistId) {
         reservationService.updateEnableDate(enableDateUpdateDto, artistId);
         return BaseResponseDto.SuccessResponse(UPDATE_ENABLE_DATE_SUCCESS);
@@ -102,7 +102,7 @@ public class ReservationController {
      * @param artistId
      * @return
      */
-    @PatchMapping("/api/v2/mypage/{artistId}/enable/time")
+    @PatchMapping("/mypage/{artistId}/enable/time")
     public BaseResponseDto<?> updateEnableTime(@RequestBody ReservationRequest.EnableTimeDto enableTimeUpdateDto, @PathVariable("artistId") Long artistId) {
         reservationService.updateEnableTime(enableTimeUpdateDto, artistId);
         return BaseResponseDto.SuccessResponse(UPDATE_ENABLE_TIME_SUCCESS);
@@ -113,7 +113,7 @@ public class ReservationController {
      * @param artistId
      * @return
      */
-    @GetMapping("/api/v2/reservation/artist/{artistId}")
+    @GetMapping("/reservation/artist/{artistId}")
     public BaseResponseDto<List<ReservationResponse.ReservationSimpleDto>> getReservationSimplesByArtist(@PathVariable("artistId") Long artistId) {
         return BaseResponseDto.SuccessResponse(RESERVATION_GET_BY_ARTIST, reservationService.getReservationSimplesByArtist(artistId));
     }
@@ -123,7 +123,7 @@ public class ReservationController {
      * @param modelId
      * @return
      */
-    @GetMapping("/api/v2/reservation/model/{modelId}")
+    @GetMapping("/reservation/model/{modelId}")
     public BaseResponseDto<List<ReservationResponse.ReservationSimpleDto>> getReservationSimplesByModel(@PathVariable("modelId") Long modelId) {
         return BaseResponseDto.SuccessResponse(RESERVATION_GET_BY_MODEL, reservationService.getReservationSimplesByModel(modelId));
     }
@@ -133,7 +133,7 @@ public class ReservationController {
      * @param reservationId
      * @return
      */
-    @GetMapping("/api/v2/reservation/artist/{reservationId}")
+    @GetMapping("/reservation/artist/{reservationId}")
     public BaseResponseDto<ReservationResponse.ReservationDetailArtistSightDto> getReservationDetailByArtist(@PathVariable("reservationId") Long reservationId) {
         return BaseResponseDto.SuccessResponse(RESERVATION_DETAIL_GET_BY_ARTIST, reservationService.getReservationDetailByArtist(reservationId));
     }
@@ -143,7 +143,7 @@ public class ReservationController {
      * @param reservationId
      * @return
      */
-    @GetMapping("/api/v2/reservation/model/{reservationId}")
+    @GetMapping("/reservation/model/{reservationId}")
     public BaseResponseDto<ReservationResponse.ReservationDetailModelSightDto> getReservationDetailByModel(@PathVariable("reservationId") Long reservationId) {
         return BaseResponseDto.SuccessResponse(RESERVATION_DETAIL_GET_BY_MODEL, reservationService.getReservationDetailByModel(reservationId));
     }
@@ -153,7 +153,7 @@ public class ReservationController {
      * @param reservationId
      * @return
      */
-    @PatchMapping("/api/v2/reservation/artist/{reservationId}/approved")
+    @PatchMapping("/reservation/artist/{reservationId}/approved")
     public BaseResponseDto<?> changeStatusApprovedByArtist(@PathVariable("reservationId") Long reservationId) {
         reservationService.changeReservationStatusApproved(reservationId);
         return BaseResponseDto.SuccessResponse(RESERVATION_STATUS_APPROVED_BY_ARTIST);
@@ -164,7 +164,7 @@ public class ReservationController {
      * @param reservationId
      * @return
      */
-    @PatchMapping("/api/v2/reservation/artist/{reservationId}/canceled")
+    @PatchMapping("/reservation/artist/{reservationId}/canceled")
     public BaseResponseDto<?> changeStatusCanceledByArtist(@PathVariable("reservationId") Long reservationId) {
         reservationService.changeReservationStatusCanceled(reservationId);
         return BaseResponseDto.SuccessResponse(RESERVATION_STATUS_CANCELED_BY_ARTIST);
@@ -175,7 +175,7 @@ public class ReservationController {
      * @param reservationId
      * @return
      */
-    @PatchMapping("/api/v2/reservation/model/{reservationId}/canceled")
+    @PatchMapping("/reservation/model/{reservationId}/canceled")
     public BaseResponseDto<?> changeStatusCanceledByModel(@PathVariable("reservationId") Long reservationId) {
         reservationService.changeReservationStatusCanceled(reservationId);
         return BaseResponseDto.SuccessResponse(RESERVATION_STATUS_CANCELED_BY_MODEL);

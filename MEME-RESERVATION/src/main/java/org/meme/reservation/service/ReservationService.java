@@ -126,10 +126,13 @@ public class ReservationService {
         for (Portfolio portfolio : portfolioList) {
             List<Reservation> reservations = portfolio.getReservations();  // 포트폴리오의 예약 목록 조회
             for (Reservation reservation : reservations) {
-                ReservationResponse.ReservationSimpleDto reservationSimpleDto = ReservationConverter.toReservationSimpleDto(reservation);
+                ReservationResponse.ReservationSimpleDto reservationSimpleDto = ReservationConverter.toReservationSimpleDto(reservation, Role.ARTIST);
                 reservationSimpleDtos.add(reservationSimpleDto);
             }
         }
+
+        // TODO: reservationSimpleDtos 정렬 필요
+        ReservationResponse.sortByStatusAndDate(reservationSimpleDtos);
 
         return reservationSimpleDtos;
     }
@@ -142,9 +145,12 @@ public class ReservationService {
         List<ReservationResponse.ReservationSimpleDto> reservationSimpleDtos = new ArrayList<>();
 
         for (Reservation reservation : reservations) {
-            ReservationResponse.ReservationSimpleDto reservationSimpleDto = ReservationConverter.toReservationSimpleDto(reservation);
+            ReservationResponse.ReservationSimpleDto reservationSimpleDto = ReservationConverter.toReservationSimpleDto(reservation, Role.MODEL);
             reservationSimpleDtos.add(reservationSimpleDto);
         }
+
+        // TODO: reservationSimpleDtos 정렬 필요
+        ReservationResponse.sortByStatusAndDate(reservationSimpleDtos);
 
         return reservationSimpleDtos;
     }

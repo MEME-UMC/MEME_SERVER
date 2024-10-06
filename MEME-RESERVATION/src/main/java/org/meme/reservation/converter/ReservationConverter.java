@@ -55,15 +55,15 @@ public class ReservationConverter {
 
     public static ReservationResponse.DateDto toDateDto(ArtistEnableDate artistEnableDate) {
         return ReservationResponse.DateDto.builder()
-                .artist_id(artistEnableDate.getArtist().getUserId())
-                .enable_dates(intoDates(artistEnableDate.getEnableDates()))
+                .artistId(artistEnableDate.getArtist().getUserId())
+                .enableDates(intoDates(artistEnableDate.getEnableDates()))
                 .build();
     }
 
     public static ReservationResponse.TimeDto toTimeDto(ArtistEnableTime artistEnableTime) {
         return ReservationResponse.TimeDto.builder()
-                .artist_id(artistEnableTime.getArtist().getUserId())
-                .enable_times(intoTimes(artistEnableTime.getEnableTimes()))
+                .artistId(artistEnableTime.getArtist().getUserId())
+                .enableTimes(intoTimes(artistEnableTime.getEnableTimes()))
                 .build();
     }
 
@@ -128,19 +128,38 @@ public class ReservationConverter {
         return times;
     }
 
-    public static ReservationResponse.ReservationSimpleDto toReservationSimpleDto(Reservation reservation) {
+    public static ReservationResponse.ReservationSimpleDto toReservationSimpleDto(Reservation reservation, Role role) {
         String[] reservationTimes = getReservationTimes(reservation.getTimes());
         String startTime = reservationTimes[0];
         String endTime = reservationTimes[reservationTimes.length - 1];
 
+        int year = reservation.getYear();
+        int month = reservation.getMonth();
+        int day = reservation.getDay();
+
+        String userName = "";
+        if (role == Role.ARTIST) {
+            userName = reservation.getModel().getUser().getUsername();
+        } else if (role == Role.MODEL) {
+            userName = reservation.getArtistName();
+        } else {
+            // exception
+        }
+        return getReservationSimpleDto(reservation, startTime, endTime, year, month, day, userName);
+    }
+
+    private static ReservationResponse.ReservationSimpleDto getReservationSimpleDto(Reservation reservation, String startTime, String endTime, int year, int month, int day, String userName) {
         return ReservationResponse.ReservationSimpleDto.builder()
+                .reservationId(reservation.getReservationId())
                 .makeupName(reservation.getMakeupName())
-                .artistName(reservation.getArtistName())
+                .userName(userName)
                 .location(reservation.getLocation())
                 .price(reservation.getPrice())
                 .status(reservation.getStatus())
                 .year(reservation.getYear())
                 .month(reservation.getMonth())
+                .day(reservation.getDay())
+                .dayOfWeek(getDayOfWeek(LocalDate.of(year, month, day)))
                 .startTime(startTime)
                 .endTime(endTime)
                 .build();
@@ -168,18 +187,20 @@ public class ReservationConverter {
         Model model = reservation.getModel();
 
         return ReservationResponse.ReservationDetailArtistSightDto.builder()
-                // TODO: 참조가 한번 더 들어가기 때문에 고민
-                .model_name(model.getUser().getNickname())
-                .model_email(model.getUser().getEmail())
-                .model_gender(model.getUser().getGender())
+                .reservationId(reservation.getReservationId())
 
-                .model_skin_type(model.getSkinType())
-                .model_personal_color(model.getPersonalColor())
-                .reservation_name(reservation.getMakeupName())
-                .reservation_date(getDateString(reservation))
-                .reservation_time(getTimeString(reservation))
-                .reservation_price(getPriceString(reservation))
-                .reservation_status(reservation.getStatus())
+                // TODO: 참조가 한번 더 들어가기 때문에 고민
+                .modelName(model.getUser().getNickname())
+                .modelEmail(model.getUser().getEmail())
+                .modelGender(model.getUser().getGender())
+
+                .modelSkinType(model.getSkinType())
+                .modelPersonalColor(model.getPersonalColor())
+                .reservationName(reservation.getMakeupName())
+                .reservationDate(getDateString(reservation))
+                .reservationTime(getTimeString(reservation))
+                .reservationPrice(getPriceString(reservation))
+                .reservationStatus(reservation.getStatus())
                 .build();
     }
 
@@ -187,15 +208,30 @@ public class ReservationConverter {
         User artist = reservation.getPortfolio().getUser();
 
         return ReservationResponse.ReservationDetailModelSightDto.builder()
-                // TODO: 참조가 살짝 복잡한 것 같아서 고민
-                .aritst_name(artist.getNickname())
-                .artist_email(artist.getEmail())
+                .reservationId(reservation.getReservationId())
 
-                .reservation_name(reservation.getMakeupName())
-                .reservation_date(getDateString(reservation))
-                .reservation_time(getTimeString(reservation))
-                .reservation_price(getPriceString(reservation))
-                .reservation_status(reservation.getStatus())
+                // TODO: 참조가 살짝 복잡한 것 같아서 고민
+                .aritstName(artist.getNickname())
+                .artistEmail(artist.getEmail())
+
+                .reservationName(reservation.getMakeupName())
+                .reservationDate(getDateString(reservation))
+                .reservationTime(getTimeString(reservation))
+                .reservationPrice(getPriceString(reservation))
+                .reservationStatus(reservation.getStatus())
                 .build();
+    }
+
+    private static String getDayOfWeek(LocalDate localDate) {
+        java.time.DayOfWeek dayOfWeek = localDate.getDayOfWeek();
+        return switch (dayOfWeek) {
+            case SUNDAY -> DayOfWeek.SUN.getDayOfWeekName();
+            case MONDAY -> DayOfWeek.MON.getDayOfWeekName();
+            case TUESDAY -> DayOfWeek.TUE.getDayOfWeekName();
+            case WEDNESDAY -> DayOfWeek.WED.getDayOfWeekName();
+            case THURSDAY -> DayOfWeek.THU.getDayOfWeekName();
+            case FRIDAY -> DayOfWeek.FRI.getDayOfWeekName();
+            case SATURDAY -> DayOfWeek.SAT.getDayOfWeekName();
+        };
     }
 }

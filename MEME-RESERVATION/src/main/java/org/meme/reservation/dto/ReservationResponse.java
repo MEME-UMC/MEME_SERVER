@@ -26,8 +26,8 @@ public class ReservationResponse {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class DateDto {
-        private Long artist_id;
-        private List<LocalDate> enable_dates;
+        private Long artistId;
+        private List<LocalDate> enableDates;
     }
 
     @Data
@@ -35,8 +35,8 @@ public class ReservationResponse {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class TimeDto {
-        private Long artist_id;
-        private Map<DayOfWeek, List<String>> enable_times;
+        private Long artistId;
+        private Map<DayOfWeek, List<String>> enableTimes;
     }
 
     @Data
@@ -66,12 +66,15 @@ public class ReservationResponse {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class ReservationSimpleDto {
+        private Long reservationId;
         private String makeupName;
-        private String artistName;
+        private String userName;
         private String location;
         private int price;
         private int year;
         private int month;
+        private int day;
+        private String dayOfWeek;
         private String startTime;
         private String endTime;
         private Status status;
@@ -82,19 +85,21 @@ public class ReservationResponse {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class ReservationDetailArtistSightDto {
+        private Long reservationId;
+
         // 아티스트에게 보이는 모델 정보
-        private String model_name;
-        private String model_email;
-        private Gender model_gender;
-        private SkinType model_skin_type;
-        private PersonalColor model_personal_color;
+        private String modelName;
+        private String modelEmail;
+        private Gender modelGender;
+        private SkinType modelSkinType;
+        private PersonalColor modelPersonalColor;
 
         // 공통 정보
-        private String reservation_name;
-        private String reservation_date;   // 2024년 08월 11일
-        private String reservation_time;   // 18:00 - 19:00
-        private String reservation_price;  // 100,000원
-        private Status reservation_status;
+        private String reservationName;
+        private String reservationDate;   // 2024년 08월 11일
+        private String reservationTime;   // 18:00 - 19:00
+        private String reservationPrice;  // 100,000원
+        private Status reservationStatus;
     }
 
     @Data
@@ -102,15 +107,62 @@ public class ReservationResponse {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class ReservationDetailModelSightDto {
+        private Long reservationId;
+
         // 모델에게 보이는 아티스트 정보
-        private String aritst_name;
-        private String artist_email;
+        private String aritstName;
+        private String artistEmail;
 
         // 공통 정보
-        private String reservation_name;
-        private String reservation_date;   // 8월 11일 (일)
-        private String reservation_time;   // 18:00 - 19:00
-        private String reservation_price;  // 100,000원
-        private Status reservation_status;
+        private String reservationName;
+        private String reservationDate;   // 8월 11일 (일)
+        private String reservationTime;   // 18:00 - 19:00
+        private String reservationPrice;  // 100,000원
+        private Status reservationStatus;
     }
+
+    // Status, 날짜(year, month, day), startTime 오름차순 정렬 메서드
+    public static void sortByStatusAndDate(List<ReservationSimpleDto> reservations) {
+        reservations.sort((r1, r2) -> {
+            // Status 비교
+            int statusCompare = Integer.compare(getOrder(r1.status), getOrder(r2.status));
+            if (statusCompare != 0) {
+                return statusCompare;
+            }
+
+            // year, month, day 비교
+            int yearCompare = Integer.compare(r1.year, r2.year);
+            if (yearCompare != 0) {
+                return yearCompare;
+            }
+
+            int monthCompare = Integer.compare(r1.month, r2.month);
+            if (monthCompare != 0) {
+                return monthCompare;
+            }
+
+            int dayCompare = Integer.compare(r1.day, r2.day);
+            if (dayCompare != 0) {
+                return dayCompare;
+            }
+
+            // startTime 비교 (시간 문자열이므로 사전순 비교)
+            return r1.startTime.compareTo(r2.startTime);
+        });
+    }
+
+    // Status 우선순위를 반환하는 헬퍼 메서드
+    private static int getOrder(Status status) {
+        switch (status) {
+            case APPROVED:
+                return 1;
+            case PENDING:
+                return 2;
+            case COMPLETED:
+                return 3;
+            default:
+                throw new IllegalArgumentException("Unknown status: " + status);
+        }
+    }
+
 }
