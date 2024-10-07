@@ -23,6 +23,7 @@ public class FavoriteArtist extends BaseEntity {
     @JoinColumn(name="user_id", nullable = false)
     private Model model;
 
-    private Long artistId;
+    @OneToOne
+    private Artist artist;
 
 }

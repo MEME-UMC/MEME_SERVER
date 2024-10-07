@@ -3,13 +3,10 @@ package org.meme.reservation;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-@ComponentScan("org.meme.domain")
-@EntityScan(basePackages = "org.meme.domain")
-@EnableJpaRepositories(basePackages = "org.meme.domain")
-@ComponentScan("org.meme.reservation")
+@EnableJpaRepositories(basePackages = "org.meme.reservation.domain")
+@EntityScan(basePackages = "org.meme.reservation.domain")
 @SpringBootApplication
 public class ReservationApplication {
 

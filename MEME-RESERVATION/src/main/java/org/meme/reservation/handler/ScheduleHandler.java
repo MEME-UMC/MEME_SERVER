@@ -1,9 +1,9 @@
 package org.meme.reservation.handler;
 
 import lombok.RequiredArgsConstructor;
-import org.meme.domain.enums.DayOfWeek;
-import org.meme.domain.repository.ArtistEnableDateRepository;
-import org.meme.domain.repository.ArtistEnableTimeRepository;
+import org.meme.reservation.domain.ArtistEnableDateRepository;
+import org.meme.reservation.domain.ArtistEnableTimeRepository;
+import org.meme.reservation.domain.DayOfWeek;
 import org.meme.reservation.dto.ReservationResponse;
 import org.springframework.stereotype.Service;
 

@@ -1,6 +1,5 @@
 package org.meme.service.domain.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.meme.service.common.exception.GeneralException;
 import org.meme.service.common.status.ErrorStatus;
@@ -16,12 +15,14 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class FavoriteService {
     private final ModelRepository modelRepository;
     private final ArtistRepository artistRepository;
@@ -42,9 +43,9 @@ public class FavoriteService {
         //관심 아티스트 리스트
         List<ArtistResponse.ArtistSimpleDto> content = favoriteArtistPage.getContent().stream()
                 .map(favoriteArtist -> {
-                    Artist artist = findArtistById(favoriteArtist.getArtistId());
+                    Artist artist = favoriteArtist.getArtist();
                     //해당 아티스트를 관심 아티스트로 설정한 모델 수 카운트
-                    Long modelCount = favoriteArtistRepository.countByArtistId(artist.getUserId());
+                    Long modelCount = favoriteArtistRepository.countByArtist(artist);
                     return ArtistConverter.toArtistSimpleDto(artist, modelCount);
                 })
                 .collect(Collectors.toList());
@@ -71,7 +72,7 @@ public class FavoriteService {
         Artist artist = findArtistById(favoriteArtistDto.getArtistId());
 
         //이미 관심 아티스트가 존재하는 경우
-        if (favoriteArtistRepository.existsByModelAndArtistId(model, artist.getUserId())) {
+        if (favoriteArtistRepository.existsByModelAndArtist(model, artist)) {
             throw new GeneralException(ErrorStatus.ALREADY_EXIST_FAVORITE_ARTIST);
         }
 
@@ -102,7 +103,7 @@ public class FavoriteService {
         Model model = findModelById(favoriteArtistDto.getModelId());
         Artist artist = findArtistById(favoriteArtistDto.getArtistId());
 
-        FavoriteArtist favoriteArtist = findFavoriteArtistByModelAndArtistId(model, artist.getUserId());
+        FavoriteArtist favoriteArtist = findFavoriteArtistByModelAndArtist(model, artist);
         favoriteArtistRepository.delete(favoriteArtist);
     }
 
@@ -136,8 +137,8 @@ public class FavoriteService {
                 .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_FAVORITE_PORTFOLIO));
     }
 
-    private FavoriteArtist findFavoriteArtistByModelAndArtistId(Model model, Long artistId){
-        return favoriteArtistRepository.findByModelAndArtistId(model, artistId)
+    private FavoriteArtist findFavoriteArtistByModelAndArtist(Model model, Artist artist){
+        return favoriteArtistRepository.findByModelAndArtist(model, artist)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_FAVORITE_ARTIST));
     }
 

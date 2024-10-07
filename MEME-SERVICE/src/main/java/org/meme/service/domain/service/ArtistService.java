@@ -12,11 +12,13 @@ import org.meme.service.domain.dto.response.ArtistResponse;
 import org.springframework.stereotype.Service;
 import org.meme.service.domain.entity.Artist;
 import org.meme.service.common.exception.GeneralException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ArtistService {
     private final ArtistRepository artistRepository;
     private final ModelRepository modelRepository;
@@ -29,7 +31,7 @@ public class ArtistService {
         Artist artist = findArtistById(artistId);
 
         boolean isFavorite = false;
-        Optional<FavoriteArtist> favoriteArtist = favoriteArtistRepository.findByModelAndArtistId(model, artistId);
+        Optional<FavoriteArtist> favoriteArtist = favoriteArtistRepository.findByModelAndArtist(model, artist);
         if(favoriteArtist.isPresent())
             isFavorite = true;
 

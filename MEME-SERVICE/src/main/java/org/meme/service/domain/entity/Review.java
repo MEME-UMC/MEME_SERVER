@@ -24,7 +24,7 @@ public class Review extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name="user_id", nullable = false)
-    private User model;
+    private Model model;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "review")
     private List<ReviewImg> reviewImgList;
