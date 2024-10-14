@@ -12,13 +12,15 @@ import org.meme.auth.dto.AuthResponse;
 import org.meme.auth.service.AuthService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import static org.meme.auth.common.BaseResponseDto.SuccessResponse;
 
 @Slf4j(topic = "MEME-AUTH")
 @RequiredArgsConstructor
-@RestController("/api/v2")
+@RestController
+@RequestMapping("/api/v2")
 public class AuthController {
 
     private final AuthService authService;

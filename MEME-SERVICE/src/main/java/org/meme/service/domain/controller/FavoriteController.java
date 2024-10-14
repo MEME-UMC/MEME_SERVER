@@ -36,7 +36,7 @@ public class FavoriteController {
     @Operation(summary = "관심 메이크업 추가", description = "관심 메이크업을 추가하는 API입니다.")
     @PostMapping("/portfolio")
     public BaseResponseDto postFavoritePortfolio(@RequestBody FavoriteRequest.FavoritePortfolioDto favoritePortfolioDto) {
-        favoriteService.addFavoritePortfolio(favoritePortfolioDto);
+        favoriteService.addFavoritePortfolioV2(favoritePortfolioDto);
         return BaseResponseDto.SuccessResponse(SuccessStatus.FAVORITE_PORTFOLIO_POST);
     }
 

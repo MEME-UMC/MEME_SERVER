@@ -1,11 +1,18 @@
 package org.meme.service.domain.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.meme.service.domain.dto.request.FavoriteRequest;
 import org.meme.service.domain.dto.request.PortfolioRequest;
 import org.meme.service.domain.dto.response.PortfolioResponse;
 import org.meme.service.domain.entity.*;
 import org.meme.service.domain.converter.PortfolioConverter;
 import org.springframework.data.domain.*;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.meme.service.domain.repository.ArtistRepository;
 import org.meme.service.domain.repository.FavoritePortfolioRepository;
@@ -21,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -30,6 +38,8 @@ public class PortfolioService {
     private final PortfolioImgRepository portfolioImgRepository;
     private final ModelRepository modelRepository;
     private final FavoritePortfolioRepository favoritePortfolioRepository;
+    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final ObjectMapper objectMapper = new ObjectMapper(); // ObjectMapper 인스턴스 재사용
 
     //포트폴리오 생성
     @Transactional
@@ -55,6 +65,32 @@ public class PortfolioService {
         artist.updatePortfolioList(portfolio);
         portfolioRepository.save(portfolio);
         return portfolio.getPortfolioId();
+    }
+
+    // Kafka Listener: FavoritePortfolioRequest 토픽에서 메시지 수신
+    @KafkaListener(topics = "FavoritePortfolioRequest", groupId = "favorite-consumer-group")
+    public void getPortfolioForFavoritePortfolio(String message) {
+        try {
+            objectMapper.registerModule(new JavaTimeModule());
+
+            // JSON 메시지를 DTO로 역직렬화
+            FavoriteRequest.FavoritePortfolioDto dto = objectMapper.readValue(message, FavoriteRequest.FavoritePortfolioDto.class);
+
+            // DTO에서 portfolioId 추출 및 Portfolio 객체 조회
+            Long portfolioId = dto.getPortfolioId();
+            Portfolio portfolio = findPortfolioById(portfolioId);
+
+            log.info("Portfolio found: {}", portfolio);
+
+            // FavoritePortfolioResponse 토픽에 Portfolio 객체 전송
+            kafkaTemplate.send("FavoritePortfolioResponse", objectMapper.writeValueAsString(portfolio));
+
+            // 이곳에 추가 로직 작성 가능 (예: Portfolio 처리)
+        } catch (JsonProcessingException e) {
+            log.error("Failed to deserialize message", e);
+        } catch (Exception e) {
+            log.error("Failed to process portfolio", e);
+        }
     }
 
     // 포트폴리오 전체 조회
