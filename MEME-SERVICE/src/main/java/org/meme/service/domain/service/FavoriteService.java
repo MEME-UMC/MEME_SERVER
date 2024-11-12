@@ -123,7 +123,7 @@ public class FavoriteService {
     }
 
     private Model findModelById(Long modelId){
-        return modelRepository.findById(modelId)
+        return modelRepository.findModelByUserId(modelId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_MODEL));
     }
 
