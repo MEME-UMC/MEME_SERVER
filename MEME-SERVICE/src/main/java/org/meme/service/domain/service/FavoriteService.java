@@ -11,7 +11,6 @@ import org.meme.service.domain.dto.response.ArtistResponse;
 import org.meme.service.domain.dto.request.FavoriteRequest;
 import org.meme.service.domain.dto.response.FavoriteResponse;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -39,6 +38,7 @@ public class FavoriteService {
         Pageable pageable = PageRequest.of(page, pageSize);
         Page<FavoriteArtist> favoriteArtistPage = favoriteArtistRepository.findFavoriteArtistByModel(model, pageable);
 
+        // TODO:
         //관심 아티스트 리스트
         List<ArtistResponse.ArtistSimpleDto> content = favoriteArtistPage.getContent().stream()
                 .map(favoriteArtist -> {
@@ -137,17 +137,6 @@ public class FavoriteService {
     private FavoriteArtist findFavoriteArtistByModelAndArtist(Model model, Artist artist){
         return favoriteArtistRepository.findByModelAndArtist(model, artist)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_FAVORITE_ARTIST));
-    }
-
-    private Page getPage(int page, List list){
-        Pageable pageable = PageRequest.of(page, 30);
-
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), list.size());
-
-        //list를 page로 변환
-        return new PageImpl<>(list.subList(start, end),
-                pageable, list.size());
     }
 
 }

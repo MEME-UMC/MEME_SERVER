@@ -10,7 +10,6 @@ import org.meme.service.domain.dto.request.ReviewRequest;
 import org.meme.service.domain.dto.response.ReviewResponse;
 import org.meme.service.domain.repository.PortfolioRepository;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -83,9 +82,8 @@ public class ReviewService {
     public ReviewResponse.ReviewListPageDto getReviewList(Long portfolioId, int page) {
         Portfolio portfolio = findPortfolioById(portfolioId);
 
-        // list를 page로 변환
-        List<Review> reviewList = portfolio.getReviewList();
-        Page<Review> reviewPage = getPage(page, reviewList);
+        Pageable pageable = PageRequest.of(page, 30);
+        Page<Review> reviewPage = reviewRepository.findReviewsByPortfolio(portfolio, pageable);
 
         return ReviewConverter.toReviewListPageDto(reviewPage);
     }
@@ -188,24 +186,13 @@ public class ReviewService {
     }
 
     private Review findReviewById(Long reviewId){
-        return reviewRepository.findById(reviewId)
+        return reviewRepository.findReviewById(reviewId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_REVIEW));
     }
 
     private Reservation findReservationByIdAndModel(Long reservationId, Long modelId){
         return reservationRepository.findByReservationIdAndModelId(reservationId, modelId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_RESERVATION));
-    }
-
-    private Page<Review> getPage(int page, List<Review> list){
-        Pageable pageable = PageRequest.of(page, 30);
-
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), list.size());
-
-        //list를 page로 변환
-        return new PageImpl<>(list.subList(start, end),
-                pageable, list.size());
     }
 
     private void updateReview(Review review, ReviewRequest.UpdateReviewDto updateReviewDto){
