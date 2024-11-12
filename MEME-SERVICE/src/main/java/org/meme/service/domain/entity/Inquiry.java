@@ -28,7 +28,7 @@ public class Inquiry extends BaseEntity {
     @Column(nullable = false)
     private String email;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 

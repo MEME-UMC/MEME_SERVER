@@ -176,7 +176,7 @@ public class PortfolioService {
         if (portfolio.getArtist() != artist)
             throw new GeneralException(ErrorStatus.NOT_AUTHORIZED_PORTFOLIO);
 
-        portfolio.setBlock(!portfolio.isBlock());
+        portfolio.updateBlock(!portfolio.isBlock());
     }
 
     private Artist findArtistById(Long artistId){
@@ -220,14 +220,10 @@ public class PortfolioService {
     }
 
     private void updatePortfolioEntity(Portfolio portfolio, PortfolioRequest.UpdatePortfolioDto request) {
-        if(request.getCategory() != null)
-            portfolio.setCategory(request.getCategory());
-        if(request.getPrice() >= 0)
-            portfolio.setPrice(request.getPrice());
-        if(request.getInfo() != null)
-            portfolio.setInfo(request.getInfo());
-        if(request.getMakeupName() != null)
-            portfolio.setMakeupName(request.getMakeupName());
-        portfolio.setBlock(request.getIsBlock());
+        portfolio.updateCategory(request.getCategory());
+        portfolio.updatePrice(request.getPrice());
+        portfolio.updateInfo(request.getInfo());
+        portfolio.updateMakeupName(request.getMakeupName());
+        portfolio.updateBlock(request.getIsBlock());
     }
 }

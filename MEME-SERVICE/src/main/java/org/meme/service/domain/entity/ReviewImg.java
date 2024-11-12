@@ -14,7 +14,7 @@ public class ReviewImg extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reviewImgId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="review_id", nullable = false)
     private Review review;
 

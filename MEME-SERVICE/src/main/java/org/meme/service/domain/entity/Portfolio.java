@@ -12,7 +12,7 @@ import java.util.List;
 
 
 @Builder
-@Getter @Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -57,14 +57,9 @@ public class Portfolio extends BaseEntity {
     @OneToMany(mappedBy = "portfolio")
     private List<Reservation> reservations;
 
-    public void updateReservationList(Reservation reservation){
-        this.reservations.add(reservation);
-    }
-
     public boolean isBlock(){
         return this.isBlock;
     }
-
 
     public void updateReviewList(Review review){
         this.reviewList.add(review);
@@ -91,4 +86,32 @@ public class Portfolio extends BaseEntity {
         this.portfolioImgList.add(portfolioImg);
         portfolioImg.setPortfolio(this);
     }
+
+    public void updateCategory(Category category) {
+        if (category != null)
+            this.category = category;
+    }
+
+    public void updatePrice(int price) {
+        if (price >= 0)
+            this.price = price;
+    }
+
+    public void updateInfo(String info) {
+        if (!info.isEmpty()) {
+            this.info = info;
+        }
+    }
+
+    public void updateMakeupName(String makeupName) {
+        if (!makeupName.isEmpty()) {
+            this.makeupName = makeupName;
+        }
+    }
+
+    public void updateBlock(boolean isBlock) {
+        this.isBlock = isBlock;
+    }
+
+
 }
