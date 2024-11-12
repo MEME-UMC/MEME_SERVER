@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -40,4 +41,23 @@ public interface PortfolioRepository extends JpaRepository<Portfolio, Long> {
             "WHERE p.portfolioId = :portfolioId " +
             "AND p.isBlock = false ")
     Optional<Portfolio> findPortfolioById(@Param(value = "portfolioId") Long portfolioId);
+
+
+    @Query("SELECT p " +
+            "FROM Portfolio p " +
+            "JOIN FETCH p.portfolioImgList pl " +
+            "JOIN FETCH p.artist a " +
+            "JOIN FETCH a.user u " +
+            "WHERE p.isBlock = false " +
+            "ORDER BY p.averageStars desc")
+    List<Portfolio> findPortfolioByReviewList();
+
+    @Query("SELECT p " +
+            "FROM Portfolio p " +
+            "JOIN FETCH p.portfolioImgList pl " +
+            "JOIN FETCH p.artist a " +
+            "JOIN FETCH a.user u " +
+            "WHERE p.isBlock = false " +
+            "ORDER BY p.createdAt desc")
+    List<Portfolio> findPortfolioByCreatedAt();
 }

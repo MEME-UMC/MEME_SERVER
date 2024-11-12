@@ -140,20 +140,18 @@ public class PortfolioService {
      **/
     //리뷰 많은 순 포트폴리오 추천
     public List<PortfolioResponse.PortfolioSimpleDto> recommendReview() {
-        Pageable pageable = setPageRequest(0, "review");
-        Page<Portfolio> portfolioList = portfolioRepository.findAllNotBlocked(pageable);
+        List<Portfolio> portfolioList = portfolioRepository.findPortfolioByReviewList();
 
-        return portfolioList.getContent().stream()
+        return portfolioList.stream()
                 .map(PortfolioConverter::toPortfolioSimpleDto)
                 .toList();
     }
 
     //최신 등록 순 포트폴리오 추천
     public List<PortfolioResponse.PortfolioSimpleDto> recommendRecent() {
-        Pageable pageable = setPageRequest(0, "recent");
-        Page<Portfolio> portfolioList = portfolioRepository.findAllNotBlocked(pageable);
+        List<Portfolio> portfolioList = portfolioRepository.findPortfolioByCreatedAt();
 
-        return portfolioList.getContent().stream()
+        return portfolioList.stream()
                 .map(PortfolioConverter::toPortfolioSimpleDto)
                 .toList();
     }
@@ -183,31 +181,6 @@ public class PortfolioService {
     private Portfolio findPortfolioById(Long portfolioId){
         return portfolioRepository.findPortfolioById(portfolioId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_PORTFOLIO));
-    }
-
-    private Pageable setPageRequest(int page, String sortBy) {
-
-        Sort sort = switch (sortBy) {
-            case "desc" -> Sort.by("price").descending();
-            case "asc" -> Sort.by("price").ascending();
-            case "review" -> Sort.by("averageStars").descending();
-            case "recent" -> Sort.by("createdAt").descending();
-            default -> throw new GeneralException(ErrorStatus.INVALID_SORT_CRITERIA);
-        };
-
-        //별점 높은 순 정렬 추가
-        Sort finalSort = sort.and(Sort.by("averageStars").descending());
-        return PageRequest.of(page, 30, finalSort);
-    }
-
-    private Page<Portfolio> getPage(int page, List<Portfolio> list) {
-        Pageable pageable = PageRequest.of(page, 30);
-
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), list.size());
-
-        return new PageImpl<>(list.subList(start, end),
-                pageable, list.size());
     }
 
     private void updatePortfolioEntity(Portfolio portfolio, PortfolioRequest.UpdatePortfolioDto request) {
