@@ -38,8 +38,7 @@ public class PortfolioService {
         Artist artist = findArtistById(portfolioDto.getArtistId());
 
         //포트폴리오 이름이 이미 존재할 시
-        if (portfolioRepository.existsByMakeupName(portfolioDto.getMakeupName()))
-            throw new GeneralException(ErrorStatus.ALREADY_EXIST_PORTFOLIO);
+        validDuplicatePortfolioName(portfolioDto);
 
         // 포트폴리오 이미지 리스트 생성
         List<PortfolioImg> portfolioImgList = portfolioDto.getPortfolioImgSrc().stream()
@@ -89,11 +88,8 @@ public class PortfolioService {
         Artist artist = findArtistById(updatePortfolioDto.getArtistId());
         Portfolio portfolio = findPortfolioById(updatePortfolioDto.getPortfolioId());
 
-        if (portfolio.isBlock() && updatePortfolioDto.getIsBlock())
-            throw new GeneralException(ErrorStatus.BLOCKED_PORTFOLIO);
-
-        if (!portfolio.getArtist().equals(artist))
-            throw new GeneralException(ErrorStatus.NOT_AUTHORIZED_PORTFOLIO);
+        validPortfolioIsBlock(portfolio, updatePortfolioDto);
+        validArtistAuthorizedForPortfolio(portfolio, artist);
 
         // 포트폴리오 이미지 수정
         if (!updatePortfolioDto.getPortfolioImgSrcList().isEmpty())
@@ -103,7 +99,6 @@ public class PortfolioService {
         updatePortfolioEntity(portfolio, updatePortfolioDto);
     }
 
-    @Transactional
     public void updatePortfolioImgList(Portfolio portfolio, List<String> portfolioImgDtoList) {
         List<PortfolioImg> updatedPortfolioImgList = new ArrayList<>();
 
@@ -162,14 +157,28 @@ public class PortfolioService {
         Artist artist = findArtistById(userId);
         Portfolio portfolio = findPortfolioById(portfolioId);
 
-        if (portfolio.getArtist() != artist)
-            throw new GeneralException(ErrorStatus.NOT_AUTHORIZED_PORTFOLIO);
+        validArtistAuthorizedForPortfolio(portfolio, artist);
 
         portfolio.updateBlock(!portfolio.isBlock());
     }
 
+    private void validArtistAuthorizedForPortfolio(Portfolio portfolio, Artist artist) {
+        if (portfolio.getArtist() != artist)
+            throw new GeneralException(ErrorStatus.NOT_AUTHORIZED_PORTFOLIO);
+    }
+
+    private void validPortfolioIsBlock(Portfolio portfolio, PortfolioRequest.UpdatePortfolioDto requestDto) {
+        if (portfolio.isBlock() && requestDto.getIsBlock())
+            throw new GeneralException(ErrorStatus.BLOCKED_PORTFOLIO);
+    }
+
+    private void validDuplicatePortfolioName(PortfolioRequest.CreatePortfolioDto portfolioDto) {
+        if (portfolioRepository.existsByMakeupName(portfolioDto.getMakeupName()))
+            throw new GeneralException(ErrorStatus.ALREADY_EXIST_PORTFOLIO);
+    }
+
     private Artist findArtistById(Long artistId){
-        return artistRepository.findById(artistId)
+        return artistRepository.findArtistByUserId(artistId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_ARTIST));
     }
 

@@ -25,11 +25,6 @@ public interface PortfolioRepository extends JpaRepository<Portfolio, Long> {
             @Param(value = "artist") Artist artist,
             Pageable pageable);
 
-
-
-    @Query("SELECT p FROM Portfolio p WHERE p.isBlock = false")
-    Page<Portfolio> findAllNotBlocked(Pageable pageable);
-
     boolean existsByMakeupName(String makeupName);
 
 

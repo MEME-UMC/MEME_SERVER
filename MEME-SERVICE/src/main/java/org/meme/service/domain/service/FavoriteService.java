@@ -118,7 +118,7 @@ public class FavoriteService {
     }
 
     private Artist findArtistById(Long artistId){
-        return artistRepository.findById(artistId)
+        return artistRepository.findArtistByUserId(artistId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_ARTIST));
     }
 
