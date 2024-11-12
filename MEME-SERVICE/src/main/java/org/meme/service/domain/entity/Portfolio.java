@@ -2,6 +2,7 @@ package org.meme.service.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 import org.meme.service.common.BaseEntity;
 import org.meme.service.domain.entity.Artist;
 import org.meme.service.domain.entity.Reservation;
@@ -42,6 +43,7 @@ public class Portfolio extends BaseEntity {
     @Column(nullable = false)
     private String durationTime; //소요시간
 
+    @BatchSize(size = 10)
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "portfolio")
     private List<PortfolioImg> portfolioImgList;
 
@@ -51,6 +53,7 @@ public class Portfolio extends BaseEntity {
     @Column(nullable = false, columnDefinition = "TINYINT(1) default 0")
     private boolean isBlock;
 
+    @BatchSize(size = 50)
     @OneToMany(mappedBy = "portfolio")
     private List<Review> reviewList;
 

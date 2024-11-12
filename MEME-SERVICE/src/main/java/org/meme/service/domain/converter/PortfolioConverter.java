@@ -48,7 +48,7 @@ public class PortfolioConverter {
                 .isBlock(portfolio.isBlock())
                 .portfolioImgDtoList(portfolioImgDtoList)
                 .averageStars(portfolio.getAverageStars())
-                .reviewCount(portfolio.getReviewList().size())
+                .reviewCount(portfolio.getReviewList().size()) // TODO: count 쿼리 줄일 수 있는 방법 고안 필요
                 .build();
     }
 

@@ -30,6 +30,7 @@ public class PortfolioService {
     private final PortfolioImgRepository portfolioImgRepository;
     private final ModelRepository modelRepository;
     private final FavoritePortfolioRepository favoritePortfolioRepository;
+    private final int pageSize = 30;
 
     //포트폴리오 생성
     @Transactional
@@ -61,33 +62,23 @@ public class PortfolioService {
     @Transactional
     public PortfolioResponse.PortfolioPageDto getPortfolio(Long artistId, int page) {
         Artist artist = findArtistById(artistId);
-        List<Portfolio> portfolioList = artist.getPortfolioList();
 
-        //isblock이면 리스트에서 제거
-        portfolioList.removeIf(Portfolio::isBlock);
-
-        //list를 page로 변환
-        Page<Portfolio> portfolioPage = getPage(page, portfolioList);
+        // 아티스트의 전체 포트폴리오 리스트 조회
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<Portfolio> portfolioList = portfolioRepository.findPortfoliosByArtist(artist, pageable);
 
         //검색 결과가 없을 시
-        if(portfolioPage.getContent().isEmpty())
+        if(portfolioList.getContent().isEmpty())
             throw new GeneralException(ErrorStatus.SEARCH_NOT_FOUNT);
 
-        return PortfolioConverter.toPortfolioPageDto(portfolioPage);
+        return PortfolioConverter.toPortfolioPageDto(portfolioList);
     }
 
     // 포트폴리오 하나만 조회
     public PortfolioResponse.PortfolioDetailDto getPortfolioDetails(Long userId, Long portfolioId) {
         Model model = findModelById(userId);
         Portfolio portfolio = findPortfolioById(portfolioId);
-
-        if (portfolio.isBlock())
-            throw new GeneralException(ErrorStatus.BLOCKED_PORTFOLIO);
-
-        boolean isFavorite = false;
-        Optional<FavoritePortfolio> favoritePortfolio = favoritePortfolioRepository.findByModelAndPortfolio(model, portfolio);
-        if (favoritePortfolio.isPresent())
-            isFavorite = true;
+        boolean isFavorite = favoritePortfolioRepository.existsByModelAndPortfolio(model, portfolio);
 
         return PortfolioConverter.toPortfolioDetailDto(portfolio, isFavorite);
     }
@@ -185,12 +176,12 @@ public class PortfolioService {
     }
 
     private Model findModelById(Long modelId){
-        return modelRepository.findById(modelId)
+        return modelRepository.findModelByUserId(modelId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_MODEL));
     }
 
     private Portfolio findPortfolioById(Long portfolioId){
-        return portfolioRepository.findById(portfolioId)
+        return portfolioRepository.findPortfolioById(portfolioId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_PORTFOLIO));
     }
 
