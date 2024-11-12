@@ -33,12 +33,14 @@ public class ArtistConverter {
     }
 
     public static ArtistResponse.ArtistSimpleDto toArtistSimpleDto(Artist artist, Long modelCount) {
+         String region = artist.getRegion().isEmpty() ? null : artist.getRegion().get(0).getValue();
+
         return ArtistResponse.ArtistSimpleDto.builder()
                 .artistId(artist.getUserId())
                 .profileImg(artist.getUser().getProfileImg())
                 .artistNickName(artist.getUser().getNickname())
                 .email(artist.getUser().getEmail())
-                .region(artist.getRegion().get(0).getValue())
+                .region(region)
                 .modelCount(modelCount)
                 .build();
     }

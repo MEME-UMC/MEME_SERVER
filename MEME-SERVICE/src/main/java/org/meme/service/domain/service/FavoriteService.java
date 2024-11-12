@@ -29,16 +29,15 @@ public class FavoriteService {
     private final FavoriteArtistRepository favoriteArtistRepository;
     private final FavoritePortfolioRepository favoritePortfolioRepository;
     private final PortfolioRepository portfolioRepository;
+    private final int pageSize = 30;
 
 
     //관심 아티스트 조회
-    @Transactional
     public FavoriteResponse.FavoriteArtistPageDto getFavoriteArtist(Long modelId, int page){
         Model model = findModelById(modelId);
 
-        //paging
-        List<FavoriteArtist> favoriteArtistList = model.getFavoriteArtistList();
-        Page<FavoriteArtist> favoriteArtistPage = getPage(page, favoriteArtistList);
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<FavoriteArtist> favoriteArtistPage = favoriteArtistRepository.findFavoriteArtistByModel(model, pageable);
 
         //관심 아티스트 리스트
         List<ArtistResponse.ArtistSimpleDto> content = favoriteArtistPage.getContent().stream()
@@ -54,13 +53,11 @@ public class FavoriteService {
     }
 
     //관심 메이크업 조회
-    @Transactional
     public FavoriteResponse.FavoritePortfolioPageDto getFavoritePortfolio(Long modelId, int page){
         Model model = findModelById(modelId);
 
-        //list를 page로 변환
-        List<FavoritePortfolio> favoritePortfolioList = model.getFavoritePortfolioList();
-        Page<FavoritePortfolio> favoritePortfolioPage = getPage(page, favoritePortfolioList);
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<FavoritePortfolio> favoritePortfolioPage = favoritePortfolioRepository.findFavoritePortfolioByModel(model, pageable);
 
         return FavoriteConverter.toFavoritePortfolioPageDto(favoritePortfolioPage);
     }
