@@ -4,9 +4,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.SuperBuilder;
-import org.meme.service.domain.entity.Portfolio;
 import org.meme.service.domain.enums.*;
 
 import java.util.List;
@@ -14,7 +11,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter @Setter
+@Getter
 @Entity
 public class Artist {
 
@@ -63,15 +60,40 @@ public class Artist {
         this.portfolioList.add(portfolio);
     }
 
-    public void updateProfileImg(String profileimg){
-        this.user.updateProfileImg(profileimg);
+    public void updateIntroduction(String introduction) {
+        if (!introduction.isEmpty()) {
+            this.introduction = introduction;
+        }
     }
 
-    public void updateNickname(String nickname){
-        this.user.updateNickname(nickname);
+    public void updateWorkExperience(WorkExperience workExperience) {
+        if (workExperience != null) {
+            this.workExperience = workExperience;
+        }
     }
 
-    public void updateGender(Gender gender){
-        this.user.updateGender(gender);
+    public void updateRegion(List<Region> region) {
+        if (!region.isEmpty()) {
+            this.region = region;
+        }
     }
+
+    public void updateSpecialization(List<Category> specialization) {
+        if (!specialization.isEmpty()) {
+            this.specialization = specialization;
+        }
+    }
+
+    public void updateMakeupLocation(MakeupLocation makeupLocation) {
+        if (makeupLocation != null) {
+            this.makeupLocation = makeupLocation;
+        }
+    }
+
+    public void updateShopLocation(String shopLocation) {
+        if (!shopLocation.isEmpty()) {
+            this.shopLocation = shopLocation;
+        }
+    }
+
 }

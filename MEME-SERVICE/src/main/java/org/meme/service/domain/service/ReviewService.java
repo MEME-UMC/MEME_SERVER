@@ -10,7 +10,6 @@ import org.meme.service.domain.dto.request.ReviewRequest;
 import org.meme.service.domain.dto.response.ReviewResponse;
 import org.meme.service.domain.repository.PortfolioRepository;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -38,7 +37,7 @@ public class ReviewService {
         Model model = findModelById(reviewDto.getModelId());
         Reservation reservation = findReservationByIdAndModel(reviewDto.getReservationId(), reviewDto.getModelId());
 
-        validateReservationStatus(reservation);
+        validReservationStatus(reservation);
 
         // 리뷰 이미지 리스트 생성
         List<ReviewImg> reviewImgList = reviewDto.getReviewImgSrc().stream()
@@ -55,6 +54,7 @@ public class ReviewService {
         // 리뷰 연관관게 설정
         portfolio.updateReviewList(review);
         model.updateReviewList(review);
+        portfolio.updateReviewCount();
 
         reviewRepository.save(review);
 
@@ -83,9 +83,8 @@ public class ReviewService {
     public ReviewResponse.ReviewListPageDto getReviewList(Long portfolioId, int page) {
         Portfolio portfolio = findPortfolioById(portfolioId);
 
-        // list를 page로 변환
-        List<Review> reviewList = portfolio.getReviewList();
-        Page<Review> reviewPage = getPage(page, reviewList);
+        Pageable pageable = PageRequest.of(page, 30);
+        Page<Review> reviewPage = reviewRepository.findReviewsByPortfolio(portfolio, pageable);
 
         return ReviewConverter.toReviewListPageDto(reviewPage);
     }
@@ -93,13 +92,7 @@ public class ReviewService {
     //리뷰 작성 가능 예약 리스트 조회
     public List<ReviewResponse.ReviewAvailableListDto> getReviewReservationList(Long modelId){
         Model model = findModelById(modelId);
-        List<Reservation> reservationList = model.getReservationList();
-
-        //status != COMPLETE 이면 리스트에서 제거
-        reservationList.removeIf(reservation -> !reservation.isCompleted());
-
-        //리뷰 작성 완료시 리스트에서 제거
-        reservationList.removeIf(Reservation::isReviewed);
+        List<Reservation> reservationList = reservationRepository.findReservationByStatus(model);
 
         return reservationList.stream()
                 .map(ReviewConverter::toReviewAvailableListDto)
@@ -111,9 +104,7 @@ public class ReviewService {
     public ReviewResponse.ReviewDetailsDto updateReview(ReviewRequest.UpdateReviewDto updateReviewDto){
         Model model = findModelById(updateReviewDto.getModelId());
         Review review = findReviewById(updateReviewDto.getReviewId());
-
-        if (!review.getModel().getUserId().equals(model.getUserId()))
-            throw new GeneralException(ErrorStatus.INVALID_MODEL_FOR_REVIEW);
+        validIsUserAuthorizedForReview(model, review);
 
         // 리뷰 이미지 수정
         if (!updateReviewDto.getReviewImgSrcList().isEmpty())
@@ -162,14 +153,18 @@ public class ReviewService {
     public void deleteReview(ReviewRequest.DeleteReviewDto reviewDto){
         Model model = findModelById(reviewDto.getModelId());
         Review review = findReviewById(reviewDto.getReviewId());
+        validIsUserAuthorizedForReview(model, review);
 
-        if(!Objects.equals(review.getModel().getUserId(), model.getUserId()))
-            throw new GeneralException(ErrorStatus.INVALID_MODEL_FOR_REVIEW);
-
+        review.getPortfolio().decreaseReviewCount();
         reviewRepository.delete(review);
     }
 
-    private void validateReservationStatus(Reservation reservation) {
+    private void validIsUserAuthorizedForReview(Model model, Review review) {
+        if(!Objects.equals(review.getModel().getUserId(), model.getUserId()))
+            throw new GeneralException(ErrorStatus.INVALID_MODEL_FOR_REVIEW);
+    }
+
+    private void validReservationStatus(Reservation reservation) {
         if (reservation.isReviewed())
             throw new GeneralException(ErrorStatus.ALREADY_REVIEWED);
 
@@ -178,7 +173,7 @@ public class ReviewService {
     }
 
     private Model findModelById(Long modelId){
-        return modelRepository.findById(modelId)
+        return modelRepository.findModelByUserId(modelId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_MODEL));
     }
 
@@ -188,24 +183,13 @@ public class ReviewService {
     }
 
     private Review findReviewById(Long reviewId){
-        return reviewRepository.findById(reviewId)
+        return reviewRepository.findReviewById(reviewId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_REVIEW));
     }
 
     private Reservation findReservationByIdAndModel(Long reservationId, Long modelId){
         return reservationRepository.findByReservationIdAndModelId(reservationId, modelId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_RESERVATION));
-    }
-
-    private Page<Review> getPage(int page, List<Review> list){
-        Pageable pageable = PageRequest.of(page, 30);
-
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), list.size());
-
-        //list를 page로 변환
-        return new PageImpl<>(list.subList(start, end),
-                pageable, list.size());
     }
 
     private void updateReview(Review review, ReviewRequest.UpdateReviewDto updateReviewDto){

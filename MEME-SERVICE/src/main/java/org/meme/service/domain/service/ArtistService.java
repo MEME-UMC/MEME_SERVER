@@ -2,7 +2,6 @@ package org.meme.service.domain.service;
 
 import lombok.RequiredArgsConstructor;
 import org.meme.service.common.status.ErrorStatus;
-import org.meme.service.domain.entity.FavoriteArtist;
 import org.meme.service.domain.entity.Model;
 import org.meme.service.domain.repository.ArtistRepository;
 import org.meme.service.domain.repository.FavoriteArtistRepository;
@@ -13,8 +12,6 @@ import org.springframework.stereotype.Service;
 import org.meme.service.domain.entity.Artist;
 import org.meme.service.common.exception.GeneralException;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,10 +27,7 @@ public class ArtistService {
         Model model = findModelById(userId);
         Artist artist = findArtistById(artistId);
 
-        boolean isFavorite = false;
-        Optional<FavoriteArtist> favoriteArtist = favoriteArtistRepository.findByModelAndArtist(model, artist);
-        if(favoriteArtist.isPresent())
-            isFavorite = true;
+        boolean isFavorite = favoriteArtistRepository.existsByModelAndArtist(model, artist);
 
         return ArtistConverter.toArtistDto(artist, isFavorite);
     }
@@ -45,12 +39,12 @@ public class ArtistService {
     }
 
     private Artist findArtistById(Long artistId){
-        return artistRepository.findById(artistId)
+        return artistRepository.findArtistByUserId(artistId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_ARTIST));
     }
 
     private Model findModelById(Long modelId){
-        return modelRepository.findById(modelId)
+        return modelRepository.findModelByUserId(modelId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_MODEL));
     }
 }

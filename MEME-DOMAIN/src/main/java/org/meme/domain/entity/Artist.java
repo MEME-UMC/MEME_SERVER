@@ -55,16 +55,5 @@ public class Artist extends User {
         this.portfolioList.add(portfolio);
     }
 
-
-//    public void tempMethod(){
-//        this.username = "name";
-//        this.email="";
-//        this.password="";
-//        this.workExperience=WorkExperience.FIVE;
-//        this.role="ARTIST";
-//        this.userStatus = UserStatus.ACTIVE;
-//        this.provider = Provider.KAKAO;
-//        this.details = false;
-//    }
 }
 

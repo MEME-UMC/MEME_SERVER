@@ -11,7 +11,6 @@ import org.meme.service.domain.dto.response.ArtistResponse;
 import org.meme.service.domain.dto.request.FavoriteRequest;
 import org.meme.service.domain.dto.response.FavoriteResponse;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,17 +28,17 @@ public class FavoriteService {
     private final FavoriteArtistRepository favoriteArtistRepository;
     private final FavoritePortfolioRepository favoritePortfolioRepository;
     private final PortfolioRepository portfolioRepository;
+    private final int pageSize = 30;
 
 
     //관심 아티스트 조회
-    @Transactional
     public FavoriteResponse.FavoriteArtistPageDto getFavoriteArtist(Long modelId, int page){
         Model model = findModelById(modelId);
 
-        //paging
-        List<FavoriteArtist> favoriteArtistList = model.getFavoriteArtistList();
-        Page<FavoriteArtist> favoriteArtistPage = getPage(page, favoriteArtistList);
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<FavoriteArtist> favoriteArtistPage = favoriteArtistRepository.findFavoriteArtistByModel(model, pageable);
 
+        // TODO:
         //관심 아티스트 리스트
         List<ArtistResponse.ArtistSimpleDto> content = favoriteArtistPage.getContent().stream()
                 .map(favoriteArtist -> {
@@ -54,13 +53,11 @@ public class FavoriteService {
     }
 
     //관심 메이크업 조회
-    @Transactional
     public FavoriteResponse.FavoritePortfolioPageDto getFavoritePortfolio(Long modelId, int page){
         Model model = findModelById(modelId);
 
-        //list를 page로 변환
-        List<FavoritePortfolio> favoritePortfolioList = model.getFavoritePortfolioList();
-        Page<FavoritePortfolio> favoritePortfolioPage = getPage(page, favoritePortfolioList);
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<FavoritePortfolio> favoritePortfolioPage = favoritePortfolioRepository.findFavoritePortfolioByModel(model, pageable);
 
         return FavoriteConverter.toFavoritePortfolioPageDto(favoritePortfolioPage);
     }
@@ -70,11 +67,7 @@ public class FavoriteService {
     public void addFavoriteArtist(FavoriteRequest.FavoriteArtistDto favoriteArtistDto) {
         Model model = findModelById(favoriteArtistDto.getModelId());
         Artist artist = findArtistById(favoriteArtistDto.getArtistId());
-
-        //이미 관심 아티스트가 존재하는 경우
-        if (favoriteArtistRepository.existsByModelAndArtist(model, artist)) {
-            throw new GeneralException(ErrorStatus.ALREADY_EXIST_FAVORITE_ARTIST);
-        }
+        validExistFavoriteArtist(model, artist);
 
         FavoriteArtist favoriteArtist = FavoriteConverter.toFavoriteArtist(artist, model);
         model.updateFavoriteArtistList(favoriteArtist);
@@ -86,11 +79,7 @@ public class FavoriteService {
     public void addFavoritePortfolio(FavoriteRequest.FavoritePortfolioDto favoritePortfolioDto) {
         Model model = findModelById(favoritePortfolioDto.getModelId());
         Portfolio portfolio = findPortfolioById(favoritePortfolioDto.getPortfolioId());
-
-        //이미 관심 포트폴리오가 존재하는 경우
-        if (favoritePortfolioRepository.existsByModelAndPortfolio(model,portfolio)) {
-            throw new GeneralException(ErrorStatus.ALREADY_EXIST_FAVORITE_PORTFOLIO);
-        }
+        validExistFavoritePortfolio(model, portfolio);
 
         FavoritePortfolio favoritePortfolio = FavoriteConverter.toFavoritePortfolio(model, portfolio);
         model.updateFavoritePortfolioList(favoritePortfolio);
@@ -117,13 +106,27 @@ public class FavoriteService {
         favoritePortfolioRepository.delete(favoritePortfolio);
     }
 
+    private void validExistFavoritePortfolio(Model model, Portfolio portfolio) {
+        //이미 관심 포트폴리오가 존재하는 경우
+        if (favoritePortfolioRepository.existsByModelAndPortfolio(model,portfolio)) {
+            throw new GeneralException(ErrorStatus.ALREADY_EXIST_FAVORITE_PORTFOLIO);
+        }
+    }
+
+    private void validExistFavoriteArtist(Model model, Artist artist) {
+        //이미 관심 아티스트가 존재하는 경우
+        if (favoriteArtistRepository.existsByModelAndArtist(model, artist)) {
+            throw new GeneralException(ErrorStatus.ALREADY_EXIST_FAVORITE_ARTIST);
+        }
+    }
+
     private Artist findArtistById(Long artistId){
-        return artistRepository.findById(artistId)
+        return artistRepository.findArtistByUserId(artistId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_ARTIST));
     }
 
     private Model findModelById(Long modelId){
-        return modelRepository.findById(modelId)
+        return modelRepository.findModelByUserId(modelId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_MODEL));
     }
 
@@ -140,17 +143,6 @@ public class FavoriteService {
     private FavoriteArtist findFavoriteArtistByModelAndArtist(Model model, Artist artist){
         return favoriteArtistRepository.findByModelAndArtist(model, artist)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_FAVORITE_ARTIST));
-    }
-
-    private Page getPage(int page, List list){
-        Pageable pageable = PageRequest.of(page, 30);
-
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), list.size());
-
-        //list를 page로 변환
-        return new PageImpl<>(list.subList(start, end),
-                pageable, list.size());
     }
 
 }

@@ -21,11 +21,11 @@ public class FavoritePortfolio extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long favoritePortfolioId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id", nullable = false)
     private Model model;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="portfolio_id", nullable = false)
     private Portfolio portfolio;
 

@@ -19,10 +19,11 @@ public class FavoriteArtist extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long favoriteArtistId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id", nullable = false)
     private Model model;
 
+    // TODO:
     @OneToOne
     private Artist artist;
 

@@ -87,6 +87,7 @@ public class User {
     }
 
     public void updateGender(Gender gender){
-        this.gender = gender;
+        if (gender != null)
+            this.gender = gender;
     }
 }

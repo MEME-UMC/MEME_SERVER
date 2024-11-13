@@ -21,6 +21,7 @@ public class PortfolioConverter {
                 .price(dto.getPrice())
                 .portfolioImgList(new ArrayList<PortfolioImg>())
                 .averageStars("0.00")
+                .reviewCount(0L)
                 .durationTime(dto.getDurationTime())
                 .isBlock(false)
                 .build();
@@ -48,7 +49,7 @@ public class PortfolioConverter {
                 .isBlock(portfolio.isBlock())
                 .portfolioImgDtoList(portfolioImgDtoList)
                 .averageStars(portfolio.getAverageStars())
-                .reviewCount(portfolio.getReviewList().size())
+                .reviewCount(portfolio.getReviewCount())
                 .build();
     }
 
@@ -77,7 +78,7 @@ public class PortfolioConverter {
                     .isBlock(portfolio.isBlock())
                     .portfolioImgDtoList(portfolioImgDtoList)
                     .averageStars(portfolio.getAverageStars())
-                    .reviewCount(portfolio.getReviewList().size())
+                    .reviewCount(portfolio.getReviewCount())
                     .durationTime(portfolio.getDurationTime())
                     .build();
     }
@@ -128,18 +129,6 @@ public class PortfolioConverter {
 
     public static PortfolioResponse.PortfolioSimpleDto toPortfolioSimpleDto(FavoritePortfolio favoritePortfolio){
         Portfolio portfolio = favoritePortfolio.getPortfolio();
-        Artist artist = portfolio.getArtist();
-
-        return PortfolioResponse.PortfolioSimpleDto.builder()
-                .portfolioId(portfolio.getPortfolioId())
-                .portfolioImg(portfolio.getPortfolioImgList().get(0).getSrc())
-                .category(portfolio.getCategory())
-                .makeupName(portfolio.getMakeupName())
-                .artistName(artist.getUser().getNickname())
-                .artistEmail(artist.getUser().getEmail())
-                .price(portfolio.getPrice())
-                .makeupLocation(artist.getMakeupLocation())
-                .averageStars(portfolio.getAverageStars())
-                .build();
+        return toPortfolioSimpleDto(portfolio);
     }
 }

@@ -30,6 +30,7 @@ public class PortfolioService {
     private final PortfolioImgRepository portfolioImgRepository;
     private final ModelRepository modelRepository;
     private final FavoritePortfolioRepository favoritePortfolioRepository;
+    private final int pageSize = 30;
 
     //포트폴리오 생성
     @Transactional
@@ -37,8 +38,7 @@ public class PortfolioService {
         Artist artist = findArtistById(portfolioDto.getArtistId());
 
         //포트폴리오 이름이 이미 존재할 시
-        if (portfolioRepository.existsByMakeupName(portfolioDto.getMakeupName()))
-            throw new GeneralException(ErrorStatus.ALREADY_EXIST_PORTFOLIO);
+        validDuplicatePortfolioName(portfolioDto);
 
         // 포트폴리오 이미지 리스트 생성
         List<PortfolioImg> portfolioImgList = portfolioDto.getPortfolioImgSrc().stream()
@@ -61,33 +61,20 @@ public class PortfolioService {
     @Transactional
     public PortfolioResponse.PortfolioPageDto getPortfolio(Long artistId, int page) {
         Artist artist = findArtistById(artistId);
-        List<Portfolio> portfolioList = artist.getPortfolioList();
 
-        //isblock이면 리스트에서 제거
-        portfolioList.removeIf(Portfolio::isBlock);
+        // 아티스트의 전체 포트폴리오 리스트 조회
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<Portfolio> portfolioList = portfolioRepository.findPortfoliosByArtist(artist, pageable);
+        validExistPortfolio(portfolioList.getContent());
 
-        //list를 page로 변환
-        Page<Portfolio> portfolioPage = getPage(page, portfolioList);
-
-        //검색 결과가 없을 시
-        if(portfolioPage.getContent().isEmpty())
-            throw new GeneralException(ErrorStatus.SEARCH_NOT_FOUNT);
-
-        return PortfolioConverter.toPortfolioPageDto(portfolioPage);
+        return PortfolioConverter.toPortfolioPageDto(portfolioList);
     }
 
     // 포트폴리오 하나만 조회
     public PortfolioResponse.PortfolioDetailDto getPortfolioDetails(Long userId, Long portfolioId) {
         Model model = findModelById(userId);
         Portfolio portfolio = findPortfolioById(portfolioId);
-
-        if (portfolio.isBlock())
-            throw new GeneralException(ErrorStatus.BLOCKED_PORTFOLIO);
-
-        boolean isFavorite = false;
-        Optional<FavoritePortfolio> favoritePortfolio = favoritePortfolioRepository.findByModelAndPortfolio(model, portfolio);
-        if (favoritePortfolio.isPresent())
-            isFavorite = true;
+        boolean isFavorite = favoritePortfolioRepository.existsByModelAndPortfolio(model, portfolio);
 
         return PortfolioConverter.toPortfolioDetailDto(portfolio, isFavorite);
     }
@@ -98,11 +85,8 @@ public class PortfolioService {
         Artist artist = findArtistById(updatePortfolioDto.getArtistId());
         Portfolio portfolio = findPortfolioById(updatePortfolioDto.getPortfolioId());
 
-        if (portfolio.isBlock() && updatePortfolioDto.getIsBlock())
-            throw new GeneralException(ErrorStatus.BLOCKED_PORTFOLIO);
-
-        if (!portfolio.getArtist().equals(artist))
-            throw new GeneralException(ErrorStatus.NOT_AUTHORIZED_PORTFOLIO);
+        validPortfolioIsBlock(portfolio, updatePortfolioDto);
+        validArtistAuthorizedForPortfolio(portfolio, artist);
 
         // 포트폴리오 이미지 수정
         if (!updatePortfolioDto.getPortfolioImgSrcList().isEmpty())
@@ -112,7 +96,6 @@ public class PortfolioService {
         updatePortfolioEntity(portfolio, updatePortfolioDto);
     }
 
-    @Transactional
     public void updatePortfolioImgList(Portfolio portfolio, List<String> portfolioImgDtoList) {
         List<PortfolioImg> updatedPortfolioImgList = new ArrayList<>();
 
@@ -149,20 +132,18 @@ public class PortfolioService {
      **/
     //리뷰 많은 순 포트폴리오 추천
     public List<PortfolioResponse.PortfolioSimpleDto> recommendReview() {
-        Pageable pageable = setPageRequest(0, "review");
-        Page<Portfolio> portfolioList = portfolioRepository.findAllNotBlocked(pageable);
+        List<Portfolio> portfolioList = portfolioRepository.findPortfolioByReviewList();
 
-        return portfolioList.getContent().stream()
+        return portfolioList.stream()
                 .map(PortfolioConverter::toPortfolioSimpleDto)
                 .toList();
     }
 
     //최신 등록 순 포트폴리오 추천
     public List<PortfolioResponse.PortfolioSimpleDto> recommendRecent() {
-        Pageable pageable = setPageRequest(0, "recent");
-        Page<Portfolio> portfolioList = portfolioRepository.findAllNotBlocked(pageable);
+        List<Portfolio> portfolioList = portfolioRepository.findPortfolioByCreatedAt();
 
-        return portfolioList.getContent().stream()
+        return portfolioList.stream()
                 .map(PortfolioConverter::toPortfolioSimpleDto)
                 .toList();
     }
@@ -172,62 +153,52 @@ public class PortfolioService {
     public void blockPortfolio(Long userId, Long portfolioId){
         Artist artist = findArtistById(userId);
         Portfolio portfolio = findPortfolioById(portfolioId);
+        validArtistAuthorizedForPortfolio(portfolio, artist);
 
+        portfolio.updateBlock(!portfolio.isBlock());
+    }
+
+    private void validExistPortfolio(List<Portfolio> portfolioList) {
+        //검색 결과가 없을 시
+        if(portfolioList.isEmpty())
+            throw new GeneralException(ErrorStatus.SEARCH_NOT_FOUNT);
+    }
+
+    private void validArtistAuthorizedForPortfolio(Portfolio portfolio, Artist artist) {
         if (portfolio.getArtist() != artist)
             throw new GeneralException(ErrorStatus.NOT_AUTHORIZED_PORTFOLIO);
+    }
 
-        portfolio.setBlock(!portfolio.isBlock());
+    private void validPortfolioIsBlock(Portfolio portfolio, PortfolioRequest.UpdatePortfolioDto requestDto) {
+        if (portfolio.isBlock() && requestDto.getIsBlock())
+            throw new GeneralException(ErrorStatus.BLOCKED_PORTFOLIO);
+    }
+
+    private void validDuplicatePortfolioName(PortfolioRequest.CreatePortfolioDto portfolioDto) {
+        if (portfolioRepository.existsByMakeupName(portfolioDto.getMakeupName()))
+            throw new GeneralException(ErrorStatus.ALREADY_EXIST_PORTFOLIO);
     }
 
     private Artist findArtistById(Long artistId){
-        return artistRepository.findById(artistId)
+        return artistRepository.findArtistByUserId(artistId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_ARTIST));
     }
 
     private Model findModelById(Long modelId){
-        return modelRepository.findById(modelId)
+        return modelRepository.findModelByUserId(modelId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_MODEL));
     }
 
     private Portfolio findPortfolioById(Long portfolioId){
-        return portfolioRepository.findById(portfolioId)
+        return portfolioRepository.findPortfolioById(portfolioId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_EXIST_PORTFOLIO));
     }
 
-    private Pageable setPageRequest(int page, String sortBy) {
-
-        Sort sort = switch (sortBy) {
-            case "desc" -> Sort.by("price").descending();
-            case "asc" -> Sort.by("price").ascending();
-            case "review" -> Sort.by("averageStars").descending();
-            case "recent" -> Sort.by("createdAt").descending();
-            default -> throw new GeneralException(ErrorStatus.INVALID_SORT_CRITERIA);
-        };
-
-        //별점 높은 순 정렬 추가
-        Sort finalSort = sort.and(Sort.by("averageStars").descending());
-        return PageRequest.of(page, 30, finalSort);
-    }
-
-    private Page<Portfolio> getPage(int page, List<Portfolio> list) {
-        Pageable pageable = PageRequest.of(page, 30);
-
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), list.size());
-
-        return new PageImpl<>(list.subList(start, end),
-                pageable, list.size());
-    }
-
     private void updatePortfolioEntity(Portfolio portfolio, PortfolioRequest.UpdatePortfolioDto request) {
-        if(request.getCategory() != null)
-            portfolio.setCategory(request.getCategory());
-        if(request.getPrice() >= 0)
-            portfolio.setPrice(request.getPrice());
-        if(request.getInfo() != null)
-            portfolio.setInfo(request.getInfo());
-        if(request.getMakeupName() != null)
-            portfolio.setMakeupName(request.getMakeupName());
-        portfolio.setBlock(request.getIsBlock());
+        portfolio.updateCategory(request.getCategory());
+        portfolio.updatePrice(request.getPrice());
+        portfolio.updateInfo(request.getInfo());
+        portfolio.updateMakeupName(request.getMakeupName());
+        portfolio.updateBlock(request.getIsBlock());
     }
 }

@@ -4,15 +4,12 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.meme.service.domain.entity.*;
-import org.meme.service.domain.enums.Gender;
 import org.meme.service.domain.enums.PersonalColor;
 import org.meme.service.domain.enums.SkinType;
 
 import java.util.List;
 
-@Getter @Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -58,16 +55,14 @@ public class Model {
         this.reviewList.add(review);
     }
 
-    public void updateProfileImg(String profileimg){
-        this.user.updateProfileImg(profileimg);
+    public void updateSkinType(SkinType skinType) {
+        if (skinType != null)
+            this.skinType = skinType;
     }
 
-    public void updateNickname(String nickname){
-        this.user.updateNickname(nickname);
+    public void updatePersonalColor(PersonalColor personalColor) {
+        if (personalColor != null) {
+            this.personalColor = personalColor;
+        }
     }
-
-    public void updateGender(Gender gender){
-        this.user.updateGender(gender);
-    }
-
 }
