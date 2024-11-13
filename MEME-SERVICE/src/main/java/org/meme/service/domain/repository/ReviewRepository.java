@@ -29,6 +29,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Query("SELECT r " +
             "FROM Review r " +
             "JOIN FETCH r.reviewImgList ril " +
+            "JOIN FETCH r.model m " +
+            "JOIN FETCH m.user u " +
             "WHERE r.portfolio = :portfolio " +
             "ORDER BY r.createdAt desc ")
     Page<Review> findReviewsByPortfolio(

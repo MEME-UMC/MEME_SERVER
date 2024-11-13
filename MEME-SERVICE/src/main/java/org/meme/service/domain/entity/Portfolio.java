@@ -53,6 +53,9 @@ public class Portfolio extends BaseEntity {
     @Column(nullable = false, columnDefinition = "TINYINT(1) default 0")
     private boolean isBlock;
 
+    @Column
+    private Long reviewCount;
+
     @BatchSize(size = 50)
     @OneToMany(mappedBy = "portfolio")
     private List<Review> reviewList;
@@ -114,6 +117,10 @@ public class Portfolio extends BaseEntity {
 
     public void updateBlock(boolean isBlock) {
         this.isBlock = isBlock;
+    }
+
+    public void updateReviewCount() {
+        this.reviewCount++;
     }
 
 

@@ -29,7 +29,7 @@ public class PortfolioResponse {
         private List<Region> region; //활동 가능 지역
         private Boolean isBlock;
         private String averageStars;
-        private int reviewCount; //리뷰 개수
+        private Long reviewCount; //리뷰 개수
         private List<PortfolioImgDto> portfolioImgDtoList;
     }
 
@@ -51,7 +51,7 @@ public class PortfolioResponse {
         private List<Region> region; //활동 가능 지역
         private Boolean isBlock;
         private String averageStars;
-        private int reviewCount; //리뷰 개수
+        private Long reviewCount; //리뷰 개수
         private String durationTime; //소요 시간
         private List<PortfolioImgDto> portfolioImgDtoList;
     }

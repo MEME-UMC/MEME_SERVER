@@ -54,6 +54,7 @@ public class ReviewService {
         // 리뷰 연관관게 설정
         portfolio.updateReviewList(review);
         model.updateReviewList(review);
+        portfolio.updateReviewCount();
 
         reviewRepository.save(review);
 
