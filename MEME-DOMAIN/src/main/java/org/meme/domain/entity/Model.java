@@ -42,39 +42,4 @@ public class Model extends User {
     @OneToMany(mappedBy = "model")
     private List<Reservation> reservations;
 
-    public void updateFavoriteArtistList(FavoriteArtist artist){
-        this.favoriteArtistList.add(artist);
-    }
-
-    public void updateFavoritePortfolioList(FavoritePortfolio portfolio){
-        this.favoritePortfolioList.add(portfolio);
-    }
-    public void updateReservationList(Reservation reservation){
-        this.reservationList.add(reservation);
-    }
-
-    public void updateReviewList(Review review){
-        this.reviewList.add(review);
-    }
-
-
-    //temp create model builder
-//    public static Model from(ModelProfileDto dto){
-//        return Model.builder()
-//                .profileImg(dto.getProfileImg())
-//                .nickname(dto.getNickname())
-//                .gender(dto.getGender())
-//                .skinType(dto.getSkinType())
-//                .personalColor(dto.getPersonalColor())
-//                .build();
-//    }
-
-//    public void tempMethod(){
-//        this.username = "name";
-//        this.email="";
-//        this.password="";
-//        this.role="MODEL";
-//        this.userStatus = UserStatus.ACTIVE;
-//        this.provider = Provider.KAKAO;
-//    }
 }

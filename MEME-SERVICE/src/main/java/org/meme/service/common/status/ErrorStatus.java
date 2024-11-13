@@ -19,6 +19,8 @@ public enum ErrorStatus implements BaseErrorCode {
      * Code : 400
      * Bad Request
      */
+    OVERFLOW_ARTIST_INTRODUCTION(HttpStatus.BAD_REQUEST, 400, "아티스트의 소개글은 500자 이하여야 합니다."),
+
     INVALID_REQUEST(HttpStatus.BAD_REQUEST, 400,  "유효하지 않은 요청입니다."),
     ALREADY_EXIST_FAVORITE_ARTIST(HttpStatus.BAD_REQUEST, 400, "해당 아티스트는 이미 관심 아티스트로 등록되어있습니다."),
     ALREADY_EXIST_FAVORITE_PORTFOLIO(HttpStatus.BAD_REQUEST, 400, "해당 포트폴리오는 이미 관심 포트폴리오로 등록되어있습니다."),

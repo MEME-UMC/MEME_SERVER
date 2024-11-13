@@ -83,37 +83,31 @@ public class MypageService {
     }
 
     private void updateModelEntity(Model model, MypageRequest.ModelProfileDto request) {
-        if (request.getProfileImg() != null)
-            model.updateProfileImg(request.getProfileImg());
-        if (request.getNickname() != null)
-            model.updateNickname(request.getNickname());
-        if (request.getGender() != null)
-            model.updateGender(request.getGender());
-        if (request.getSkinType() != null)
-            model.setSkinType(request.getSkinType());
-        if (request.getPersonalColor() != null)
-            model.setPersonalColor(request.getPersonalColor());
+        model.getUser().updateProfileImg(request.getProfileImg());
+        model.getUser().updateNickname(request.getNickname());
+        model.getUser().updateGender(request.getGender());
+        model.updateSkinType(request.getSkinType());
+        model.updatePersonalColor(request.getPersonalColor());
     }
 
     private void updateArtistEntity(Artist artist, MypageRequest.ArtistProfileDto request) {
-        if (request.getProfileImg() != null)
-            artist.updateProfileImg(request.getProfileImg());
-        if (request.getNickname() != null)
-            artist.updateNickname(request.getNickname());
-        if (request.getGender() != null)
-            artist.updateGender(request.getGender());
-        if (request.getIntroduction() != null)
-            artist.setIntroduction(request.getIntroduction());
-        if (request.getWorkExperience() != null)
-            artist.setWorkExperience(request.getWorkExperience());
-        if (request.getRegion() != null)
-            artist.setRegion(request.getRegion());
-        if (request.getSpecialization() != null)
-            artist.setSpecialization(request.getSpecialization());
-        if (request.getMakeupLocation() != null)
-            artist.setMakeupLocation(request.getMakeupLocation());
-        if (request.getShopLocation() != null)
-            artist.setShopLocation(request.getShopLocation());
+        artist.getUser().updateProfileImg(request.getProfileImg());
+        artist.getUser().updateNickname(request.getNickname());
+        artist.getUser().updateGender(request.getGender());
+
+        validIntroductionLength(request.getIntroduction());
+        artist.updateIntroduction(request.getIntroduction());
+        artist.updateWorkExperience(request.getWorkExperience());
+        artist.updateRegion(request.getRegion());
+        artist.updateSpecialization(request.getSpecialization());
+        artist.updateMakeupLocation(request.getMakeupLocation());
+        artist.updateShopLocation(request.getShopLocation());
+    }
+
+    private void validIntroductionLength(String introduction) {
+        if (introduction != null && introduction.length() > 500) {
+            throw new GeneralException(ErrorStatus.OVERFLOW_ARTIST_INTRODUCTION);
+        }
     }
 
     private User findUserById(Long userId){
