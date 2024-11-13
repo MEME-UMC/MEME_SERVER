@@ -37,7 +37,7 @@ public class ReviewService {
         Model model = findModelById(reviewDto.getModelId());
         Reservation reservation = findReservationByIdAndModel(reviewDto.getReservationId(), reviewDto.getModelId());
 
-        validateReservationStatus(reservation);
+        validReservationStatus(reservation);
 
         // 리뷰 이미지 리스트 생성
         List<ReviewImg> reviewImgList = reviewDto.getReviewImgSrc().stream()
@@ -92,13 +92,7 @@ public class ReviewService {
     //리뷰 작성 가능 예약 리스트 조회
     public List<ReviewResponse.ReviewAvailableListDto> getReviewReservationList(Long modelId){
         Model model = findModelById(modelId);
-        List<Reservation> reservationList = model.getReservationList();
-
-        //status != COMPLETE 이면 리스트에서 제거
-        reservationList.removeIf(reservation -> !reservation.isCompleted());
-
-        //리뷰 작성 완료시 리스트에서 제거
-        reservationList.removeIf(Reservation::isReviewed);
+        List<Reservation> reservationList = reservationRepository.findReservationByStatus(model);
 
         return reservationList.stream()
                 .map(ReviewConverter::toReviewAvailableListDto)
@@ -110,9 +104,7 @@ public class ReviewService {
     public ReviewResponse.ReviewDetailsDto updateReview(ReviewRequest.UpdateReviewDto updateReviewDto){
         Model model = findModelById(updateReviewDto.getModelId());
         Review review = findReviewById(updateReviewDto.getReviewId());
-
-        if (!review.getModel().getUserId().equals(model.getUserId()))
-            throw new GeneralException(ErrorStatus.INVALID_MODEL_FOR_REVIEW);
+        validIsUserAuthorizedForReview(model, review);
 
         // 리뷰 이미지 수정
         if (!updateReviewDto.getReviewImgSrcList().isEmpty())
@@ -161,14 +153,18 @@ public class ReviewService {
     public void deleteReview(ReviewRequest.DeleteReviewDto reviewDto){
         Model model = findModelById(reviewDto.getModelId());
         Review review = findReviewById(reviewDto.getReviewId());
+        validIsUserAuthorizedForReview(model, review);
 
-        if(!Objects.equals(review.getModel().getUserId(), model.getUserId()))
-            throw new GeneralException(ErrorStatus.INVALID_MODEL_FOR_REVIEW);
-
+        review.getPortfolio().decreaseReviewCount();
         reviewRepository.delete(review);
     }
 
-    private void validateReservationStatus(Reservation reservation) {
+    private void validIsUserAuthorizedForReview(Model model, Review review) {
+        if(!Objects.equals(review.getModel().getUserId(), model.getUserId()))
+            throw new GeneralException(ErrorStatus.INVALID_MODEL_FOR_REVIEW);
+    }
+
+    private void validReservationStatus(Reservation reservation) {
         if (reservation.isReviewed())
             throw new GeneralException(ErrorStatus.ALREADY_REVIEWED);
 

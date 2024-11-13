@@ -65,10 +65,7 @@ public class PortfolioService {
         // 아티스트의 전체 포트폴리오 리스트 조회
         Pageable pageable = PageRequest.of(page, pageSize);
         Page<Portfolio> portfolioList = portfolioRepository.findPortfoliosByArtist(artist, pageable);
-
-        //검색 결과가 없을 시
-        if(portfolioList.getContent().isEmpty())
-            throw new GeneralException(ErrorStatus.SEARCH_NOT_FOUNT);
+        validExistPortfolio(portfolioList.getContent());
 
         return PortfolioConverter.toPortfolioPageDto(portfolioList);
     }
@@ -156,10 +153,15 @@ public class PortfolioService {
     public void blockPortfolio(Long userId, Long portfolioId){
         Artist artist = findArtistById(userId);
         Portfolio portfolio = findPortfolioById(portfolioId);
-
         validArtistAuthorizedForPortfolio(portfolio, artist);
 
         portfolio.updateBlock(!portfolio.isBlock());
+    }
+
+    private void validExistPortfolio(List<Portfolio> portfolioList) {
+        //검색 결과가 없을 시
+        if(portfolioList.isEmpty())
+            throw new GeneralException(ErrorStatus.SEARCH_NOT_FOUNT);
     }
 
     private void validArtistAuthorizedForPortfolio(Portfolio portfolio, Artist artist) {

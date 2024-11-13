@@ -67,11 +67,7 @@ public class FavoriteService {
     public void addFavoriteArtist(FavoriteRequest.FavoriteArtistDto favoriteArtistDto) {
         Model model = findModelById(favoriteArtistDto.getModelId());
         Artist artist = findArtistById(favoriteArtistDto.getArtistId());
-
-        //이미 관심 아티스트가 존재하는 경우
-        if (favoriteArtistRepository.existsByModelAndArtist(model, artist)) {
-            throw new GeneralException(ErrorStatus.ALREADY_EXIST_FAVORITE_ARTIST);
-        }
+        validExistFavoriteArtist(model, artist);
 
         FavoriteArtist favoriteArtist = FavoriteConverter.toFavoriteArtist(artist, model);
         model.updateFavoriteArtistList(favoriteArtist);
@@ -83,11 +79,7 @@ public class FavoriteService {
     public void addFavoritePortfolio(FavoriteRequest.FavoritePortfolioDto favoritePortfolioDto) {
         Model model = findModelById(favoritePortfolioDto.getModelId());
         Portfolio portfolio = findPortfolioById(favoritePortfolioDto.getPortfolioId());
-
-        //이미 관심 포트폴리오가 존재하는 경우
-        if (favoritePortfolioRepository.existsByModelAndPortfolio(model,portfolio)) {
-            throw new GeneralException(ErrorStatus.ALREADY_EXIST_FAVORITE_PORTFOLIO);
-        }
+        validExistFavoritePortfolio(model, portfolio);
 
         FavoritePortfolio favoritePortfolio = FavoriteConverter.toFavoritePortfolio(model, portfolio);
         model.updateFavoritePortfolioList(favoritePortfolio);
@@ -112,6 +104,20 @@ public class FavoriteService {
 
         FavoritePortfolio favoritePortfolio = findFavoritePortfolioByModelAndPortfolio(model, portfolio);
         favoritePortfolioRepository.delete(favoritePortfolio);
+    }
+
+    private void validExistFavoritePortfolio(Model model, Portfolio portfolio) {
+        //이미 관심 포트폴리오가 존재하는 경우
+        if (favoritePortfolioRepository.existsByModelAndPortfolio(model,portfolio)) {
+            throw new GeneralException(ErrorStatus.ALREADY_EXIST_FAVORITE_PORTFOLIO);
+        }
+    }
+
+    private void validExistFavoriteArtist(Model model, Artist artist) {
+        //이미 관심 아티스트가 존재하는 경우
+        if (favoriteArtistRepository.existsByModelAndArtist(model, artist)) {
+            throw new GeneralException(ErrorStatus.ALREADY_EXIST_FAVORITE_ARTIST);
+        }
     }
 
     private Artist findArtistById(Long artistId){

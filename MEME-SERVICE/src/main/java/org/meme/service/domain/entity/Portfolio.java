@@ -4,9 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
 import org.meme.service.common.BaseEntity;
-import org.meme.service.domain.entity.Artist;
-import org.meme.service.domain.entity.Reservation;
-import org.meme.service.domain.entity.Review;
 import org.meme.service.domain.enums.Category;
 
 import java.util.List;
@@ -121,6 +118,10 @@ public class Portfolio extends BaseEntity {
 
     public void updateReviewCount() {
         this.reviewCount++;
+    }
+
+    public void decreaseReviewCount() {
+        this.reviewCount--;
     }
 
 
