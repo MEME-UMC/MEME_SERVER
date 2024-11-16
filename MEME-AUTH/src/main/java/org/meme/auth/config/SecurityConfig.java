@@ -50,7 +50,6 @@ public class SecurityConfig {
                                 .requestMatchers("/api/v1/signup/artist").permitAll()
                                 .requestMatchers("/api/v1/reissue").permitAll()
                                 .requestMatchers("/api/v1/check/*").permitAll()
-
                                 .requestMatchers("/api/v1/auth/artist/extra").permitAll()
                                 .requestMatchers("/api/v1/auth/logout").permitAll()
                                 .requestMatchers("/api/v1/auth/withdraw").permitAll()

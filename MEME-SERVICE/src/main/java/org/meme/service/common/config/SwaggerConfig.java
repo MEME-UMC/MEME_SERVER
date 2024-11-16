@@ -1,4 +1,4 @@
-package org.meme.auth.config;
+package org.meme.service.common.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class SwaggerConfig {
-    // http://localhost:8080/api/v2/swagger-ui/index.html#/
+    // http://localhost:8084/api/v2/swagger-ui/index.html#/
     @Bean
     public OpenAPI MemeAPI() {
         Info info = new Info()
@@ -32,7 +32,7 @@ public class SwaggerConfig {
                         .bearerFormat("JWT"));
 
         return new OpenAPI()
-                .addServersItem(new Server().url("/api/v2"))
+                .addServersItem(new Server().url("/"))
                 .info(info)
                 .addSecurityItem(securityRequirement)
                 .components(components);
