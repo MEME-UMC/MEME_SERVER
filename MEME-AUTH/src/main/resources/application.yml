@@ -46,3 +46,17 @@ springdoc:
 
 server:
   port: 8081
+
+logging:
+    level:
+        org:
+        springframework: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: "always"

@@ -12,13 +12,15 @@ import org.meme.auth.dto.AuthResponse;
 import org.meme.auth.service.AuthService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import static org.meme.auth.common.BaseResponseDto.SuccessResponse;
 
 @Slf4j(topic = "MEME-AUTH")
 @RequiredArgsConstructor
-@RestController("/api/v2")
+@RestController
+@RequestMapping("/api/v2")  // 클래스 레벨 URL 매핑
 public class AuthController {
 
     private final AuthService authService;
@@ -31,6 +33,7 @@ public class AuthController {
      */
     @PostMapping("/join/social")
     public BaseResponseDto<AuthResponse.JoinDto> socialJoin(@RequestBody AuthRequest.UserJoinDto joinDto) throws AuthException {
+        log.info("소셜 회원가입 요청: {}", joinDto);
         return SuccessResponse(SuccessStatus.USER_SIGNUP_SUCCESS, authService.socialJoin(joinDto));
     }
 

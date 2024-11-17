@@ -11,7 +11,6 @@ dependencies {
 
     // Spring Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
     testImplementation 'org.springframework.security:spring-security-test'
 
     // Json Web Token
@@ -27,6 +26,10 @@ dependencies {
 
     // Embedded Redis
     implementation 'it.ozimov:embedded-redis:0.7.2'
+
+    // Spring Boot Actuator
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
 
     runtimeOnly 'com.h2database:h2'  // h2 추가
 }
