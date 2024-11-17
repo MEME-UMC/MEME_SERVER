@@ -15,6 +15,7 @@ jobs:
         with:
           java-version: '17'
           distribution: "adopt"
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -40,7 +41,7 @@ jobs:
           context: ./MEME-AUTH  # MEME-AUTH 모듈의 경로
           push: true
           tags: ${{ vars.DOCKER_USERNAME }}/${{ vars.MEME_AUTH }}:latest
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/arm64
 
       # MEME-RESERVATION 모듈 빌드
       - name: Build MEME-RESERVATION with Gradle
@@ -55,7 +56,7 @@ jobs:
           context: ./MEME-RESERVATION  # MEME-RESERVATION 모듈의 경로
           push: true
           tags: ${{ vars.DOCKER_USERNAME }}/${{ vars.MEME_RESERVATION }}:latest
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/arm64
 
       # MEME-RESERVATION 모듈 빌드
       - name: Build MEME-SERVICE with Gradle
@@ -70,7 +71,7 @@ jobs:
           context: ./MEME-SERVICE  # MEME-RESERVATION 모듈의 경로
           push: true
           tags: ${{ vars.DOCKER_USERNAME }}/${{ vars.MEME_SERVICE }}:latest
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/arm64
 
   deploy:
     runs-on: ubuntu-latest
