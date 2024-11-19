@@ -8,10 +8,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 //@EnableJpaRepositories(basePackages = "org.meme.member.domain")
 //@EntityScan(basePackages = "org.meme.member.domain")
 @EnableJpaAuditing
-public class MemeMemberApplication {
+public class MemberApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(MemeMemberApplication.class, args);
+        SpringApplication.run(MemberApplication.class, args);
     }
 
 }
