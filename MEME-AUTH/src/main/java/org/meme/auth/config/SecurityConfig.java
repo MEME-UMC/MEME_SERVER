@@ -58,7 +58,7 @@ public class SecurityConfig {
                                 .requestMatchers("/auth/**").permitAll()
 
                                 .requestMatchers("/api/v2/**").permitAll()  // API version update
-                                .requestMatchers(PathRequest.toH2Console()).permitAll()  // H2 데이터베이스 경로 허용
+                                .requestMatchers("/h2-console/**").permitAll()  // H2 데이터베이스 경로 허용
                 );
 
 
