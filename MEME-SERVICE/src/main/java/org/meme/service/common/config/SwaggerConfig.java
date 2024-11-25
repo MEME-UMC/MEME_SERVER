@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class SwaggerConfig {
-    // http://localhost:8084/api/v2/swagger-ui/index.html#/
+    // http://localhost:8083/service/swagger-ui/index.html#/
     @Bean
     public OpenAPI MemeAPI() {
         Info info = new Info()
@@ -32,7 +32,8 @@ public class SwaggerConfig {
                         .bearerFormat("JWT"));
 
         return new OpenAPI()
-                .addServersItem(new Server().url("/"))
+                .addServersItem(new Server().url("/meme-service"))  // 운영 환경 추가
+                .addServersItem(new Server().url("/"))  // 로컬 환경 추가
                 .info(info)
                 .addSecurityItem(securityRequirement)
                 .components(components);

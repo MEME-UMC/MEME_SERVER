@@ -2,7 +2,7 @@ name: MeMe CI/CD
 
 on:
   push:
-    branches: ['feat/#55']
+    branches: ['develop']
 
 jobs:
   build:
