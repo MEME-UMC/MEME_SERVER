@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/${DB_SCHEMA}?useSSL=false&useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
+    url: ${SPRING_DATASOURCE_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 
@@ -22,6 +22,13 @@ spring:
       host: ${REDIS_URL}
       port: 6379
 
+springdoc:
+  swagger-ui:
+    path: /reservation/swagger-ui
+    display-request-duration: true
+  api-docs:
+    path: /reservation/docs
+
 server:
-  port: 8083
+  port: 8082
 

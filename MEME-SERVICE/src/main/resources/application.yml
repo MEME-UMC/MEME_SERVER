@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/${DB_SCHEMA}?useSSL=false&useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
+    url: ${SPRING_DATASOURCE_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 
@@ -17,6 +17,13 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
 
+springdoc:
+  swagger-ui:
+    path: /service/swagger-ui
+    display-request-duration: true
+  api-docs:
+    path: /service/docs
+
 server:
-  port: 8084
+  port: 8083
 

@@ -43,3 +43,20 @@ springdoc:
     display-request-duration: true
   api-docs:
     path: /auth/docs
+
+server:
+  port: 8081
+
+logging:
+    level:
+        org:
+        springframework: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: "always"

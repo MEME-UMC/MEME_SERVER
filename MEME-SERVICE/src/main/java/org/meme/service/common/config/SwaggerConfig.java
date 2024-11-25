@@ -1,4 +1,4 @@
-package org.meme.reservation.config;
+package org.meme.service.common.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -11,12 +11,13 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class SwaggerConfig {
+    // http://localhost:8083/service/swagger-ui/index.html#/
     @Bean
     public OpenAPI MemeAPI() {
         Info info = new Info()
-                .title("MEME RESERVATION API Docs")
-                .description("MEME API 명세서")
-                .version("2.0.0");
+                .title("MeMe API Docs")
+                .description("MeMe API 명세서")
+                .version("1.0.0");
 
         String jwtSchemeName = "accessToken";
         // API 요청헤더에 인증정보 포함
@@ -31,8 +32,8 @@ public class SwaggerConfig {
                         .bearerFormat("JWT"));
 
         return new OpenAPI()
-                .addServersItem(new Server().url("/meme-reservation"))  // 운영 환경 추가
-                .addServersItem(new Server().url("/"))
+                .addServersItem(new Server().url("/meme-service"))  // 운영 환경 추가
+                .addServersItem(new Server().url("/"))  // 로컬 환경 추가
                 .info(info)
                 .addSecurityItem(securityRequirement)
                 .components(components);

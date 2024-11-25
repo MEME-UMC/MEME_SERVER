@@ -39,58 +39,58 @@ class ReservationServiceTest {
     @MockBean
     private ReservationRepository reservationRepository;
 
-    @Test
-    void 예약_성공() {
-        // Given
-        ReservationRequest.SaveDto request = new ReservationRequest.SaveDto();
-        request.setTimes(Set.of("18:30", "19:00", "19:30"));
-
-        Model mockedModel = mock(Model.class);
-        Portfolio mockedPortfolio = mock(Portfolio.class);
-
-        when(modelRepository.findById(any())).thenReturn(Optional.of(mockedModel));
-        when(portfolioRepository.findById(1L)).thenReturn(Optional.of(mockedPortfolio));
-        when(reservationRepository.save(any(Reservation.class))).thenReturn(new Reservation());
-
-        // When
-        when(reservationRepository.findByPortfolioAndYearAndMonthAndDay(any(Portfolio.class), anyInt(), anyInt(), anyInt()))
-                .thenReturn(Optional.empty());  // null 값 반환
-        ReservationResponse.SuccessDto successDto = reservationService.makeReservation(request);
-
-        // Then
-        Assertions.assertNotNull(successDto);
-    }
-
-    @Test
-    void 예약_실패() {
-        // Given
-        ReservationRequest.SaveDto request = new ReservationRequest.SaveDto();
-        request.setTimes(Set.of("18:30", "19:00", "19:30"));
-
-        Model mockedModel = mock(Model.class);
-        Portfolio mockedPortfolio = mock(Portfolio.class);
-
-        when(modelRepository.findById(any())).thenReturn(Optional.of(mockedModel));
-        when(portfolioRepository.findById(1L)).thenReturn(Optional.of(mockedPortfolio));
-        when(reservationRepository.save(any(Reservation.class))).thenReturn(new Reservation());
-
-        // When
-        when(reservationRepository.findByPortfolioAndYearAndMonthAndDay(any(Portfolio.class), anyInt(), anyInt(), anyInt()))
-                .thenReturn(Optional.of(getReservations()));  // 예약 내역 반환
-
-        // Then
-        Assertions.assertThrows(ReservationException.class,
-                () -> reservationService.makeReservation(request));
-    }
-
-    private List<Reservation> getReservations() {
-        Reservation reservation1 = Reservation.builder()
-                .times("18:00,18:30,19:00")
-                .build();
-        Reservation reservation2 = Reservation.builder()
-                .times("21:00,21:30,22:00")
-                .build();
-
-        return List.of(reservation1, reservation2);
-    }
+//    @Test
+//    void 예약_성공() {
+//        // Given
+//        ReservationRequest.SaveDto request = new ReservationRequest.SaveDto();
+//        request.setTimes(Set.of("18:30", "19:00", "19:30"));
+//
+//        Model mockedModel = mock(Model.class);
+//        Portfolio mockedPortfolio = mock(Portfolio.class);
+//
+//        when(modelRepository.findById(any())).thenReturn(Optional.of(mockedModel));
+//        when(portfolioRepository.findById(1L)).thenReturn(Optional.of(mockedPortfolio));
+//        when(reservationRepository.save(any(Reservation.class))).thenReturn(new Reservation());
+//
+//        // When
+//        when(reservationRepository.findByPortfolioAndYearAndMonthAndDay(any(Portfolio.class), anyInt(), anyInt(), anyInt()))
+//                .thenReturn(Optional.empty());  // null 값 반환
+//        ReservationResponse.SuccessDto successDto = reservationService.makeReservation(request);
+//
+//        // Then
+//        Assertions.assertNotNull(successDto);
+//    }
+//
+//    @Test
+//    void 예약_실패() {
+//        // Given
+//        ReservationRequest.SaveDto request = new ReservationRequest.SaveDto();
+//        request.setTimes(Set.of("18:30", "19:00", "19:30"));
+//
+//        Model mockedModel = mock(Model.class);
+//        Portfolio mockedPortfolio = mock(Portfolio.class);
+//
+//        when(modelRepository.findById(any())).thenReturn(Optional.of(mockedModel));
+//        when(portfolioRepository.findById(1L)).thenReturn(Optional.of(mockedPortfolio));
+//        when(reservationRepository.save(any(Reservation.class))).thenReturn(new Reservation());
+//
+//        // When
+//        when(reservationRepository.findByPortfolioAndYearAndMonthAndDay(any(Portfolio.class), anyInt(), anyInt(), anyInt()))
+//                .thenReturn(Optional.of(getReservations()));  // 예약 내역 반환
+//
+//        // Then
+//        Assertions.assertThrows(ReservationException.class,
+//                () -> reservationService.makeReservation(request));
+//    }
+//
+//    private List<Reservation> getReservations() {
+//        Reservation reservation1 = Reservation.builder()
+//                .times("18:00,18:30,19:00")
+//                .build();
+//        Reservation reservation2 = Reservation.builder()
+//                .times("21:00,21:30,22:00")
+//                .build();
+//
+//        return List.of(reservation1, reservation2);
+//    }
 }

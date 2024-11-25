@@ -32,7 +32,8 @@ public class SwaggerConfig {
                         .bearerFormat("JWT"));
 
         return new OpenAPI()
-                .addServersItem(new Server().url("/"))
+                .addServersItem(new Server().url("/meme-auth"))  // 운영 환경 추가
+                .addServersItem(new Server().url("/"))  // 로컬 환경 추가
                 .info(info)
                 .addSecurityItem(securityRequirement)
                 .components(components);

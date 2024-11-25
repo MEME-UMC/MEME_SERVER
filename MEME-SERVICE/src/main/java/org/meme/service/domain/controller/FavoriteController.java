@@ -40,6 +40,13 @@ public class FavoriteController {
         return BaseResponseDto.SuccessResponse(SuccessStatus.FAVORITE_PORTFOLIO_POST);
     }
 
+    @Operation(summary = "관심 메이크업 추가", description = "관심 메이크업을 추가하는 API입니다.")
+    @PostMapping("/portfolioV2")
+    public BaseResponseDto postFavoritePortfolioV2(@RequestBody FavoriteRequest.FavoritePortfolioDto favoritePortfolioDto) {
+        favoriteService.addFavoritePortfolioV2(favoritePortfolioDto);
+        return BaseResponseDto.SuccessResponse(SuccessStatus.FAVORITE_PORTFOLIO_POST);
+    }
+
     @Operation(summary = "관심 아티스트 삭제", description = "관심 아티스트를 삭제하는 API입니다.")
     @DeleteMapping("/artist")
     public BaseResponseDto deleteFavoriteArtist(@RequestBody FavoriteRequest.FavoriteArtistDto favoriteArtistDto) {
