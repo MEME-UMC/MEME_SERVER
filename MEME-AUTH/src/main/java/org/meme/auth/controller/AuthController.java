@@ -61,7 +61,7 @@ public class AuthController {
      * @return
      * @throws AuthException
      */
-    @PostMapping("/auth/logout")
+    @PostMapping("/logout")
     public BaseResponseDto<?> logout(HttpServletRequest request) throws AuthException {
         authService.logout(request.getHeader("Authorization"));
         return BaseResponseDto.SuccessResponse(SuccessStatus.LOGOUT_SUCCESS);
@@ -74,7 +74,7 @@ public class AuthController {
      * @return
      * @throws AuthException
      */
-    @PostMapping("/auth/withdraw")
+    @PostMapping("/leave")
     public BaseResponseDto<?> withdraw(HttpServletRequest request) throws AuthException {
         authService.withdraw(request.getHeader("Authorization"));
         return BaseResponseDto.SuccessResponse(SuccessStatus.WITHDRAW_SUCCESS);
@@ -86,7 +86,7 @@ public class AuthController {
      * @param idTokenDto
      * @return
      */
-    @PostMapping("/check/user")
+    @PostMapping("/validate/user")
     public BaseResponseDto<?> checkUserExists(@RequestBody AuthRequest.IdTokenDto idTokenDto) {
         AuthResponse.UserInfoDto userInfoDto = authService.checkUserExistsFindByEmail(idTokenDto);
         if (userInfoDto.isUser_status())
@@ -101,11 +101,11 @@ public class AuthController {
      * @param nicknameDto
      * @return
      */
-    @PostMapping("/check/nickname")
+    @PostMapping("/validate/nickname")
     public BaseResponseDto<?> checkNicknameDuplicate(@RequestBody AuthRequest.NicknameDto nicknameDto) {
         boolean nicknameIsDuplicate = authService.checkNicknameDuplicate(nicknameDto);
         if (nicknameIsDuplicate)
-            return BaseResponseDto.ErrorResponse(ErrorStatus.NICKNAME_NOT_EXIST, true);
+            return BaseResponseDto.ErrorResponse(ErrorStatus.NICKNAME_DUPLICATED, true);
         else
             return BaseResponseDto.SuccessResponse(SuccessStatus.NICKNAME_NOT_EXISTS, false);
     }

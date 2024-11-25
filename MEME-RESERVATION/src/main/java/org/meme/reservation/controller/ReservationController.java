@@ -12,7 +12,7 @@ import java.util.List;
 import static org.meme.reservation.common.status.SuccessStatus.*;
 
 @RequiredArgsConstructor
-@RestController("/api/v2")
+@RequestMapping("/api/v2")
 public class ReservationController {
 
     private final ReservationService reservationService;
