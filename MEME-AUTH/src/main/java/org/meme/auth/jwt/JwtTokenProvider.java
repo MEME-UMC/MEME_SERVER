@@ -2,6 +2,7 @@ package org.meme.auth.jwt;
 
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
+import org.meme.auth.service.PrincipalDetails;
 import org.meme.auth.service.PrincipalDetailsService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,12 +25,13 @@ public class JwtTokenProvider {
 
     @Transactional
     public String[] createTokenPair(Authentication authentication) {
-        UserDetails userDetails = principalDetailsService.loadUserByUsername(authentication.getName());
+        PrincipalDetails userDetails = principalDetailsService.loadUserByUsername(authentication.getName());
         String username = userDetails.getUsername();
         String authorities = getAuthorities(authentication);
+        Long userId = userDetails.getUserId();
 
         Long now = System.currentTimeMillis();
-        String accessToken = createAccessToken(username, authorities, now);
+        String accessToken = createAccessToken(username, authorities, now, userId);
         String refreshToken = createRefreshToken(now);
         return new String[]{accessToken, refreshToken};  // index 0 : access_token, index 1 : refresh_token
     }
@@ -74,7 +76,7 @@ public class JwtTokenProvider {
                 .collect(Collectors.joining(","));
     }
 
-    private String createAccessToken(String username, String authorities, Long now) {
+    private String createAccessToken(String username, String authorities, Long now, Long userId) {
         return Jwts.builder()
                 .setHeaderParam("alg", "HS512")
                 .setHeaderParam("typ", "JWT")
@@ -84,6 +86,7 @@ public class JwtTokenProvider {
                 .setSubject("access-token")
                 .claim("username", username)
                 .claim("role", authorities)
+                .claim("id", userId)  // userId 추가
                 .signWith(jwtProperties.getKey(), SignatureAlgorithm.HS512)
                 .compact();
     }

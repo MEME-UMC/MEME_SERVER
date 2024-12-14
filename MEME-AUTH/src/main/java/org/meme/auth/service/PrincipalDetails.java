@@ -49,4 +49,9 @@ public record PrincipalDetails(User user) implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    // userId 반환
+    public Long getUserId() {
+        return user.getUserId();
+    }
 }
