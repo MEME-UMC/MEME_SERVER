@@ -1,22 +1,29 @@
 dependencies {
+    // 기본 설정
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-
-    implementation 'org.springframework.kafka:spring-kafka'
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
-
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     runtimeOnly 'com.mysql:mysql-connector-j'
 
+    // 카프카 설정
+    implementation 'org.springframework.kafka:spring-kafka'
 
-    // Logstash에서 처리할 수 있는 JSON 형식으로 로그 메시지를 인코딩
-    implementation 'net.logstash.logback:logstash-logback-encoder:6.2'
+    // json 형태로 로그 출력
+    implementation "ch.qos.logback.contrib:logback-json-classic:0.1.5"
+    implementation "ch.qos.logback.contrib:logback-jackson:0.1.5"
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
 
+    // OTEL Log Exporter whit LOGBACK appender
+    def OTEL_LOGBACK_VERSION = "2.10.0-alpha"
+    implementation "io.opentelemetry.instrumentation:opentelemetry-logback-appender-1.0:$OTEL_LOGBACK_VERSION"
+    implementation "io.opentelemetry.instrumentation:opentelemetry-logback-mdc-1.0:$OTEL_LOGBACK_VERSION"
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'io.micrometer:micrometer-registry-prometheus'
+    implementation 'io.opentelemetry:opentelemetry-api:1.45.0'
+
 }
 
 test {
