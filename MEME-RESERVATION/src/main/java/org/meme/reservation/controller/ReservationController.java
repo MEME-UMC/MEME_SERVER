@@ -1,10 +1,14 @@
 package org.meme.reservation.controller;
 
+import io.jsonwebtoken.Jwt;
 import lombok.RequiredArgsConstructor;
 import org.meme.reservation.common.BaseResponseDto;
 import org.meme.reservation.dto.ReservationRequest;
 import org.meme.reservation.dto.ReservationResponse;
+import org.meme.reservation.jwt.JwtUtil;
 import org.meme.reservation.service.ReservationService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,10 +16,12 @@ import java.util.List;
 import static org.meme.reservation.common.status.SuccessStatus.*;
 
 @RequiredArgsConstructor
+@RestController
 @RequestMapping("/api/v2")
 public class ReservationController {
 
     private final ReservationService reservationService;
+    private final JwtUtil jwtUtil;
 
     /**
      * 예약하기
@@ -179,5 +185,24 @@ public class ReservationController {
     public BaseResponseDto<?> changeStatusCanceledByModel(@PathVariable("reservationId") Long reservationId) {
         reservationService.changeReservationStatusCanceled(reservationId);
         return BaseResponseDto.SuccessResponse(RESERVATION_STATUS_CANCELED_BY_MODEL);
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<String> validateToken(@RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken) {
+        System.out.println("accessToken in controller = " + accessToken);
+        if (accessToken == null || !accessToken.startsWith("Bearer ")) {
+            return ResponseEntity.badRequest().body("Invalid Authorization header");
+        }
+
+        String token = accessToken.substring(7); // "Bearer " 이후 토큰 부분 추출
+
+        try {
+            System.out.println("token = " + token);
+            Long userId = jwtUtil.extractUserId(token);
+            return ResponseEntity.ok("Valid Token. User ID: " + userId);
+        } catch (Exception e) {
+            System.out.println("e = " + e);
+            return ResponseEntity.status(401).body("Invalid Token");
+        }
     }
 }
