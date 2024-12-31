@@ -31,4 +31,7 @@ COPY --from=jre-build /javaruntime $JAVA_HOME
 # Continue with your application deployment
 RUN mkdir /opt/app
 COPY --from=jre-build /app/app.jar /opt/server/
+
+EXPOSE 8081
+
 CMD ["java", "-jar", "/opt/server/app.jar"]
