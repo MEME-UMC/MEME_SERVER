@@ -12,7 +12,7 @@ RUN jdeps \
     --multi-release 17 \
     --recursive \
     --class-path 'BOOT-INF/lib/*' \
-    app.jar > modules.txt
+    app.jar > modules.txt && cat modules.txt
 
 # Create a custom Java runtime
 RUN $JAVA_HOME/bin/jlink \
@@ -20,7 +20,6 @@ RUN $JAVA_HOME/bin/jlink \
          --strip-debug \
          --no-man-pages \
          --no-header-files \
-         --compress=2 \
          --output /javaruntime
 
 # Define your base image
