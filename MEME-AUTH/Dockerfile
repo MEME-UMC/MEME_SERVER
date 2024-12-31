@@ -1,25 +1,11 @@
 FROM eclipse-temurin:17 as jre-build
-
-COPY build/libs/*.jar /app/app.jar
-WORKDIR /app
-
-# Create a custom Java runtime
-# List jar modules
-RUN jar xf app.jar
-RUN jdeps \
-    --ignore-missing-deps \
-    --print-module-deps \
-    --multi-release 17 \
-    --recursive \
-    --class-path 'BOOT-INF/lib/*' \
-    app.jar > modules.txt && cat modules.txt
-
 # Create a custom Java runtime
 RUN $JAVA_HOME/bin/jlink \
-         --add-modules $(cat modules.txt) \
+         --add-modules ALL-MODULE-PATH \
          --strip-debug \
          --no-man-pages \
          --no-header-files \
+         --compress=2 \
          --output /javaruntime
 
 # Define your base image
@@ -30,8 +16,8 @@ COPY --from=jre-build /javaruntime $JAVA_HOME
 
 # Continue with your application deployment
 RUN mkdir /opt/app
-COPY --from=jre-build /app/app.jar /opt/server/
+COPY build/libs/*.jar /opt/app/app.jar
 
 EXPOSE 8081
 
-CMD ["java", "-jar", "/opt/server/app.jar"]
+CMD ["java", "-jar", "/opt/app/app.jar"]
