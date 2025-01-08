@@ -125,6 +125,12 @@ public class AuthService {
         return userRepository.existsByNickname(nicknameDto.getNickname());
     }
 
+    public String findEmailByNickname(String nickname) throws AuthException {
+        User user = userRepository.findByNickname(nickname)
+                .orElseThrow(() -> new AuthException(ErrorStatus.NICKNAME_NOT_FOUND));
+        return user.getEmail();
+    }
+
     private org.meme.auth.domain.User saveUser(AuthRequest.UserJoinDto signUpDto, String userEmail) {
         return userRepository.save(UserConverter.toUserEntity(signUpDto, userEmail));
     }

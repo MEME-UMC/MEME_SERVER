@@ -10,10 +10,7 @@ import org.meme.auth.common.status.SuccessStatus;
 import org.meme.auth.dto.AuthRequest;
 import org.meme.auth.dto.AuthResponse;
 import org.meme.auth.service.AuthService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static org.meme.auth.common.BaseResponseDto.SuccessResponse;
 
@@ -108,5 +105,10 @@ public class AuthController {
             return BaseResponseDto.ErrorResponse(ErrorStatus.NICKNAME_DUPLICATED, true);
         else
             return BaseResponseDto.SuccessResponse(SuccessStatus.NICKNAME_NOT_EXISTS, false);
+    }
+
+    @GetMapping("/validate/{nickname}")
+    public BaseResponseDto<?> findEmailByNickname(@PathVariable("nickname") String nickname) throws AuthException {
+        return BaseResponseDto.SuccessResponse(SuccessStatus.EMAIL_FOUND_SUCCESS, authService.findEmailByNickname(nickname));
     }
 }

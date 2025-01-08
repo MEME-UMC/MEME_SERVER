@@ -18,6 +18,7 @@ public enum SuccessStatus {
     REISSUE_SUCCESS(HttpStatus.OK, 200, "토큰 재발급이 완료되었습니다."),
     LOGOUT_SUCCESS(HttpStatus.OK, 200, "Logout Success"),
     WITHDRAW_SUCCESS(HttpStatus.OK, 200, "Withdraw Success"),
+    EMAIL_FOUND_SUCCESS(HttpStatus.OK, 200, "등록된 사용자입니다."),
 
     /**artist**/
     ARTIST_PROFILE_UPDATE(HttpStatus.OK, 200, "아티스트 프로필 수정이 완료되었습니다"),

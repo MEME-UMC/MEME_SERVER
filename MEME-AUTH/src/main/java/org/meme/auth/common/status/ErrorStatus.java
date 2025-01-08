@@ -19,6 +19,7 @@ public enum ErrorStatus implements BaseErrorCode {
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, 401, "사용자가 없습니다."),
     NICKNAME_NOT_EXIST(HttpStatus.BAD_REQUEST, 402, "닉네임은 필수 입니다."),
     NICKNAME_DUPLICATED(HttpStatus.BAD_REQUEST, 402, "중복된 닉네임입니다."),
+    NICKNAME_NOT_FOUND(HttpStatus.NOT_FOUND, 401, "가입되지 않은 닉네임입니다."),
 
     // Artist 관련 에러
     ARTIST_NOT_FOUND(HttpStatus.NOT_FOUND, 401, "Artist 정보가 존재하지 않습니다."),
